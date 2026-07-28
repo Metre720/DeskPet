@@ -1,162 +1,111 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
 *{margin:0;padding:0}
 html,body{width:100%;height:100%;overflow:hidden;background:transparent}
-#scene{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
-#pet{animation:breathe 3s ease-in-out infinite;transform-origin:center bottom}
-.particle{position:absolute;pointer-events:none;font-size:12px;opacity:0;animation:float-up 1s ease-out forwards}
-#bubble{position:absolute;top:2px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.8);color:#fff;font-size:9px;padding:2px 6px;border-radius:8px;white-space:nowrap;opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:10}
+#container{width:100%;height:100%;position:relative;display:flex;align-items:flex-end;justify-content:center}
+#pet{width:100%;height:80%;display:flex;align-items:center;justify-content:center}
+#pet svg{width:100%;height:100%}
+#bubble{position:absolute;top:0;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.95);border-radius:10px;padding:3px 6px;font-size:10px;white-space:nowrap;opacity:0;transition:opacity 0.3s;pointer-events:none;box-shadow:0 1px 3px rgba(0,0,0,0.2);max-width:150px;text-align:center;font-family:sans-serif}
 #bubble.show{opacity:1}
-@keyframes breathe{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.5px)}}
-@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(0.1)}}
-@keyframes tail-wag{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(10deg)}}
-@keyframes ear-twitch{0%,90%,100%{transform:rotate(0)}93%{transform:rotate(-8deg)}96%{transform:rotate(4deg)}}
-@keyframes float-up{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-20px) scale(0.5)}}
-@keyframes bounce{0%{transform:translateY(0)}30%{transform:translateY(-6px)}50%{transform:translateY(0)}70%{transform:translateY(-3px)}100%{transform:translateY(0)}}
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-2px)}75%{transform:translateX(2px)}}
-#pet.poked{animation:none!important;transform:scale(0.85);transition:transform 0.1s}
-#pet.bounce{animation:bounce 0.5s ease!important}
-#pet.angry{animation:shake 0.3s ease 2!important}
-#left-eye,#right-eye{animation:blink 4s ease-in-out infinite;transform-origin:center}
-#right-eye{animation-delay:0.1s}
-#tail{animation:tail-wag 2.5s ease-in-out infinite;transform-origin:85% 75%}
-#left-ear{animation:ear-twitch 6s ease-in-out infinite;transform-origin:bottom center}
-#right-ear{animation-delay:3s}#mouth-happy,#mouth-angry,#eyes-angry,#eyes-happy,#blush{display:none}
-#pet.state-happy #mouth-happy{display:block}
-#pet.state-happy #mouth-normal{display:none}
-#pet.state-happy #blush{display:block}
-#pet.state-happy #eyes-happy{display:block}
-#pet.state-happy #left-eye,#pet.state-happy #right-eye{display:none}
-#pet.state-angry #mouth-angry{display:block}
-#pet.state-angry #mouth-normal{display:none}
-#pet.state-angry #eyes-angry{display:block}
-#pet.state-angry #left-eye,#pet.state-angry #right-eye{display:none}
+#bubble::after{content:'';position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:4px solid rgba(255,255,255,0.95)}
 </style>
 </head>
 <body>
-<div id="scene">
+<div id="container">
 <div id="bubble"></div>
-<svg id="pet" viewBox="0 0 100 120" width="100%" height="100%">
-<!-- tail -->
-<path id="tail" d="M70,85 Q85,75 90,65 Q95,55 88,50 Q82,47 80,55 Q78,63 72,72 Z" fill="#3a3a3a" stroke="#222" stroke-width="0.5"/>
-<!-- body -->
-<ellipse cx="50" cy="90" rx="18" ry="22" fill="#1a1a1a"/>
-<!-- shirt collar -->
-<path d="M38,75 Q50,72 62,75 L60,80 Q50,77 40,80 Z" fill="#2a2a2a"/>
-<!-- head -->
-<circle cx="50" cy="45" r="22"fill="#fce4d6"/>
-<!-- hair back -->
-<path d="M30,40 Q35,20 50,18 Q65,20 70,40 Q68,30 60,25 Q50,22 40,25 Q32,30 30,40Z" fill="#1a1a1a"/>
-<!-- left ear -->
-<g id="left-ear">
-<path d="M32,32 L28,12 L40,28 Z" fill="#3a3a3a"/>
-<path d="M33,30 L30,16 L38,28 Z" fill="#d4a8a8"/>
-</g>
-<!-- right ear -->
-<g id="right-ear" style="animation:ear-twitch 6s ease-in-out infinite 3s;transform-origin:bottom center">
-<path d="M68,32 L72,12 L60,28 Z" fill="#3a3a3a"/>
-<path d="M67,30 L70,16 L62,28 Z" fill="#d4a8a8"/>
-</g>
-<!-- hair front -->
-<path d="M32,42 Q35,28 42,25 Q46,23 50,24 Q54,23 58,25 Q65,28 68,42 Q65,35 58,32 Q54,30 50,31 Q46,30 42,32 Q35,35 32,42Z" fill="#222"/>
-<!-- ahoge -->
-<path d="M48,24 Q45,18 48,14 Q50,12 51,16 Q52,20 50,24" fill="#222" stroke="none"/>
-<!-- eyes normal -->
-<g id="left-eye"><ellipse cx="42" cy="47"rx="4" ry="4.5" fill="#fff"/><ellipse cx="42" cy="47" rx="2.8" ry="3" fill="#c0392b"/><circle cx="41" cy="45.5" r="1" fill="#fff"/></g>
-<g id="right-eye"><ellipse cx="58" cy="47" rx="4" ry="4.5" fill="#fff"/><ellipse cx="58" cy="47" rx="2.8" ry="3" fill="#c0392b"/><circle cx="57" cy="45.5" r="1" fill="#fff"/></g>
-<!-- eyes happy -->
-<g id="eyes-happy"><path d="M38,47 Q42,44 46,47" stroke="#222" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M54,47 Q58,44 62,47" stroke="#222" stroke-width="1.5" fill="none" stroke-linecap="round"/></g>
-<!-- eyes angry -->
-<g id="eyes-angry"><ellipse cx="42" cy="47" rx="3.5" ry="3" fill="#fff"/><ellipse cx="42" cy="47" rx="2.5" ry="2.5" fill="#c0392b"/><path d="M37,43 L47,45" stroke="#222" stroke-width="1.2"/><ellipse cx="58" cy="47" rx="3.5" ry="3" fill="#fff"/><ellipse cx="58" cy="47" rx="2.5" ry="2.5" fill="#c0392b"/><path d="M53,45 L63,43" stroke="#222" stroke-width="1.2"/></g>
-<!-- blush -->
-<g id="blush"><ellipse cx="36" cy="52"rx="3" ry="1.8" fill="rgba(255,150,150,0.5)"/><ellipse cx="64" cy="52" rx="3" ry="1.8" fill="rgba(255,150,150,0.5)"/></g>
-<!-- mouth normal -->
-<path id="mouth-normal" d="M47,54 Q50,56 53,54" stroke="#a0522d" stroke-width="1" fill="none" stroke-linecap="round"/>
-<!-- mouth happy -->
-<path id="mouth-happy" d="M45,53 Q50,58 55,53" stroke="#a0522d" stroke-width="1.2" fill="none" stroke-linecap="round"/>
-<!-- mouth angry -->
-<path id="mouth-angry" d="M45,55 Q50,53 55,55" stroke="#a0522d" stroke-width="1.2" fill="none" stroke-linecap="round"/>
-<!-- arms -->
-<path d="M32,80 Q28,85 26,92 Q25,95 28,94Q30,90 34,86Z" fill="#1a1a1a"/>
-<path d="M68,80 Q72,85 74,92 Q75,95 72,94 Q70,90 66,86Z" fill="#1a1a1a"/>
-<!-- feet -->
-<ellipse cx="42" cy="110" rx="7" ry="4" fill="#333"/>
-<ellipse cx="58" cy="110" rx="7" ry="4" fill="#333"/>
-</svg>
+<div id="pet"></div>
 </div>
 <script>
-const pet=document.getElementById('pet');
-const bubble=document.getElementById('bubble');
-const scene=document.getElementById('scene');
-let bubbleTimer=null,stateTimer=null;
+(function(){
+var states={
+idle:'clawd-idle-living.svg',
+happy:'clawd-happy.svg',
+annoyed:'clawd-react-annoyed.svg',
+sleeping:'clawd-sleeping.svg',
+yawn:'clawd-idle-yawn.svg',
+drag:'clawd-react-drag.svg',
+error:'clawd-error.svg',
+notification:'clawd-notification.svg',
+bubble:'clawd-idle-bubble.svg',
+doze:'clawd-idle-doze.svg',
+look:'clawd-idle-look.svg',
+wake:'clawd-wake.svg',
+doubleTap:'clawd-react-double.svg',
+typing:'clawd-working-typing.svg',
+thinking:'clawd-working-thinking.svg',
+building:'clawd-working-building.svg'
+};
+var petEl=document.getElementById('pet');
+var bubbleEl=document.getElementById('bubble');
+var currentState='idle';
+var bubbleTimer=;
 
-function showBubble(text){
-  bubble.textContent=text;
-  bubble.classList.add('show');
-  clearTimeout(bubbleTimer);
-  bubbleTimer=setTimeout(()=>bubble.classList.remove('show'),2500);
+var tapTexts=['嗯？','干嘛戳我','别碰','看什么看','哼。','...你手欠？','有事？'];
+var dblTexts=['嘿嘿~','喜欢你♡','开心！','再来一下~','♪'];
+var longTexts=['放开我！','你要干啥！','啊啊啊别拽！','松手！！'];
+
+function loadState(name){
+var file=states[name]||states.idle;
+var xhr=new XMLHttpRequest();
+xhr.open('GET',file,true);
+xhr.onload=function(){
+if(xhr.status===200){
+petEl.innerHTML=xhr.responseText;
+currentState=name;
 }
-function spawnParticle(emoji){
-  const p=document.createElement('div');
-  p.className='particle';
-  p.textContent=emoji;
-  p.style.left=Math.random()*60+20+'%';
-  p.style.top=Math.random()*30+10+'%';
-  scene.appendChild(p);
-  setTimeout(()=>p.remove(),1000);
-}
-function setState(s,duration){
-  pet.className='';
-  pet.classList.add('state-'+s);
-  clearTimeout(stateTimer);
-  stateTimer=setTimeout(()=>{pet.className='';},duration||3000);
+};
+xhr.send();
 }
 
-const tapTexts=['干嘛戳我！','哎呀~','手欠是吧','嗯？','轻点啦','你想干啥','又戳！','烦诶','痒~'];
-const dblTexts=['好啦知道你想我','别闹了','亲一个？','哼原谅你了','你今天真黏人','我在呢'];
-const longTexts=['你按着我干嘛...','想把我按扁吗','放开我！','我要窒息了','你手真重','救命'];
+function showBubble(text,duration){
+bubbleEl.textContent=text;
+bubbleEl.classList.add('show');
+if(bubbleTimer)clearTimeout(bubbleTimer);
+bubbleTimer=setTimeout(function(){
+bubbleEl.classList.remove('show');
+},duration||2000);
+}
 
-let touchStart=0,lastTap=0,longTimer=null;
-pet.addEventListener('touchstart',(e)=>{
-  e.preventDefault();
-  touchStart=Date.now();
-  pet.classList.add('poked');
-  longTimer=setTimeout(()=>{
-    pet.classList.remove('poked');
-    setState('angry',2500);
-    pet.classList.add('angry');
-    showBubble(longTexts[Math.floor(Math.random()*longTexts.length)]);
-    spawnParticle('💢');
-  },800);
-});
-pet.addEventListener('touchend',()=>{
-  clearTimeout(longTimer);
-  pet.classList.remove('poked');
-  const dt=Date.now()-touchStart;  if(dt>=800)return;
-  const now=Date.now();
-  if(now-lastTap<400){
-    setState('happy',3000);
-    pet.classList.add('bounce');
-    setTimeout(()=>pet.classList.remove('bounce'),500);
-    showBubble(dblTexts[Math.floor(Math.random()*dblTexts.length)]);
-    spawnParticle('✨');spawnParticle('💕');
-    lastTap=0;
-  } else {
-    lastTap=now;
-    setTimeout(()=>{
-  if(lastTap!==0&&Date.now()-lastTap>=380){
-        pet.classList.add('bounce');
-        setTimeout(()=>pet.classList.remove('bounce'),500);
-        showBubble(tapTexts[Math.floor(Math.random()*tapTexts.length)]);
-        spawnParticle('❓');
-        lastTap=0;
-      }
-    },400);
-  }
-});
+function randomFrom(arr){return arr[Math.floor(Math.random()*arr.length)];}
+
+function backToIdle(){
+setTimeout(function(){loadState('idle');},2500);
+}
+
+window.petEngine={
+onTap:function(){
+loadState('annoyed');
+showBubble(randomFrom(tapTexts));
+backToIdle();
+},
+onDoubleTap:function(){
+loadState('happy');
+showBubble(randomFrom(dblTexts));
+backToIdle();
+},
+onLongPress:function(){
+loadState('drag');
+showBubble(randomFrom(longTexts));
+backToIdle();
+}
+};
+
+loadState('idle');
+
+// idle cycle
+var idleAnim=['idle','look','bubble','yawn','doze'];
+function idleCycle(){
+var next=idleAnim[Math.floor(Math.random()*idleAnim.length)];
+if(currentState==='idle'||currentState==='look'||currentState==='bubble'||currentState==='yawn'||currentState==='doze'){
+loadState(next);
+}
+}
+setInterval(idleCycle,16000);
+})();
 </script>
 </body>
 </html>
