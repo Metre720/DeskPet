@@ -44,13 +44,75 @@ var miniIdleTimer=null;
 var miniSleepTimer=null;
 var petDiv=document.getElementById('pet');
 var bubbleDiv=document.getElementById('bubble');
+
+// === TIME AWARENESS ===
+var timeSlots={
+  dawn:{hours:[6,7,8],
+    auto:['早安...','新的一天~','起床气消了没','要吃早饭哦','太阳出来了','醒了没呀','伸个懒腰~'],
+    tap:['一大早就来烦我','早起的虫被鸟吃','早上好困...','你也起这么早？','别碰我还没醒']},
+  morning:{hours:[9,10,11],
+    auto:['在忙吗','喝水了没','别太累','上午好呀','认真的你好看','今天计划是什么'],
+    tap:['工作时间别摸鱼','你不忙吗','专心点啦','有事说事','又来找我玩']},
+  noon:{hours:[12,13],
+    auto:['该吃午饭了','中午要午休吗','困不困','吃饱了吗','下午还长着呢先歇会'],
+    tap:['吃了吗','饭点了还戳我','困...','午休一下吧','别饿着自己']},
+  afternoon:{hours:[14,15,16,17],
+    auto:['下午好呀','有点困...','今天还顺利吗','在干嘛呢','摸鱼时间到','下午茶时间'],
+    tap:['下午犯困正常','又来了','要喝奶茶吗','你今天好闲','再戳我咬你']},
+  evening:{hours:[18,19],
+    auto:['该吃晚饭了','今天辛苦了','晚上想做什么','傍晚了呢','一天快结束了'],
+    tap:['吃晚饭了吗','今天怎么样','晚上有什么安排','你还在忙啊','陪我玩会']},
+  night:{hours:[20,21,22],
+    auto:['夜晚好','放松一下吧','今天开心吗','别玩太晚','夜深了','在干嘛呢'],
+    tap:['晚上好呀','别熬夜','你今天还没休息','玩够了没','夜猫子']},
+  latenight:{hours:[23,0,1,2,3,4,5],
+    auto:['太晚了...','该睡觉了','再不睡我生气了','晚安...','熬夜伤身体','你不困我困了','都几点了...'],
+    tap:['大半夜不睡觉戳我','困...别闹','你不睡我也不睡了哼','真的该睡了','夜猫子本猫','明天不起了吧','黑眼圈要出来了']}
+};
+var usedAutoWords=[];
+var lastAutoSlot='';
+var autoTimer=null;
+
+function getTimeSlot(){
+  var h=new Date().getHours();
+  for(var key in timeSlots){
+    if(timeSlots[key].hours.indexOf(h)!==-1)return key;
+  }
+  return 'night';
+}
+
+function pickUnused(pool,usedList){
+  var available=[];
+  for(var i=0;i<pool.length;i++){
+    if(usedList.indexOf(pool[i])===-1)available.push(pool[i]);
+  }
+  if(available.length===0)return null;
+  return available[Math.floor(Math.random()*available.length)];
+}
+
+function checkTimeAuto(){
+  if(isMini||isLonely)return;
+  var slot=getTimeSlot();
+  if(slot!==lastAutoSlot){
+    lastAutoSlot=slot;
+    usedAutoWords=[];
+  }
+  var word=pickUnused(timeSlots[slot].auto,usedAutoWords);
+  if(word){
+    usedAutoWords.push(word);
+    showBubble(word);
+  }
+}
+autoTimer=setInterval(checkTimeAuto,3600000);
+setTimeout(function(){checkTimeAuto();},5000);
+
 // === LONELINESS ENGINE ===
 var lastInteraction=Date.now();
 var lonelyLevel=0;
 var lonelyTimer=null;
 var isLonely=false;
 var lonelyStages=[
-  {time:300000, state:'look', msg:null},
+  {time:300000, state:'look', msg:},
   {time:600000, state:'bubble', msg:'...'},
   {time:900000, state:'carrying', msg:null},
   {time:1200000, state:'yawn', msg:'\u597d\u65e0\u804a...'},
@@ -86,6 +148,7 @@ function checkLonely(){
   }
 }
 lonelyTimer=setInterval(checkLonely,30000);
+
 function loadState(name){
   if(!states[name])name='idle';
   currentState=name;
@@ -127,38 +190,60 @@ function idleCycle(){
   var pick=idlePool[Math.floor(Math.random()*idlePool.length)];
   loadState(pick);
 }
-var tapReactions=['annoyed','dizzy','reactLeft','reactRight'];
-var tapWords=['\u5e72\u561b\u6233\u6211','\u522b\u78b0','\u770b\u4ec0\u4e48\u770b','\u54fc'];
-var doubleTapReactions=['happy','shy','doubleJump','coffee'];
-var doubleTapWords=['\u559c\u6b22\u4f60~','\u563f\u563f','\u518d\u6765\u4e00\u4e0b','\u7ed9\u4f60\u5496\u5561'];
-var dragWords=['\u554a\u554a\u653e\u6211\u4e0b\u6765','\u522b\u62fd\u6211','\u6551\u547d'];
-// === MINI IDLE/SLEEP SYSTEM ===
+
+// === TAP REACTIONS (expanded + time-aware) ===
+var baseTapReactions=['annoyed','dizzy','reactLeft','reactRight','error','look'];
+var baseTapWords=['\u5e72\u561b\u6233\u6211','\u522b\u78b0','\u770b\u4ec0\u4e48\u770b','\u54fc','\u8ba8\u538c','\u4f60\u624b\u6b20\u554a','\u6233\u6211\u4e00\u4e0b\u4e00\u5757\u94b1','...\u53c8\u662f\u4f60','\u8f7b\u70b9','\u6709\u4e8b\uff1f','\u518d\u6233\u6211\u54ac\u4f60','\u70e6\u6b7b\u4e86'];
+var baseDoubleTapReactions=['happy','shy','doubleJump','coffee','notification'];
+var baseDoubleTapWords=['\u559c\u6b22\u4f60~','\u563f\u563f','\u518d\u6765\u4e00\u4e0b','\u7ed9\u4f60\u5496\u5561','\u4f60\u597d\u7c98\u4eba','\u5f00\u5fc3~','\u4e48\u4e48','\u62b1\u62b1','\u8e6d\u8e6d','\u2764','\u559c\u6b22\u88ab\u4f60\u6233','\u54ce\u5440\u597d\u7a81\u7136'];
+var dragWords=['\u554a\u554a\u653e\u6211\u4e0b\u6765','\u522b\u62fd\u6211','\u6551\u547d','\u5934\u6655...','\u4f60\u8f7b\u70b9','\u6211\u8981\u5410\u4e86'];
+var usedTapWords=[];
+var usedDoubleTapWords=[];
+
+function getTimeTapWords(){
+  var slot=getTimeSlot();
+  return timeSlots[slot]?timeSlots[slot].tap:[];
+}
+
+function pickTapWord(){
+  var pool=baseTapWords.concat(getTimeTapWords());
+  var w=pickUnused(pool,usedTapWords);
+  if(!w){usedTapWords=[];w=pool[Math.floor(Math.random()*pool.length)];}
+  usedTapWords.push(w);
+  return w;
+}
+
+function pickDoubleTapWord(){
+  var w=pickUnused(baseDoubleTapWords,usedDoubleTapWords);
+  if(!w){usedDoubleTapWords=[];w=baseDoubleTapWords[Math.floor(Math.random()*baseDoubleTapWords.length)];}
+  usedDoubleTapWords.push(w);
+  return w;
+}
+
+// === MINI IDLE/SLEEP ===
 function clearMiniTimers(){
   if(miniIdleTimer){clearTimeout(miniIdleTimer);miniIdleTimer=null;}
   if(miniSleepTimer){clearTimeout(miniSleepTimer);miniSleepTimer=null;}
 }
 function startMiniTimers(){
   clearMiniTimers();
-  miniIdleTimer=setTimeout(function(){
-    if(isMini){loadState('miniIdle');}
-  },60000);
-  miniSleepTimer=setTimeout(function(){
-    if(isMini){loadState('miniSleep');}
-  },300000);
+  miniIdleTimer=setTimeout(function(){if(isMini)loadState('miniIdle');},60000);
+  miniSleepTimer=setTimeout(function(){if(isMini)loadState('miniSleep');},300000);
 }
+
 window.petEngine={
   onTap:function(){
     resetLonely();
-    var i=Math.floor(Math.random()*tapReactions.length);
-    loadState(tapReactions[i]);
-    showBubble(tapWords[i]);
+    var i=Math.floor(Math.random()*baseTapReactions.length);
+    loadState(baseTapReactions[i]);
+    showBubble(pickTapWord());
     backToIdle();
   },
   onDoubleTap:function(){
     resetLonely();
-    var i=Math.floor(Math.random()*doubleTapReactions.length);
-    loadState(doubleTapReactions[i]);
-    showBubble(doubleTapWords[i]);
+    var i=Math.floor(Math.random()*baseDoubleTapReactions.length);
+    loadState(baseDoubleTapReactions[i]);
+    showBubble(pickDoubleTapWord());
     backToIdle();
   },
   onLongPress:function(){
