@@ -26,10 +26,10 @@ class OverlayService : Service() {
     companion object {
         private const val CHANNEL_ID = "pet_overlay_channel"
         private const val NOTIFICATION_ID = 1001
-        private const val PET_SIZE_DP = 80
-        private const val PET_HEIGHT_DP = 55
+        private const val PET_SIZE_DP = 65
+        private const val PET_HEIGHT_DP = 45
         private const val EDGE_THRESHOLD_DP = 25
-        private const val MINI_VISIBLE_DP = 40
+        private const val MINI_VISIBLE_DP = 32
     }
     override fun onBind(intent: Intent?): IBinder? = null
     override fun onCreate() {
@@ -111,8 +111,10 @@ class OverlayService : Service() {
                     if (isMiniMode && !hasMoved) {
                         exitMiniMode()
                     } else if (hasMoved && !isMiniMode) {
-                        onDragEnd()
-                        checkEdgeSnap()
+                        // Key fix: check edge FIRST, only onDragEnd if NOT snapped
+                        if (!checkEdgeSnap()) {
+                            onDragEnd()
+                        }
                     } else if (!hasMoved && !isMiniMode) {
                         when {
                             elapsed > 600 -> onLongPress()
@@ -129,13 +131,14 @@ class OverlayService : Service() {
             }
         }
     }
-    private fun checkEdgeSnap() {
+    private fun checkEdgeSnap(): Boolean {
         val currentX = params?.x ?: 0
         val edgeThreshold = dpToPx(EDGE_THRESHOLD_DP)
         val petWidth = dpToPx(PET_SIZE_DP)
-        when {
-            currentX < edgeThreshold -> enterMiniMode(isLeft = true)
-            currentX > screenWidth - petWidth - edgeThreshold -> enterMiniMode(isLeft = false)
+        return when {
+            currentX < edgeThreshold -> { enterMiniMode(isLeft = true); true }
+            currentX > screenWidth - petWidth - edgeThreshold -> { enterMiniMode(isLeft = false); true }
+            else -> false
         }
     }
     private fun enterMiniMode(isLeft: Boolean) {
