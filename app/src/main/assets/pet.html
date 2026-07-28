@@ -2,7 +2,7 @@
 *{margin:0;padding:0}
 html,body{width:100%;height:100%;overflow:hidden;background:transparent}
 #container{width:100%;height:100%;position:relative}
-#pet{width:100%;position:absolute;bottom:0;left:0;right:0;height:80%;display:flex;align-items:flex-end;justify-content:center}
+#pet{width:100%;position:absolute;bottom:0;left:0;right:0;height:82%;display:flex;align-items:flex-end;justify-content:center}
 #pet svg{width:auto;height:100%;max-width:100%}
 #bubble{position:absolute;top:2px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.95);border-radius:8px;padding:3px 6px;font-size:9px;font-family:sans-serif;white-space:nowrap;opacity:0;transition:opacity 0.3s;pointer-events:none;box-shadow:0 1px 3px rgba(0,0,0,0.2);z-index:10}
 #bubble.show{opacity:1}
@@ -32,17 +32,18 @@ var states={
   miniPeek:'clawd-mini-peek.svg',miniIdle:'clawd-mini-idle.svg',
   miniEnter:'clawd-mini-enter.svg',miniHappy:'clawd-mini-happy.svg',
   miniAlert:'clawd-mini-alert.svg',miniTyping:'clawd-mini-typing.svg',
-  miniSleep:'clawd-mini-sleep.svg',thinking:'clawd-working-thinking.svg',
-  typing:'clawd-working-typing.svg'
+  miniSleep:'clawd-mini-sleep.svg',miniEnterSleep:'clawd-mini-enter-sleep.svg',
+  thinking:'clawd-working-thinking.svg',typing:'clawd-working-typing.svg'
 };
 var currentState='idle';
 var bubbleTimer=null;
 var idleTimer=null;
 var backTimer=null;
 var isMini=false;
+var miniIdleTimer=null;
+var miniSleepTimer=null;
 var petDiv=document.getElementById('pet');
 var bubbleDiv=document.getElementById('bubble');
-
 // === LONELINESS ENGINE ===
 var lastInteraction=Date.now();
 var lonelyLevel=0;
@@ -52,11 +53,10 @@ var lonelyStages=[
   {time:300000, state:'look', msg:null},
   {time:600000, state:'bubble', msg:'...'},
   {time:900000, state:'carrying', msg:null},
-  {time:1200000, state:'yawn', msg:'好无聊...'},
+  {time:1200000, state:'yawn', msg:'\u597d\u65e0\u804a...'},
   {time:1500000, state:'doze', msg:null},
   {time:1800000, state:'sleeping', msg:'zzZ'}
 ];
-
 function resetLonely(){
   lastInteraction=Date.now();
   if(isLonely){
@@ -64,12 +64,11 @@ function resetLonely(){
     lonelyLevel=0;
     if(currentState==='sleeping'||currentState==='doze'||currentState==='yawn'){
       loadState('wake');
-      showBubble('嗯...你来啦');
+      showBubble('\u55ef...\u4f60\u6765\u5566');
       backToIdle();
     }
   }
 }
-
 function checkLonely(){
   if(isMini)return;
   var elapsed=Date.now()-lastInteraction;
@@ -86,9 +85,7 @@ function checkLonely(){
     if(idleTimer){clearInterval(idleTimer);idleTimer=null;}
   }
 }
-
 lonelyTimer=setInterval(checkLonely,30000);
-
 function loadState(name){
   if(!states[name])name='idle';
   currentState=name;
@@ -99,7 +96,7 @@ function loadState(name){
       petDiv.innerHTML=xhr.responseText;
       var svg=petDiv.querySelector('svg');
       if(svg){
-        svg.setAttribute('viewBox','-3 0 21 18');
+        svg.setAttribute('viewBox','-5 -3 26 22');
         svg.removeAttribute('width');
         svg.removeAttribute('height');
         svg.style.width='100%';
@@ -131,10 +128,24 @@ function idleCycle(){
   loadState(pick);
 }
 var tapReactions=['annoyed','dizzy','reactLeft','reactRight'];
-var tapWords=['干嘛戳我','别碰','看什么看','哼'];
+var tapWords=['\u5e72\u561b\u6233\u6211','\u522b\u78b0','\u770b\u4ec0\u4e48\u770b','\u54fc'];
 var doubleTapReactions=['happy','shy','doubleJump','coffee'];
-var doubleTapWords=['喜欢你~','嘿嘿','再来一下','给你咖啡'];
-var dragWords=['啊啊放我下来','别拽我','救命'];
+var doubleTapWords=['\u559c\u6b22\u4f60~','\u563f\u563f','\u518d\u6765\u4e00\u4e0b','\u7ed9\u4f60\u5496\u5561'];
+var dragWords=['\u554a\u554a\u653e\u6211\u4e0b\u6765','\u522b\u62fd\u6211','\u6551\u547d'];
+// === MINI IDLE/SLEEP SYSTEM ===
+function clearMiniTimers(){
+  if(miniIdleTimer){clearTimeout(miniIdleTimer);miniIdleTimer=null;}
+  if(miniSleepTimer){clearTimeout(miniSleepTimer);miniSleepTimer=null;}
+}
+function startMiniTimers(){
+  clearMiniTimers();
+  miniIdleTimer=setTimeout(function(){
+    if(isMini){loadState('miniIdle');}
+  },60000);
+  miniSleepTimer=setTimeout(function(){
+    if(isMini){loadState('miniSleep');}
+  },300000);
+}
 window.petEngine={
   onTap:function(){
     resetLonely();
@@ -153,7 +164,7 @@ window.petEngine={
   onLongPress:function(){
     resetLonely();
     loadState('drag');
-    showBubble('放开我！！');
+    showBubble('\u653e\u5f00\u6211\uff01\uff01');
     backToIdle();
   },
   onDragStart:function(){
@@ -164,7 +175,7 @@ window.petEngine={
   },
   onDragEnd:function(){
     loadState('annoyed');
-    showBubble('哼，别乱丢我');
+    showBubble('\u54fc\uff0c\u522b\u4e71\u4e22\u6211');
     backToIdle();
   },
   enterMini:function(isLeft){
@@ -173,12 +184,14 @@ window.petEngine={
     if(backTimer){clearTimeout(backTimer);backTimer=null;}
     bubbleDiv.classList.remove('show');
     loadState('miniPeek');
+    startMiniTimers();
   },
   exitMini:function(){
     isMini=false;
+    clearMiniTimers();
     resetLonely();
     loadState('wake');
-    showBubble('我回来啦~');
+    showBubble('\u6211\u56de\u6765\u5566~');
     backToIdle();
   }
 };
