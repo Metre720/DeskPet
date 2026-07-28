@@ -1,42 +1,49 @@
 package com.example.deskpet
-
 import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.graphics.PixelFormat
 import android.os.Build
 import android.os.IBinder
+import android.os.Handler
+import android.os.Looper
 import android.view.*
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.webkit.WebSettings
+import android.util.DisplayMetrics
+import android.animation.ValueAnimator
+import android.view.animation.OvershootInterpolator
 import androidx.core.app.NotificationCompat
-
 class OverlayService : Service() {
-
     private var windowManager: WindowManager? = null
     private var overlayView: WebView? = null
     private var params: WindowManager.LayoutParams? = null
-
+    private var screenWidth = 0
+    private var screenHeight = 0
+    private var isMiniMode = false
+    private val handler = Handler(Looper.getMainLooper())
     companion object {
         private const val CHANNEL_ID = "pet_overlay_channel"
         private const val NOTIFICATION_ID = 1001
         private const val PET_SIZE_DP = 80
         private const val PET_HEIGHT_DP = 55
+        private const val MINI_SIZE_DP = 24
+        private const val EDGE_THRESHOLD_DP = 25
     }
-
     override fun onBind(intent: Intent?): IBinder? = null
-
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
-        startForeground(NOTIFICATION_ID, buildNotification("🦀 螃蟹在你屏幕上"))
+        startForeground(NOTIFICATION_ID, buildNotification())
+        val dm = DisplayMetrics()
+        (getSystemService(WINDOW_SERVICE) as WindowManager).defaultDisplay.getMetrics(dm)
+        screenWidth = dm.widthPixels
+        screenHeight = dm.heightPixels
         setupOverlay()
     }
-
     private fun setupOverlay() {
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
-
         params = WindowManager.LayoutParams(
             dpToPx(PET_SIZE_DP),
             dpToPx(PET_HEIGHT_DP),
@@ -49,7 +56,6 @@ class OverlayService : Service() {
             x = 50
             y = 300
         }
-
         overlayView = WebView(this).apply {
             setBackgroundColor(0x00000000)
             settings.apply {
@@ -64,12 +70,9 @@ class OverlayService : Service() {
             loadUrl("file:///android_asset/pet.html")
             setOnTouchListener(createTouchListener())
         }
-
         windowManager?.addView(overlayView, params)
     }
-
     // === GESTURE HANDLING ===
-
     private var initialX = 0
     private var initialY = 0
     private var initialTouchX = 0f
@@ -77,7 +80,6 @@ class OverlayService : Service() {
     private var lastTapTime = 0L
     private var touchStartTime = 0L
     private var hasMoved = false
-
     private fun createTouchListener(): View.OnTouchListener {
         return View.OnTouchListener { _, event ->
             when (event.action) {
@@ -94,18 +96,24 @@ class OverlayService : Service() {
                     val dx = (event.rawX - initialTouchX).toInt()
                     val dy = (event.rawY - initialTouchY).toInt()
                     if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
-                        if (!hasMoved) { onDragStart() }
+                        if (!hasMoved && !isMiniMode) { onDragStart() }
                         hasMoved = true
-                        params?.x = initialX + dx
-                        params?.y = initialY + dy
-                        windowManager?.updateViewLayout(overlayView, params)
+                        if (!isMiniMode) {
+                            params?.x = initialX + dx
+                            params?.y = initialY + dy
+                            windowManager?.updateViewLayout(overlayView, params)
+                        }
                     }
                     true
                 }
                 MotionEvent.ACTION_UP -> {
                     val elapsed = System.currentTimeMillis() - touchStartTime
-                    if (hasMoved) { onDragEnd() }
-                    if (!hasMoved) {
+                    if (isMiniMode) {
+                        exitMiniMode()
+                    } else if (hasMoved) {
+                        onDragEnd()
+                        checkEdgeSnap()
+                    } else {
                         when {
                             elapsed > 600 -> onLongPress()
                             System.currentTimeMillis() - lastTapTime < 300 -> onDoubleTap()
@@ -121,19 +129,49 @@ class OverlayService : Service() {
             }
         }
     }
-
+    private fun checkEdgeSnap() {
+        val currentX = params?.x ?: 0
+        val edgeThreshold = dpToPx(EDGE_THRESHOLD_DP)
+        val petWidth = dpToPx(PET_SIZE_DP)
+        when {
+            currentX < edgeThreshold -> enterMiniMode(isLeft = true)
+            currentX > screenWidth - petWidth - edgeThreshold -> enterMiniMode(isLeft = false)
+        }
+    }
+    private fun enterMiniMode(isLeft: Boolean) {
+        isMiniMode = true
+        val miniSize = dpToPx(MINI_SIZE_DP)
+        params?.width = miniSize
+        params?.height = miniSize
+        params?.x = if (isLeft) -(miniSize / 3) else screenWidth - miniSize + (miniSize / 3)
+        windowManager?.updateViewLayout(overlayView, params)
+        overlayView?.evaluateJavascript(
+            "window.petEngine && window.petEngine.enterMini(${isLeft})", null
+        )
+    }
+    private fun exitMiniMode() {
+        isMiniMode = false
+        val fullW = dpToPx(PET_SIZE_DP)
+        val fullH = dpToPx(PET_HEIGHT_DP)
+        val targetX = screenWidth / 4
+        params?.width = fullW
+        params?.height = fullH
+        params?.x = targetX
+        windowManager?.updateViewLayout(overlayView, params)
+        overlayView?.evaluateJavascript(
+            "window.petEngine && window.petEngine.exitMini()", null
+        )
+    }
     private fun onTap() {
         overlayView?.evaluateJavascript(
             "window.petEngine && window.petEngine.onTap()", null
         )
     }
-
     private fun onDoubleTap() {
         overlayView?.evaluateJavascript(
             "window.petEngine && window.petEngine.onDoubleTap()", null
         )
     }
-
     private fun onLongPress() {
         overlayView?.evaluateJavascript(
             "window.petEngine && window.petEngine.onLongPress()", null
@@ -149,25 +187,22 @@ class OverlayService : Service() {
             "window.petEngine && window.petEngine.onDragEnd()", null
         )
     }
-
     // === NOTIFICATION ===
-
-    private fun buildNotification(text: String): Notification {
+    private fun buildNotification(): Notification {
         val pendingIntent = PendingIntent.getActivity(
             this, 0,
             packageManager.getLaunchIntentForPackage(packageName),
             PendingIntent.FLAG_IMMUTABLE
         )
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("🦀 DeskPet")
-            .setContentText(text)
+            .setContentTitle("DeskPet")
+            .setContentText("螃蟹在你屏幕上")
             .setSmallIcon(android.R.drawable.ic_menu_compass)
             .setContentIntent(pendingIntent)
             .setOngoing(true)
             .setSilent(true)
             .build()
     }
-
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
@@ -179,13 +214,10 @@ class OverlayService : Service() {
                 .createNotificationChannel(channel)
         }
     }
-
     // === UTILS ===
-
     private fun dpToPx(dp: Int): Int {
         return (dp * resources.displayMetrics.density).toInt()
     }
-
     override fun onDestroy() {
         overlayView?.let {
             windowManager?.removeView(it)
