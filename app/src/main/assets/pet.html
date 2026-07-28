@@ -93,20 +93,29 @@ onLongPress:function(){
 loadState('drag');
 showBubble(randomFrom(longTexts));
 backToIdle();
+},
+onDragStart:function(){
+loadState('drag');
+showBubble('啊啊啊放我下来！');
+},
+onDragEnd:function(){
+loadState('annoyed');
+showBubble('哼，别乱丢我');
+backToIdle();
 }
 };
 
 loadState('idle');
 
 // idle cycle
-var idleAnim=['idle','look','bubble','yawn','doze'];
+var idleAnim=['idle','idle','idle','look','bubble','yawn','doze','wake','notification'];
 function idleCycle(){
 var next=idleAnim[Math.floor(Math.random()*idleAnim.length)];
 if(currentState==='idle'||currentState==='look'||currentState==='bubble'||currentState==='yawn'||currentState==='doze'){
 loadState(next);
 }
 }
-setInterval(idleCycle,16000);
+setInterval(idleCycle,12000);
 })();
 </script>
 </body>
