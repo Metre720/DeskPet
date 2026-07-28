@@ -55,6 +55,8 @@ xhr.open('GET',file,true);
 xhr.onload=function(){
 if(xhr.status===200){
 petEl.innerHTML=xhr.responseText;
+var svg=petEl.querySelector('svg');
+if(svg){svg.setAttribute('viewBox','-1 4 17 13');svg.removeAttribute('width');svg.removeAttribute('height');svg.style.width='100%';svg.style.height='100%';}
 currentState=name;
 }
 };
