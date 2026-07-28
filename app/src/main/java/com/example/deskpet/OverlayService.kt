@@ -12,8 +12,6 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.webkit.WebSettings
 import android.util.DisplayMetrics
-import android.animation.ValueAnimator
-import android.view.animation.OvershootInterpolator
 import androidx.core.app.NotificationCompat
 class OverlayService : Service() {
     private var windowManager: WindowManager? = null
@@ -22,14 +20,16 @@ class OverlayService : Service() {
     private var screenWidth = 0
     private var screenHeight = 0
     private var isMiniMode = false
+    private var miniIsLeft = false
+    private var savedY = 300
     private val handler = Handler(Looper.getMainLooper())
     companion object {
         private const val CHANNEL_ID = "pet_overlay_channel"
         private const val NOTIFICATION_ID = 1001
         private const val PET_SIZE_DP = 80
         private const val PET_HEIGHT_DP = 55
-        private const val MINI_SIZE_DP = 24
         private const val EDGE_THRESHOLD_DP = 25
+        private const val MINI_VISIBLE_DP = 18
     }
     override fun onBind(intent: Intent?): IBinder? = null
     override fun onCreate() {
@@ -108,12 +108,12 @@ class OverlayService : Service() {
                 }
                 MotionEvent.ACTION_UP -> {
                     val elapsed = System.currentTimeMillis() - touchStartTime
-                    if (isMiniMode) {
+                    if (isMiniMode && !hasMoved) {
                         exitMiniMode()
-                    } else if (hasMoved) {
+                    } else if (hasMoved && !isMiniMode) {
                         onDragEnd()
                         checkEdgeSnap()
-                    } else {
+                    } else if (!hasMoved && !isMiniMode) {
                         when {
                             elapsed > 600 -> onLongPress()
                             System.currentTimeMillis() - lastTapTime < 300 -> onDoubleTap()
@@ -140,10 +140,11 @@ class OverlayService : Service() {
     }
     private fun enterMiniMode(isLeft: Boolean) {
         isMiniMode = true
-        val miniSize = dpToPx(MINI_SIZE_DP)
-        params?.width = miniSize
-        params?.height = miniSize
-        params?.x = if (isLeft) -(miniSize / 3) else screenWidth - miniSize + (miniSize / 3)
+        miniIsLeft = isLeft
+        savedY = params?.y ?: 300
+        val petWidth = dpToPx(PET_SIZE_DP)
+        val visible = dpToPx(MINI_VISIBLE_DP)
+        params?.x = if (isLeft) -(petWidth - visible) else screenWidth - visible
         windowManager?.updateViewLayout(overlayView, params)
         overlayView?.evaluateJavascript(
             "window.petEngine && window.petEngine.enterMini(${isLeft})", null
@@ -151,11 +152,7 @@ class OverlayService : Service() {
     }
     private fun exitMiniMode() {
         isMiniMode = false
-        val fullW = dpToPx(PET_SIZE_DP)
-        val fullH = dpToPx(PET_HEIGHT_DP)
-        val targetX = screenWidth / 4
-        params?.width = fullW
-        params?.height = fullH
+        val targetX = if (miniIsLeft) dpToPx(10) else screenWidth - dpToPx(PET_SIZE_DP) - dpToPx(10)
         params?.x = targetX
         windowManager?.updateViewLayout(overlayView, params)
         overlayView?.evaluateJavascript(
@@ -196,7 +193,7 @@ class OverlayService : Service() {
         )
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("DeskPet")
-            .setContentText("螃蟹在你屏幕上")
+            .setContentText("蹲在屏幕上看着你")
             .setSmallIcon(android.R.drawable.ic_menu_compass)
             .setContentIntent(pendingIntent)
             .setOngoing(true)
