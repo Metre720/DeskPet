@@ -29,7 +29,7 @@ class OverlayService : Service() {
         private const val PET_SIZE_DP = 80
         private const val PET_HEIGHT_DP = 55
         private const val EDGE_THRESHOLD_DP = 25
-        private const val MINI_VISIBLE_DP = 18
+        private const val MINI_VISIBLE_DP = 40
     }
     override fun onBind(intent: Intent?): IBinder? = null
     override fun onCreate() {
