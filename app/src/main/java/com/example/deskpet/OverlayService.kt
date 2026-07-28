@@ -27,7 +27,7 @@ class OverlayService : Service() {
         private const val CHANNEL_ID = "pet_overlay_channel"
         private const val NOTIFICATION_ID = 1001
         private const val PET_SIZE_DP = 65
-        private const val PET_HEIGHT_DP = 45
+        private const val PET_HEIGHT_DP = 58
         private const val EDGE_THRESHOLD_DP = 25
         private const val MINI_VISIBLE_DP = 32
     }
@@ -111,7 +111,6 @@ class OverlayService : Service() {
                     if (isMiniMode && !hasMoved) {
                         exitMiniMode()
                     } else if (hasMoved && !isMiniMode) {
-                        // Key fix: check edge FIRST, only onDragEnd if NOT snapped
                         if (!checkEdgeSnap()) {
                             onDragEnd()
                         }
