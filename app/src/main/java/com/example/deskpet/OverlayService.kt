@@ -56,6 +56,8 @@ class OverlayService : Service() {
                 javaScriptEnabled = true
                 domStorageEnabled = true
                 allowFileAccess = true
+                allowFileAccessFromFileURLs = true
+                allowUniversalAccessFromFileURLs = true
                 cacheMode = WebSettings.LOAD_DEFAULT
             }
             webViewClient = WebViewClient()
