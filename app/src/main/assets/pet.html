@@ -5,12 +5,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:transparent}
 #pet svg{width:auto;height:100%;max-width:100%}
 #bubble{position:absolute;top:0;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.95);border-radius:8px;padding:3px 6px;font-size:9px;font-family:sans-serif;white-space:nowrap;opacity:0;transition:opacity 0.3s;pointer-events:none;box-shadow:0 1px 3px rgba(0,0,0,0.2)}
 #bubble.show{opacity:1}
-#mini-peek{position:absolute;bottom:20%;font-size:14px;opacity:0;transition:opacity 0.3s;pointer-events:none}
-#mini-peek.show{opacity:1}
 </style></head><body>
 <div id="pet"></div>
 <div id="bubble"></div>
-<div id="mini-peek"></div>
 <script>
 var states={
   idle:'clawd-idle-living.svg',look:'clawd-idle-look.svg',bubble:'clawd-idle-bubble.svg',
@@ -34,7 +31,6 @@ var idleTimer=null;
 var isMini=false;
 var petDiv=document.getElementById('pet');
 var bubbleDiv=document.getElementById('bubble');
-var miniPeek=document.getElementById('mini-peek');
 
 function loadState(name){
   if(!states[name])name='idle';
@@ -112,16 +108,10 @@ window.petEngine={
   enterMini:function(isLeft){
     isMini=true;
     if(idleTimer)clearInterval(idleTimer);
-    petDiv.innerHTML='';
-    bubbleDiv.classList.remove('show');
-    miniPeek.textContent='👀';
-    miniPeek.style.left=isLeft?'60%':'auto';
-    miniPeek.style.right=isLeft?'auto':'60%';
-    miniPeek.classList.add('show');
+    loadState('look');
   },
   exitMini:function(){
     isMini=false;
-    miniPeek.classList.remove('show');
     loadState('wake');
     showBubble('我回来啦~');
     backToIdle();
