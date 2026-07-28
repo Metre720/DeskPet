@@ -1,165 +1,106 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
 <style>
-* { margin: 0; padding: 0; }
-html, body { background: transparent; overflow: hidden; }
-.pet-container {
-    width: 180px;
-    height: 240px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
+* { margin:0; padding:0; }
+html, body { width:100%; height:100%; overflow:hidden; background:transparent; }
+#pet-container {
+  width:100%; height:100%;
+  display:flex; align-items:center; justify-content:center;
+  animation: breathe 3s ease-in-out infinite;
 }
-.bubble {
-    background: rgba(255,255,255,0.95);
-    border-radius: 12px;
-    padding: 8px 12px;
-    font-size: 12px;
-    color: #333;
-    max-width: 160px;
-    text-align: center;
-    margin-bottom: 8px;
-    opacity: 0;
-    transition: opacity 0.3s;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+#pet {
+  width:100%; height:100%;
+  background-image: url('sprite.png');
+  background-size: 300% 300%;
+  background-position: 0% 0%;
+  transition: opacity 0.3s ease, transform 0.1s ease;
+  opacity:1;
 }
-.bubble.show { opacity: 1; }
-.bubble::after {
-    content: '';
-    position: absolute;
-    bottom: -6px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0; height: 0;
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
-    border-top: 6px solid rgba(255,255,255,0.95);
+#pet.react { transform: scale(0.85); }
+#pet.switching { opacity:0; }
+#bubble {
+  position:absolute; top:-8px; left:50%; transform:translateX(-50%);
+  background:rgba(0,0,0,0.75); color:#fff; font-size:10px;
+  padding:2px 6px; border-radius:8px; white-space:nowrap;
+  opacity:0; transition:opacity 0.3s;
+  pointer-events:none;
 }
-.crab {
-    width: 120px;
-    height: 120px;
-    position: relative;
-    animation: idle 2s ease-in-out infinite;
+#bubble.show { opacity:1; }
+@keyframes breathe {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
 }
-/* 像素螃蟹SVG */
-.crab svg { width: 100%; height: 100%; }
-@keyframes idle {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
-}
-@keyframes shake {
-    0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(-8deg); }
-    75% { transform: rotate(8deg); }
-}
-@keyframes happy {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-}
-.crab.shake { animation: shake 0.4s ease-in-out; }
-.crab.happy { animation: happy 0.5s ease-in-out; }
 </style>
 </head>
 <body>
-<div class="pet-container">
-    <div class="bubble" id="bubble"></div>
-    <div class="crab" id="crab">
-        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-            <!-- 橘色像素螃蟹 -->
-            <!-- 身体 -->
-            <rect x="20" y="24" width="24" height="20" fill="#FF6B35"/>
-            <rect x="16" y="28" width="4" height="12" fill="#FF6B35"/>
-            <rect x="44" y="28" width="4" height="12" fill="#FF6B35"/>
-            <!-- 钳子 -->
-            <rect x="8" y="20" width="8" height="8" fill="#FF8C42"/>
-            <rect x="4" y="16" width="4" height="8" fill="#FF8C42"/>
-            <rect x="12" y="16" width="4" height="4" fill="#FF8C42"/>
-            <rect x="48" y="20" width="8" height="8" fill="#FF8C42"/>
-            <rect x="52" y="16" width="4" height="8" fill="#FF8C42"/>
-            <rect x="48" y="16" width="4" height="4" fill="#FF8C42"/>
-            <!-- 眼睛 -->
-            <rect x="26" y="28" width="4" height="4" fill="#FFFFFF"/>
-            <rect x="34" y="28" width="4" height="4" fill="#FFFFFF"/>
-            <rect x="27" y="29" width="2" height="2" fill="#222222"/>
-            <rect x="35" y="29" width="2" height="2" fill="#222222"/>
-            <!-- 嘴巴 -->
-            <rect x="29" y="36" width="6" height="2" fill="#CC4400"/>
-            <!-- 腿 -->
-            <rect x="22" y="44" width="4" height="6" fill="#FF6B35"/>
-            <rect x="30" y="44" width="4" height="6" fill="#FF6B35"/>
-            <rect x="38" y="44" width="4" height="6" fill="#FF6B35"/>
-        </svg>
-    </div>
+<div id="pet-container">
+  <div id="pet"></div>
+  <div id="bubble"></div>
 </div>
-
 <script>
+const pet = document.getElementById('pet');
 const bubble = document.getElementById('bubble');
-const crab = document.getElementById('crab');
-let bubbleTimer = null;
-
-const tapMessages = [
-    "干嘛戳我！",
-    "哎呀~",
-    "你手欠是吧",
-    "再戳我生气了",
-    "嗯？",
-    "我在呢",
-    "别闹",
-    "想我了？"
-];
-
-const doubleTapMessages = [
-    "戳戳戳！烦！",
-    "手给你剁了啊",
-    "你是真的闲",
-    "我要生气了！"
-];
-
-const longPressMessages = [
-    "...你摸我干嘛",
-    "放手！",
-    "害羞了啦",
-    "别...别这样"
-];
-
-function showBubble(text) {
-    bubble.textContent = text;
-    bubble.classList.add('show');
-    if (bubbleTimer) clearTimeout(bubbleTimer);
-    bubbleTimer = setTimeout(() => {
-        bubble.classList.remove('show');
-    }, 3000);
-}
-
-function playAnim(name) {
-    crab.classList.remove('shake', 'happy');
-    void crab.offsetWidth;
-    crab.classList.add(name);
-    setTimeout(() => crab.classList.remove(name), 500);
-}
-
-window.petEngine = {
-    onTap: function() {
-        const msg = tapMessages[Math.floor(Math.random() * tapMessages.length)];
-        showBubble(msg);
-        playAnim('shake');
-    },
-    onDoubleTap: function() {
-        const msg = doubleTapMessages[Math.floor(Math.random() * doubleTapMessages.length)];
-        showBubble(msg);
-        playAnim('shake');
-    },
-    onLongPress: function() {
-        const msg = longPressMessages[Math.floor(Math.random() * longPressMessages.length)];
-        showBubble(msg);
-        playAnim('happy');
-    }
+const poses = {
+  idle:'0% 0%', yawn:'50% 0%', sleep:'100% 0%',
+  smile:'0% 50%', surprise:'50% 50%', angry:'100% 50%',
+  zzz:'0% 100%', wink:'50% 100%', hug:'100% 100%'
 };
+let currentPose='idle', idleTimer=null, bubbleTimer=null;
+
+function switchPose(name){
+  if(!poses[name]||name===currentPose)return;
+  pet.classList.add('switching');
+  setTimeout(()=>{
+    pet.style.backgroundPosition=poses[name];
+    currentPose=name;
+    pet.classList.remove('switching');
+  },150);
+}
+function showBubble(text){
+  bubble.textContent=text;
+  bubble.classList.add('show');
+  clearTimeout(bubbleTimer);
+  bubbleTimer=setTimeout(()=>bubble.classList.remove('show'),2500);
+}
+function reactThen(pose){
+  pet.classList.add('react');
+  setTimeout(()=>{pet.classList.remove('react');switchPose(pose);},120);
+}
+
+const tapTexts=['干嘛戳我！','哎呀~','手欠是吧','嗯？','轻点啦','你想干啥','又戳！','烦诶','痒~'];
+const dblTexts=['好啦好啦知道你想我','别闹了','亲一个？','哼，原谅你了','你今天真黏人','我在呢'];
+const longTexts=['你按着我干嘛...','想把我按扁吗','放开我！','我要窒息了','你手真重','救命'];
+
+let touchStart=0,lastTap=0,longTimer=null;
+pet.addEventListener('touchstart',(e)=>{
+  e.preventDefault();
+  touchStart=Date.now();
+  longTimer=setTimeout(()=>{reactThen('angry');showBubble(longTexts[Math.floor(Math.random()*longTexts.length)]);},800);
+});
+pet.addEventListener('touchend',()=>{
+  clearTimeout(longTimer);
+  const dt=Date.now()-touchStart;
+  if(dt>=800)return;
+  const now=Date.now();
+  if(now-lastTap<400){
+    reactThen('hug');showBubble(dblTexts[Math.floor(Math.random()*dblTexts.length)]);lastTap=0;
+  } else {
+    lastTap=now;
+    setTimeout(()=>{if(lastTap!==0&&Date.now()-lastTap>=380){reactThen('surprise');showBubble(tapTexts[Math.floor(Math.random()*tapTexts.length)]);lastTap=0;}},400);
+  }
+});
+
+function startIdleCycle(){
+  clearTimeout(idleTimer);
+  const cycle=['idle','yawn','smile','wink','idle','sleep'];
+  let idx=0;
+  function next(){switchPose(cycle[idx%cycle.length]);idx++;idleTimer=setTimeout(next,8000+Math.random()*7000);}
+  idleTimer=setTimeout(next,10000);
+}
+startIdleCycle();
+pet.addEventListener('touchstart',()=>{startIdleCycle();});
 </script>
 </body>
 </html>
