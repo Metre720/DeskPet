@@ -28,6 +28,7 @@ var states={
 var currentState='idle';
 var bubbleTimer=null;
 var idleTimer=null;
+var backTimer=null;
 var isMini=false;
 var petDiv=document.getElementById('pet');
 var bubbleDiv=document.getElementById('bubble');
@@ -61,7 +62,10 @@ function showBubble(text){
 }
 
 function backToIdle(){
-  setTimeout(function(){loadState('idle');},2500);
+  if(backTimer)clearTimeout(backTimer);
+  backTimer=setTimeout(function(){
+    if(!isMini)loadState('idle');
+  },2500);
 }
 
 var idlePool=['idle','idle','idle','look','bubble','yawn','doze','wake','reading','coffee','headphones','follow','crabwalk','sweeping','idleCollapse','notification'];
@@ -108,6 +112,8 @@ window.petEngine={
   enterMini:function(isLeft){
     isMini=true;
     if(idleTimer)clearInterval(idleTimer);
+    if(backTimer)clearTimeout(backTimer);
+    bubbleDiv.classList.remove('show');
     loadState('look');
   },
   exitMini:function(){
