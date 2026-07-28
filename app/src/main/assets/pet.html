@@ -1,13 +1,16 @@
 <html><head><style>
 *{margin:0;padding:0}
 html,body{width:100%;height:100%;overflow:hidden;background:transparent}
-#pet{width:100%;height:100%;display:flex;align-items:flex-end;justify-content:center;position:relative}
+#container{width:100%;height:100%;position:relative}
+#pet{width:100%;position:absolute;bottom:0;left:0;right:0;height:80%;display:flex;align-items:flex-end;justify-content:center}
 #pet svg{width:auto;height:100%;max-width:100%}
-#bubble{position:absolute;top:-18px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.95);border-radius:8px;padding:3px 6px;font-size:9px;font-family:sans-serif;white-space:nowrap;opacity:0;transition:opacity 0.3s;pointer-events:none;box-shadow:0 1px 3px rgba(0,0,0,0.2)}
+#bubble{position:absolute;top:2px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.95);border-radius:8px;padding:3px 6px;font-size:9px;font-family:sans-serif;white-space:nowrap;opacity:0;transition:opacity 0.3s;pointer-events:none;box-shadow:0 1px 3px rgba(0,0,0,0.2);z-index:10}
 #bubble.show{opacity:1}
 </style></head><body>
-<div id="pet"></div>
+<div id="container">
 <div id="bubble"></div>
+<div id="pet"></div>
+</div>
 <script>
 var states={
   idle:'clawd-idle-living.svg',look:'clawd-idle-look.svg',bubble:'clawd-idle-bubble.svg',
@@ -25,7 +28,12 @@ var states={
   debugger:'clawd-working-debugger.svg',juggling:'clawd-working-juggling.svg',
   sweeping:'clawd-working-sweeping.svg',typingBoss:'clawd-working-typing-boss.svg',
   ultrathink:'clawd-working-ultrathink.svg',wizard:'clawd-working-wizard.svg',
-  sleeping:'clawd-sleeping.svg'
+  sleeping:'clawd-sleeping.svg',
+  miniPeek:'clawd-mini-peek.svg',miniIdle:'clawd-mini-idle.svg',
+  miniEnter:'clawd-mini-enter.svg',miniHappy:'clawd-mini-happy.svg',
+  miniAlert:'clawd-mini-alert.svg',miniTyping:'clawd-mini-typing.svg',
+  miniSleep:'clawd-mini-sleep.svg',thinking:'clawd-working-thinking.svg',
+  typing:'clawd-working-typing.svg'
 };
 var currentState='idle';
 var bubbleTimer=null;
@@ -66,7 +74,7 @@ function backToIdle(){
     if(!isMini)loadState('idle');
   },2500);
 }
-var idlePool=['idle','idle','idle','look','bubble','yawn','doze','reading','coffee','headphones','follow','crabwalk','sweeping','idleCollapse','notification','carrying'];
+var idlePool=['idle','idle','idle','look','bubble','yawn','doze','reading','coffee','headphones','follow','crabwalk','sweeping','idleCollapse','notification','carrying','thinking'];
 function idleCycle(){
   if(isMini)return;
   var pick=idlePool[Math.floor(Math.random()*idlePool.length)];
@@ -110,7 +118,7 @@ window.petEngine={
     if(idleTimer)clearInterval(idleTimer);
     if(backTimer){clearTimeout(backTimer);backTimer=null;}
     bubbleDiv.classList.remove('show');
-    loadState('crabwalk');
+    loadState('miniPeek');
   },
   exitMini:function(){
     isMini=false;
