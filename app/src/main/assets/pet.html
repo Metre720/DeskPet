@@ -42,6 +42,53 @@ var backTimer=null;
 var isMini=false;
 var petDiv=document.getElementById('pet');
 var bubbleDiv=document.getElementById('bubble');
+
+// === LONELINESS ENGINE ===
+var lastInteraction=Date.now();
+var lonelyLevel=0;
+var lonelyTimer=null;
+var isLonely=false;
+var lonelyStages=[
+  {time:300000, state:'look', msg:null},
+  {time:600000, state:'bubble', msg:'...'},
+  {time:900000, state:'carrying', msg:null},
+  {time:1200000, state:'yawn', msg:'好无聊...'},
+  {time:1500000, state:'doze', msg:null},
+  {time:1800000, state:'sleeping', msg:'zzZ'}
+];
+
+function resetLonely(){
+  lastInteraction=Date.now();
+  if(isLonely){
+    isLonely=false;
+    lonelyLevel=0;
+    if(currentState==='sleeping'||currentState==='doze'||currentState==='yawn'){
+      loadState('wake');
+      showBubble('嗯...你来啦');
+      backToIdle();
+    }
+  }
+}
+
+function checkLonely(){
+  if(isMini)return;
+  var elapsed=Date.now()-lastInteraction;
+  var newLevel=-1;
+  for(var i=lonelyStages.length-1;i>=0;i--){
+    if(elapsed>=lonelyStages[i].time){newLevel=i;break;}
+  }
+  if(newLevel>=0 && newLevel!==lonelyLevel-1){
+    lonelyLevel=newLevel+1;
+    isLonely=true;
+    var stage=lonelyStages[newLevel];
+    loadState(stage.state);
+    if(stage.msg)showBubble(stage.msg);
+    if(idleTimer){clearInterval(idleTimer);idleTimer=null;}
+  }
+}
+
+lonelyTimer=setInterval(checkLonely,30000);
+
 function loadState(name){
   if(!states[name])name='idle';
   currentState=name;
@@ -66,17 +113,20 @@ function showBubble(text){
   bubbleDiv.textContent=text;
   bubbleDiv.classList.add('show');
   if(bubbleTimer)clearTimeout(bubbleTimer);
-  bubbleTimer=setTimeout(function(){bubbleDiv.classList.remove('show');},2000);
+  bubbleTimer=setTimeout(function(){bubbleDiv.classList.remove('show');},2500);
 }
 function backToIdle(){
   if(backTimer)clearTimeout(backTimer);
   backTimer=setTimeout(function(){
-    if(!isMini)loadState('idle');
+    if(!isMini && !isLonely){
+      loadState('idle');
+      if(!idleTimer)idleTimer=setInterval(idleCycle,12000);
+    }
   },2500);
 }
-var idlePool=['idle','idle','idle','look','bubble','yawn','doze','reading','coffee','headphones','follow','crabwalk','sweeping','idleCollapse','notification','carrying','thinking'];
+var idlePool=['idle','idle','idle','look','bubble','yawn','reading','coffee','headphones','follow','crabwalk','sweeping','idleCollapse','notification','carrying','thinking'];
 function idleCycle(){
-  if(isMini)return;
+  if(isMini||isLonely)return;
   var pick=idlePool[Math.floor(Math.random()*idlePool.length)];
   loadState(pick);
 }
@@ -87,23 +137,27 @@ var doubleTapWords=['喜欢你~','嘿嘿','再来一下','给你咖啡'];
 var dragWords=['啊啊放我下来','别拽我','救命'];
 window.petEngine={
   onTap:function(){
+    resetLonely();
     var i=Math.floor(Math.random()*tapReactions.length);
     loadState(tapReactions[i]);
     showBubble(tapWords[i]);
     backToIdle();
   },
   onDoubleTap:function(){
+    resetLonely();
     var i=Math.floor(Math.random()*doubleTapReactions.length);
     loadState(doubleTapReactions[i]);
     showBubble(doubleTapWords[i]);
     backToIdle();
   },
   onLongPress:function(){
+    resetLonely();
     loadState('drag');
     showBubble('放开我！！');
     backToIdle();
   },
   onDragStart:function(){
+    resetLonely();
     loadState('drag');
     var w=dragWords[Math.floor(Math.random()*dragWords.length)];
     showBubble(w);
@@ -115,17 +169,17 @@ window.petEngine={
   },
   enterMini:function(isLeft){
     isMini=true;
-    if(idleTimer)clearInterval(idleTimer);
+    if(idleTimer){clearInterval(idleTimer);idleTimer=null;}
     if(backTimer){clearTimeout(backTimer);backTimer=null;}
     bubbleDiv.classList.remove('show');
     loadState('miniPeek');
   },
   exitMini:function(){
     isMini=false;
+    resetLonely();
     loadState('wake');
     showBubble('我回来啦~');
     backToIdle();
-    idleTimer=setInterval(idleCycle,12000);
   }
 };
 loadState('idle');
