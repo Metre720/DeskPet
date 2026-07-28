@@ -3,7 +3,7 @@
 html,body{width:100%;height:100%;overflow:hidden;background:transparent}
 #pet{width:100%;height:100%;display:flex;align-items:flex-end;justify-content:center;position:relative}
 #pet svg{width:auto;height:100%;max-width:100%}
-#bubble{position:absolute;top:0;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.95);border-radius:8px;padding:3px 6px;font-size:9px;font-family:sans-serif;white-space:nowrap;opacity:0;transition:opacity 0.3s;pointer-events:none;box-shadow:0 1px 3px rgba(0,0,0,0.2)}
+#bubble{position:absolute;top:-18px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.95);border-radius:8px;padding:3px 6px;font-size:9px;font-family:sans-serif;white-space:nowrap;opacity:0;transition:opacity 0.3s;pointer-events:none;box-shadow:0 1px 3px rgba(0,0,0,0.2)}
 #bubble.show{opacity:1}
 </style></head><body>
 <div id="pet"></div>
@@ -11,19 +11,21 @@ html,body{width:100%;height:100%;overflow:hidden;background:transparent}
 <script>
 var states={
   idle:'clawd-idle-living.svg',look:'clawd-idle-look.svg',bubble:'clawd-idle-bubble.svg',
-  yawn:'clawd-idle-yawn.svg',doze:'clawd-idle-doze.svg',wake:'clawd-idle-wake.svg',
-  happy:'clawd-happy.svg',annoyed:'clawd-idle-annoyed.svg',drag:'clawd-idle-drag.svg',
+  yawn:'clawd-idle-yawn.svg',doze:'clawd-idle-doze.svg',wake:'clawd-wake.svg',
+  happy:'clawd-happy.svg',annoyed:'clawd-react-annoyed.svg',drag:'clawd-react-drag.svg',
   error:'clawd-error.svg',notification:'clawd-notification.svg',
   shy:'clawd-aegyo-shy.svg',coffee:'clawd-coffee-hand.svg',coffeeFlip:'clawd-coffee-head-flip.svg',
   collapseSleep:'clawd-collapse-sleep.svg',dizzy:'clawd-dizzy.svg',
   headphones:'clawd-headphones-groove.svg',idleCollapse:'clawd-idle-collapse.svg',
   follow:'clawd-idle-follow.svg',lowBattery:'clawd-idle-low-battery.svg',
   reading:'clawd-idle-reading.svg',crabwalk:'clawd-mini-crabwalk.svg',
-  doubleJump:'clawd-react-double-jump.svg',reactLeft:'clawd-react-left.svg',
-  reactRight:'clawd-react-right.svg',carrying:'clawd-working-carrying.svg',
+  doubleJump:'clawd-react-double-jump.svg',reactDouble:'clawd-react-double.svg',
+  reactLeft:'clawd-react-left.svg',reactRight:'clawd-react-right.svg',
+  carrying:'clawd-working-carrying.svg',building:'clawd-working-building.svg',
   debugger:'clawd-working-debugger.svg',juggling:'clawd-working-juggling.svg',
   sweeping:'clawd-working-sweeping.svg',typingBoss:'clawd-working-typing-boss.svg',
-  ultrathink:'clawd-working-ultrathink.svg',wizard:'clawd-working-wizard.svg'
+  ultrathink:'clawd-working-ultrathink.svg',wizard:'clawd-working-wizard.svg',
+  sleeping:'clawd-sleeping.svg'
 };
 var currentState='idle';
 var bubbleTimer=null;
@@ -32,7 +34,6 @@ var backTimer=null;
 var isMini=false;
 var petDiv=document.getElementById('pet');
 var bubbleDiv=document.getElementById('bubble');
-
 function loadState(name){
   if(!states[name])name='idle';
   currentState=name;
@@ -53,34 +54,29 @@ function loadState(name){
   };
   xhr.send();
 }
-
 function showBubble(text){
   bubbleDiv.textContent=text;
   bubbleDiv.classList.add('show');
   if(bubbleTimer)clearTimeout(bubbleTimer);
   bubbleTimer=setTimeout(function(){bubbleDiv.classList.remove('show');},2000);
 }
-
 function backToIdle(){
   if(backTimer)clearTimeout(backTimer);
   backTimer=setTimeout(function(){
     if(!isMini)loadState('idle');
   },2500);
 }
-
-var idlePool=['idle','idle','idle','look','bubble','yawn','doze','wake','reading','coffee','headphones','follow','crabwalk','sweeping','idleCollapse','notification'];
+var idlePool=['idle','idle','idle','look','bubble','yawn','doze','reading','coffee','headphones','follow','crabwalk','sweeping','idleCollapse','notification','carrying'];
 function idleCycle(){
   if(isMini)return;
   var pick=idlePool[Math.floor(Math.random()*idlePool.length)];
   loadState(pick);
 }
-
 var tapReactions=['annoyed','dizzy','reactLeft','reactRight'];
 var tapWords=['干嘛戳我','别碰','看什么看','哼'];
 var doubleTapReactions=['happy','shy','doubleJump','coffee'];
 var doubleTapWords=['喜欢你~','嘿嘿','再来一下','给你咖啡'];
 var dragWords=['啊啊放我下来','别拽我','救命'];
-
 window.petEngine={
   onTap:function(){
     var i=Math.floor(Math.random()*tapReactions.length);
@@ -112,9 +108,9 @@ window.petEngine={
   enterMini:function(isLeft){
     isMini=true;
     if(idleTimer)clearInterval(idleTimer);
-    if(backTimer)clearTimeout(backTimer);
+    if(backTimer){clearTimeout(backTimer);backTimer=null;}
     bubbleDiv.classList.remove('show');
-    loadState('look');
+    loadState('crabwalk');
   },
   exitMini:function(){
     isMini=false;
@@ -124,7 +120,6 @@ window.petEngine={
     idleTimer=setInterval(idleCycle,12000);
   }
 };
-
 loadState('idle');
 idleTimer=setInterval(idleCycle,12000);
 </script></body></html>
