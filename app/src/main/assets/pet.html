@@ -37,7 +37,28 @@ wake:'clawd-wake.svg',
 doubleTap:'clawd-react-double.svg',
 typing:'clawd-working-typing.svg',
 thinking:'clawd-working-thinking.svg',
-building:'clawd-working-building.svg'
+building:'clawd-working-building.svg',
+shy:'clawd-aegyo-shy.svg',
+coffee:'clawd-coffee-hand.svg',
+coffeeFlip:'clawd-coffee-head-flip.svg',
+collapseSleep:'clawd-collapse-sleep.svg',
+dizzy:'clawd-dizzy.svg',
+headphones:'clawd-headphones-groove.svg',
+collapse:'clawd-idle-collapse.svg',
+follow:'clawd-idle-follow.svg',
+lowBattery:'clawd-idle-low-battery.svg',
+reading:'clawd-idle-reading.svg',
+crabwalk:'clawd-mini-crabwalk.svg',
+doubleJump:'clawd-react-double-jump.svg',
+reactLeft:'clawd-react-left.svg',
+reactRight:'clawd-react-right.svg',
+carrying:'clawd-working-carrying.svg',
+debugger:'clawd-working-debugger.svg',
+juggling:'clawd-working-juggling.svg',
+sweeping:'clawd-working-sweeping.svg',
+typingBoss:'clawd-working-typing-boss.svg',
+ultrathink:'clawd-working-ultrathink.svg',
+wizard:'clawd-working-wizard.svg'
 };
 var petEl=document.getElementById('pet');
 var bubbleEl=document.getElementById('bubble');
@@ -80,12 +101,14 @@ setTimeout(function(){loadState('idle');},2500);
 
 window.petEngine={
 onTap:function(){
-loadState('annoyed');
+var tapStates=['annoyed','dizzy','reactLeft','reactRight'];
+loadState(randomFrom(tapStates));
 showBubble(randomFrom(tapTexts));
 backToIdle();
 },
 onDoubleTap:function(){
-loadState('happy');
+var dblStates=['happy','shy','doubleJump','coffee'];
+loadState(randomFrom(dblStates));
 showBubble(randomFrom(dblTexts));
 backToIdle();
 },
@@ -108,7 +131,7 @@ backToIdle();
 loadState('idle');
 
 // idle cycle
-var idleAnim=['idle','idle','idle','look','bubble','yawn','doze','wake','notification'];
+var idleAnim=['idle','idle','idle','look','bubble','yawn','doze','wake','reading','coffee','headphones','follow','crabwalk','sweeping','collapse'];
 function idleCycle(){
 var next=idleAnim[Math.floor(Math.random()*idleAnim.length)];
 if(currentState==='idle'||currentState==='look'||currentState==='bubble'||currentState==='yawn'||currentState==='doze'){
