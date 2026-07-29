@@ -101,7 +101,7 @@ class OverlayService : Service() {
     private var lastMoveX = 0f
     private var lastMoveTime = 0L
     private var isFlung = false
-    private val FLING_VELOCITY_THRESHOLD = 1000f
+    private val FLING_VELOCITY_THRESHOLD = 850f
     private val tapResetRunnable = Runnable { tapCount = 0 }
     private val longPressStartRunnable = Runnable {
         if (!hasMoved) {
