@@ -35,15 +35,34 @@ doze:'clawd-idle-doze.svg',
 look:'clawd-idle-look.svg',
 wake:'clawd-wake.svg',
 doubleTap:'clawd-react-double.svg',
-typing:'clawd-working-typing.svg',
-thinking:'clawd-working-thinking.svg',
 building:'clawd-working-building.svg',
+aegyo:'clawd-aegyo-shy.svg',
+coffeeHand:'clawd-coffee-hand.svg',
+coffeeFlip:'clawd-coffee-head-flip.svg',
+collapseSleep:'clawd-collapse-sleep.svg',
+dizzy:'clawd-dizzy.svg',
+headphones:'clawd-headphones-groove.svg',
+collapse:'clawd-idle-collapse.svg',
+follow:'clawd-idle-follow.svg',
+lowBattery:'clawd-idle-low-battery.svg',
+reading:'clawd-idle-reading.svg',
+crabwalk:'clawd-mini-crabwalk.svg',
+doubleJump:'clawd-react-double-jump.svg',
+reactLeft:'clawd-react-left.svg',
+reactRight:'clawd-react-right.svg',
+carrying:'clawd-working-carrying.svg',
+debugger:'clawd-working-debugger.svg',
+juggling:'clawd-working-juggling.svg',
+sweeping:'clawd-working-sweeping.svg',
+typingBoss:'clawd-working-typing-boss.svg',
+ultrathink:'clawd-working-ultrathink.svg',
+wizard:'clawd-working-wizard.svg',
 bathing:'svg/clawd-daily-bathing.svg',
 eating:'svg/clawd-daily-eating.svg',
 exercising:'svg/clawd-daily-exercising.svg',
 gaming:'svg/clawd-daily-gaming.svg',
 listening:'svg/clawd-daily-listening-music.svg',
-reading:'svg/clawd-daily-reading.svg',
+readingNew:'svg/clawd-daily-reading.svg',
 singing:'svg/clawd-daily-singing.svg',
 dailySleeping:'svg/clawd-daily-sleeping.svg',
 birthday:'svg/clawd-festival-birthday.svg',
@@ -66,7 +85,7 @@ coding:'svg/clawd-hobby-coding.svg'
 var petEl=document.getElementById('pet');
 var bubbleEl=document.getElementById('bubble');
 var currentState='idle';
-var bubbleTimer=;
+var bubbleTimer=null;
 
 var tapTexts=['嗯？','干嘛戳我','别碰','看什么看','哼。','...你手欠？','有事？'];
 var dblTexts=['嘿嘿~','喜欢你♡','开心！','再来一下~','♪'];
@@ -102,13 +121,13 @@ setTimeout(function(){loadState('idle');},2500);
 
 window.petEngine={
 onTap:function(){
-var tapAnims=['annoyed','gaming','eating','listening','reading','coffee','singing'];
+var tapAnims=['annoyed','gaming','eating','listening','reading','coffee','headphones','coffeeHand','singing'];
 loadState(randomFrom(tapAnims));
 showBubble(randomFrom(tapTexts));
 backToIdle();
 },
 onDoubleTap:function(){
-var happyAnims=['happy','guitar','painting','photo','birthday','christmas'];
+var happyAnims=['happy','doubleJump','guitar','painting','photo','birthday','christmas','aegyo'];
 loadState(randomFrom(happyAnims));
 showBubble(randomFrom(dblTexts));
 backToIdle();
@@ -122,14 +141,10 @@ backToIdle();
 
 loadState('idle');
 
-// idle cycle
-var idleAnim=['idle','look','bubble','yawn','doze','listening','reading','gaming','eating','coffee','painting','guitar','singing'];
-var allAnim=['bathing','eating','exercising','gaming','listening','reading','singing','dailySleeping','birthday','christmas','dragonboat','halloween','lantern','midautumn','newyear','newyearday','qixi','valentine','coffee','painting','photo','watering','guitar','coding'];
+var idlePool=['idle','look','bubble','yawn','doze','reading','headphones','coffeeHand','coffeeFlip','follow','crabwalk','listening','gaming','eating','singing','painting','guitar','coffee','coding','watering','photo','carrying','juggling','sweeping','building','debugger','wizard','ultrathink','typingBoss'];
 function idleCycle(){
-var next=idleAnim[Math.floor(Math.random()*idleAnim.length)];
-if(currentState==='idle'||currentState==='look'||currentState==='bubble'||currentState==='yawn'||currentState==='doze||allAnim.indexOf(currentState)>=0){
+var next=idlePool[Math.floor(Math.random()*idlePool.length)];
 loadState(next);
-}
 }
 setInterval(idleCycle,16000);
 })();
