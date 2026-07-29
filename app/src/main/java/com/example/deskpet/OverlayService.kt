@@ -98,6 +98,10 @@ class OverlayService : Service() {
     private var hasMoved = false
     private var tapCount = 0
     private var isLongPressing = false
+    private var lastMoveX = 0f
+    private var lastMoveTime = 0L
+    private var isFlung = false
+    private val FLING_VELOCITY_THRESHOLD = 2000f
     private val tapResetRunnable = Runnable { tapCount = 0 }
     private val longPressStartRunnable = Runnable {
         if (!hasMoved) {
@@ -118,7 +122,10 @@ class OverlayService : Service() {
                     initialTouchX = event.rawX
                     initialTouchY = event.rawY
                     touchStartTime = System.currentTimeMillis()
+                    lastMoveX = event.rawX
+                    lastMoveTime = System.currentTimeMillis()
                     hasMoved = false
+                    isFlung = false
                     handler.postDelayed(longPressStartRunnable, 600)
                     true
                 }
@@ -135,6 +142,11 @@ class OverlayService : Service() {
                             params?.y = initialY + dy
                             windowManager?.updateViewLayout(overlayView, params)
                         }
+                        val now = System.currentTimeMillis()
+                        if (now - lastMoveTime > 10) {
+                            lastMoveX = event.rawX
+                            lastMoveTime = now
+                        }
                     }
                     true
                 }
@@ -150,7 +162,13 @@ class OverlayService : Service() {
                     } else if (isMiniMode && !hasMoved) {
                         onTapCount(1)
                     } else if (hasMoved && !isMiniMode) {
-                        if (!checkEdgeSnap()) {
+                        val upTime = System.currentTimeMillis()
+                        val dt = (upTime - lastMoveTime).coerceAtLeast(1)
+                        val velocityX = Math.abs(event.rawX - lastMoveX) / dt * 1000f
+                        if (velocityX > FLING_VELOCITY_THRESHOLD) {
+                            val flingLeft = (event.rawX - lastMoveX) < 0
+                            onFling(flingLeft)
+                        } else if (!checkEdgeSnap()) {
                             onDragEnd()
                         }
                     } else if (!hasMoved && !isMiniMode) {
@@ -220,6 +238,49 @@ class OverlayService : Service() {
         overlayView?.evaluateJavascript(
             "window.petEngine && window.petEngine.onLongPressEnd()", null
         )
+    }
+    private fun onFling(toLeft: Boolean) {
+        isFlung = true
+        val petWidth = dpToPx(PET_SIZE_DP)
+        val targetX = if (toLeft) -petWidth - 50 else screenWidth + 50
+        params?.x = targetX
+        windowManager?.updateViewLayout(overlayView, params)
+        overlayView?.evaluateJavascript(
+            "window.petEngine && window.petEngine.onFling($toLeft)", null
+        )
+        handler.postDelayed({
+            val returnX = initialX
+            params?.x = if (toLeft) -petWidth else screenWidth
+            windowManager?.updateViewLayout(overlayView, params)
+            overlayView?.evaluateJavascript(
+                "window.petEngine && window.petEngine.onFlingReturn($toLeft)", null
+            )
+            val steps = 20
+            val stepDelay = 60L
+            var currentStep = 0
+            val animator = object : Runnable {
+                override fun run() {
+                    currentStep++
+                    val progress = currentStep.toFloat() / steps
+                    val currentX = if (toLeft) {
+                        (-petWidth + (returnX + petWidth) * progress).toInt()
+                    } else {
+                        (screenWidth - (screenWidth - returnX) * progress).toInt()
+                    }
+                    params?.x = currentX
+                    windowManager?.updateViewLayout(overlayView, params)
+                    if (currentStep < steps) {
+                        handler.postDelayed(this, stepDelay)
+                    } else {
+                        isFlung = false
+                        overlayView?.evaluateJavascript(
+                            "window.petEngine && window.petEngine.onFlingDone()", null
+                        )
+                    }
+                }
+            }
+            handler.post(animator)
+        }, 1500)
     }
     private fun onDragStart() {
         overlayView?.evaluateJavascript(
