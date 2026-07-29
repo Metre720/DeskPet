@@ -26,8 +26,8 @@ class OverlayService : Service() {
     companion object {
         private const val CHANNEL_ID = "pet_overlay_channel"
         private const val NOTIFICATION_ID = 1001
-        private const val PET_SIZE_DP = 80
-        private const val PET_HEIGHT_DP = 80
+        private const val PET_SIZE_DP = 65
+        private const val PET_HEIGHT_DP = 72
         private const val EDGE_THRESHOLD_DP = 25
         private const val MINI_VISIBLE_DP = 32
     }
