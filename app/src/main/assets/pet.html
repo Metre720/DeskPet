@@ -66,6 +66,9 @@ var backTimer=null;
 var isMini=false;
 var miniIdleTimer=null;
 var miniSleepTimer=null;
+var miniRotateTimer=null;
+var miniTapPool=['miniHappy','miniAlert'];
+var miniRotatePool=['miniIdle','miniTyping'];
 var petDiv=document.getElementById('pet');
 var bubbleDiv=document.getElementById('bubble');
 
@@ -249,16 +252,37 @@ function pickDoubleTapWord(){
 function clearMiniTimers(){
   if(miniIdleTimer){clearTimeout(miniIdleTimer);miniIdleTimer=null;}
   if(miniSleepTimer){clearTimeout(miniSleepTimer);miniSleepTimer=null;}
+  if(miniRotateTimer){clearInterval(miniRotateTimer);miniRotateTimer=null;}
 }
 function startMiniTimers(){
   clearMiniTimers();
-  miniIdleTimer=setTimeout(function(){if(isMini)loadState('miniIdle');},60000);
-  miniSleepTimer=setTimeout(function(){if(isMini)loadState('miniSleep');},300000);
+  miniIdleTimer=setTimeout(function(){
+    if(!isMini)return;
+    loadState('miniIdle');
+    miniRotateTimer=setInterval(function(){
+      if(!isMini)return;
+      var pick=miniRotatePool[Math.floor(Math.random()*miniRotatePool.length)];
+      loadState(pick);
+    },15000);
+  },60000);
+  miniSleepTimer=setTimeout(function(){
+    if(!isMini)return;
+    if(miniRotateTimer){clearInterval(miniRotateTimer);miniRotateTimer=null;}
+    loadState('miniEnterSleep');
+    setTimeout(function(){if(isMini)loadState('miniSleep');},3000);
+  },300000);
 }
 
 window.petEngine={
   onTap:function(){
     resetLonely();
+    if(isMini){
+      var pick=miniTapPool[Math.floor(Math.random()*miniTapPool.length)];
+      loadState(pick);
+      startMiniTimers();
+      setTimeout(function(){if(isMini)loadState('miniPeek');},2000);
+      return;
+    }
     var i=Math.floor(Math.random()*baseTapReactions.length);
     loadState(baseTapReactions[i]);
     showBubble(pickTapWord());
@@ -293,8 +317,8 @@ window.petEngine={
     if(idleTimer){clearInterval(idleTimer);idleTimer=null;}
     if(backTimer){clearTimeout(backTimer);backTimer=null;}
     bubbleDiv.classList.remove('show');
-    loadState('miniPeek');
-    startMiniTimers();
+    loadState('miniEnter');
+    setTimeout(function(){if(isMini)loadState('miniPeek');startMiniTimers();},1500);
   },
   exitMini:function(){
     isMini=false;
