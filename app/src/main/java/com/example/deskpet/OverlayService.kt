@@ -22,7 +22,7 @@ class OverlayService : Service() {
         private const val CHANNEL_ID = "pet_overlay_channel"
         private const val NOTIFICATION_ID = 1001
         private const val PET_SIZE_DP = 180
-        private const val PET_HEIGHT_DP = 250
+        private const val PET_HEIGHT_DP = 240
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
