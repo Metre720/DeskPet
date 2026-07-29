@@ -242,6 +242,8 @@ class OverlayService : Service() {
     private fun onFling(toLeft: Boolean) {
         isFlung = true
         val petWidth = dpToPx(PET_SIZE_DP)
+        val returnX = initialX
+        val returnY = initialY
         val targetX = if (toLeft) -petWidth - 50 else screenWidth + 50
         params?.x = targetX
         windowManager?.updateViewLayout(overlayView, params)
@@ -249,25 +251,25 @@ class OverlayService : Service() {
             "window.petEngine && window.petEngine.onFling($toLeft)", null
         )
         handler.postDelayed({
-            val returnX = initialX
-            params?.x = if (toLeft) -petWidth else screenWidth
+            val startX = if (toLeft) -petWidth else screenWidth
+            val startY = params?.y ?: returnY
+            params?.x = startX
             windowManager?.updateViewLayout(overlayView, params)
             overlayView?.evaluateJavascript(
                 "window.petEngine && window.petEngine.onFlingReturn($toLeft)", null
             )
-            val steps = 20
-            val stepDelay = 60L
+            val steps = 30
+            val stepDelay = 50L
             var currentStep = 0
             val animator = object : Runnable {
                 override fun run() {
                     currentStep++
-                    val progress = currentStep.toFloat() / steps
-                    val currentX = if (toLeft) {
-                        (-petWidth + (returnX + petWidth) * progress).toInt()
-                    } else {
-                        (screenWidth - (screenWidth - returnX) * progress).toInt()
-                    }
+                    val t = currentStep.toFloat() / steps
+                    val ease = 1f - (1f - t) * (1f - t)
+                    val currentX = (startX + (returnX - startX) * ease).toInt()
+                    val currentY = (startY + (returnY - startY) * ease).toInt()
                     params?.x = currentX
+                    params?.y = currentY
                     windowManager?.updateViewLayout(overlayView, params)
                     if (currentStep < steps) {
                         handler.postDelayed(this, stepDelay)
