@@ -327,6 +327,35 @@ window.petEngine={
     loadState('wake');
     showBubble('我回来啦~');
     backToIdle();
+  },
+  onScreenshot:function(){
+    resetLonely();
+    if(isMini)return;
+    var pool=[
+      {anim:'wake',words:['啊被拍到了！','偷拍！','吓死我了']},
+      {anim:'shy',words:['茄子~','摆好pose了','害羞...','拍到可爱的我了']},
+      {anim:'doubleJump',words:['吓我一跳！','又截图！','蹦！']},
+      {anim:'notification',words:['偷拍！！','咔嚓？！','被发现了']},
+      {anim:'reactLeft',words:['谁在偷拍我？','什么情况','嗯？']}
+    ];
+    var pick=pool[Math.floor(Math.random()*pool.length)];
+    if(pick.anim==='reactLeft'&&Math.random()>0.5)pick.anim='reactRight';
+    loadState(pick.anim);
+    var w=pick.words[Math.floor(Math.random()*pick.words.length)];
+    showBubble(w);
+    backToIdle();
+  },
+  onLowBattery:function(){
+    if(isMini)return;
+    loadState('lowBattery');
+    showBubble('没电了...要倒下了');
+  },
+  onCharging:function(){
+    if(isMini)return;
+    resetLonely();
+    loadState('happy');
+    showBubble('充电中~回血了');
+    backToIdle();
   }
 };
 loadState('idle');

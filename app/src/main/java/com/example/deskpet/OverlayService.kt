@@ -1,9 +1,13 @@
 package com.example.deskpet
 import android.app.*
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.PixelFormat
 import android.os.Build
+import android.os.Environment
+import android.os.FileObserver
 import android.os.IBinder
 import android.os.Handler
 import android.os.Looper
@@ -13,6 +17,7 @@ import android.webkit.WebViewClient
 import android.webkit.WebSettings
 import android.util.DisplayMetrics
 import androidx.core.app.NotificationCompat
+import java.io.File
 class OverlayService : Service() {
     private var windowManager: WindowManager? = null
     private var overlayView: WebView? = null
@@ -23,6 +28,8 @@ class OverlayService : Service() {
     private var miniIsLeft = false
     private var savedY = 300
     private val handler = Handler(Looper.getMainLooper())
+    private var screenshotObserver: FileObserver? = null
+    private var batteryReceiver: BroadcastReceiver? = null
     companion object {
         private const val CHANNEL_ID = "pet_overlay_channel"
         private const val NOTIFICATION_ID = 1001
@@ -41,6 +48,8 @@ class OverlayService : Service() {
         screenWidth = dm.widthPixels
         screenHeight = dm.heightPixels
         setupOverlay()
+        setupScreenshotObserver()
+        setupBatteryReceiver()
     }
     private fun setupOverlay() {
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
@@ -188,6 +197,55 @@ class OverlayService : Service() {
             "window.petEngine && window.petEngine.onDragEnd()", null
         )
     }
+    // === SCREENSHOT OBSERVER ===
+    private fun setupScreenshotObserver() {
+        val screenshotDir = File(
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+            "Screenshots"
+        )
+        if (!screenshotDir.exists()) screenshotDir.mkdirs()
+        screenshotObserver = object : FileObserver(screenshotDir.absolutePath, CREATE) {
+            override fun onEvent(event: Int, path: String?) {
+                if (path == null) return
+                if (path.endsWith(".png") || path.endsWith(".jpg") || path.endsWith(".jpeg")) {
+                    handler.post {
+                        overlayView?.evaluateJavascript(
+                            "window.petEngine && window.petEngine.onScreenshot()", null
+                        )
+                    }
+                }
+            }
+        }
+        screenshotObserver?.startWatching()
+    }
+    // === BATTERY RECEIVER ===
+    private fun setupBatteryReceiver() {
+        batteryReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                when (intent?.action) {
+                    Intent.ACTION_BATTERY_LOW -> {
+                        handler.post {
+                            overlayView?.evaluateJavascript(
+                                "window.petEngine && window.petEngine.onLowBattery()", null
+                            )
+                        }
+                    }
+                    Intent.ACTION_POWER_CONNECTED -> {
+                        handler.post {
+                            overlayView?.evaluateJavascript(
+                                "window.petEngine && window.petEngine.onCharging()", null
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        val filter = IntentFilter().apply {
+            addAction(Intent.ACTION_BATTERY_LOW)
+            addAction(Intent.ACTION_POWER_CONNECTED)
+        }
+        registerReceiver(batteryReceiver, filter)
+    }
     // === NOTIFICATION ===
     private fun buildNotification(): Notification {
         val pendingIntent = PendingIntent.getActivity(
@@ -220,6 +278,10 @@ class OverlayService : Service() {
         return (dp * resources.displayMetrics.density).toInt()
     }
     override fun onDestroy() {
+        screenshotObserver?.stopWatching()
+        screenshotObserver = null
+        batteryReceiver?.let { unregisterReceiver(it) }
+        batteryReceiver = null
         overlayView?.let {
             windowManager?.removeView(it)
             it.destroy()
@@ -227,4 +289,5 @@ class OverlayService : Service() {
         overlayView = null
         super.onDestroy()
     }
+}
 }
