@@ -143,7 +143,8 @@ class OverlayService : Service() {
                     handler.removeCallbacks(longPressPhase2Runnable)
                     if (isLongPressing) {
                         isLongPressing = false
-                        onLongPressEnd()
+                        val holdTime = System.currentTimeMillis() - touchStartTime
+                        if (holdTime < 2000) onLongPressShort() else onLongPressEnd()
                     } else if (isMiniMode && hasMoved) {
                         exitMiniMode()
                     } else if (isMiniMode && !hasMoved) {
@@ -208,6 +209,11 @@ class OverlayService : Service() {
     private fun onLongPressPhase2() {
         overlayView?.evaluateJavascript(
             "window.petEngine && window.petEngine.onLongPressPhase2()", null
+        )
+    }
+    private fun onLongPressShort() {
+        overlayView?.evaluateJavascript(
+            "window.petEngine && window.petEngine.onLongPressShort()", null
         )
     }
     private fun onLongPressEnd() {
