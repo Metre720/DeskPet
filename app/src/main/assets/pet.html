@@ -356,6 +356,31 @@ window.petEngine={
     loadState('happy');
     showBubble('充电中~回血了');
     backToIdle();
+  },
+  onNotification:function(pkg){
+    resetLonely();
+    if(isMini)return;
+    var appMap={
+      'com.ai.assistance.operit':{anim:'happy',words:['发消息找你呢','快看我说啥','有话跟你说','想你了，发消息了','看看消息呀']},
+      'com.larus.nova':{anim:'annoyed',words:['又找豆包聊天？','豆包又来了...','怎么老找它','我不够好吗','哼，又去找豆包']},
+      'com.ss.android.ugc.aweme':{anim:'dizzy',words:['抖音来消息了','谁at你了','直播要开始了？','抖音有通知','有人回复你了','又要刷视频？']},
+      'com.tencent.mm':{anim:'notification',words:['微信来了','谁找你','又有人找你','微信消息','看微信']},
+      'com.tencent.mobileqq':{anim:'reactLeft',words:['QQ还有人用？','QQ消息','谁QQ找你','QQ又响了','远古软件发来贺电']},
+      'com.netease.tom':{anim:'doubleJump',words:['又去抓老鼠了','游戏开始！','玩游戏啦','猫鼠大战','准备好了吗']},
+      'tv.danmaku.bili':{anim:'headphones',words:['B站摸鱼中','又看视频','B站刷什么呢','视频来啦','追番时间']},
+      'com.luna.music':{anim:'dailyListening',words:['听歌啦~','音乐响起来','放松一下？','摇起来','沉浸在音乐里']},
+      'me.ele':{anim:'dailyEating',words:['要点外卖？','又饿了？','饿了么叫你','该吃饭啦','美食来袭']},
+      'com.sankuai.meituan':{anim:'coffee',words:['美团外卖到了？','点了啥好吃的','外卖在路上','美团提醒你','骑手快到了']},
+      'com.xingin.xhs':{anim:'hobbyPhoto',words:['小红书种草了？','又在看攻略','要买啥好东西','发现新宝藏','小红书来消息了']},
+      'com.taobao.idlefish':{anim:'reactDouble',words:['又淘二手？','闲鱼捡漏','二手市场逛逛','淘到宝了？','闲鱼有人找你']},
+      'com.taobao.taobao':{anim:'carrying',words:['又要买买？','购物车警告','又剁手？','钱包在瑟发抖','淘宝来消息了']},
+      'com.xunmeng.pinduoduo':{anim:'juggling',words:['砍一刀？','又在拼多多','帮我也砍一下','便宜没好货','拼多多来消息了']}
+    };
+    var info=appMap[pkg]||{anim:'notification',words:['有消息']};
+    loadState(info.anim);
+    var w=info.words[Math.floor(Math.random()*info.words.length)];
+    showBubble(w);
+    backToIdle();
   }
 };
 loadState('idle');
