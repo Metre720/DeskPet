@@ -436,7 +436,7 @@ window.petEngine={
   },
   onFling:function(toLeft){
     resetLonely();
-    var flingWords=['！！！','你干嘛！！','啊？？','疼！！','过分！！','吓死我了！','救命啊！','你有病吧！','我招你惹你了！','轻点啊！！','呜呜呜','我要报警了','别甩我！！','手下留情！'];
+    var flingWords=['！！！','你干嘛！！','啊？？','疼！！','过分！！','吓死我了！','救命啊！','你怎么回事！','我招你惹你了！','轻点啊！！','呜呜呜','我要报警了','别甩我！！','手下留情！','冤枉啊！','我做错什么了！'];
     loadState('wake');
     showBubble(flingWords[Math.floor(Math.random()*flingWords.length)]);
   },
@@ -447,7 +447,8 @@ window.petEngine={
   },
   onFlingDone:function(){
     loadState('annoyed');
-    showBubble('别再甩我了！');
+    var doneWords=['别再甩我了！','我回来了哼','下次再甩我试试','终于到了...','你良心不会痛吗','累死了都怪你','我恨你的手','还甩不甩了？','记仇了啊','我要加班费'];
+    showBubble(doneWords[Math.floor(Math.random()*doneWords.length)]);
     backToIdle();
   },
   onDragStart:function(){
