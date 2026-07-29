@@ -290,4 +290,3 @@ class OverlayService : Service() {
         super.onDestroy()
     }
 }
-}
