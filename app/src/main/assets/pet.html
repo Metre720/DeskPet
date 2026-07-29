@@ -1,153 +1,310 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<style>
+<html><head><style>
 *{margin:0;padding:0}
 html,body{width:100%;height:100%;overflow:hidden;background:transparent}
-#container{width:100%;height:100%;position:relative;display:flex;align-items:flex-end;justify-content:center}
-#pet{width:100%;height:80%;display:flex;align-items:center;justify-content:center}
-#pet svg{width:100%;height:100%}
-#bubble{position:absolute;top:0;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.95);border-radius:10px;padding:3px 6px;font-size:10px;white-space:nowrap;opacity:0;transition:opacity 0.3s;pointer-events:none;box-shadow:0 1px 3px rgba(0,0,0,0.2);max-width:150px;text-align:center;font-family:sans-serif}
+#container{width:100%;height:100%;position:relative}
+#pet{width:100%;position:absolute;bottom:0;left:0;right:0;height:82%;display:flex;align-items:flex-end;justify-content:center;overflow:hidden}
+#pet svg{width:auto;height:100%;max-width:100%;transform:translateY(3px)}
+#bubble{position:absolute;top:2px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.95);border-radius:8px;padding:3px 6px;font-size:9px;font-family:sans-serif;white-space:nowrap;max-width:none;word-break:normal;text-align:center;opacity:0;transition:opacity 0.3s;pointer-events:none;box-shadow:0 1px 3px rgba(0,0,0,0.2);z-index:10}
 #bubble.show{opacity:1}
-#bubble::after{content:'';position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:4px solid rgba(255,255,255,0.95)}
-</style>
-</head>
-<body>
+</style></head><body>
 <div id="container">
 <div id="bubble"></div>
 <div id="pet"></div>
 </div>
 <script>
-(function(){
 var states={
-idle:'clawd-idle-living.svg',
-happy:'clawd-happy.svg',
-annoyed:'clawd-react-annoyed.svg',
-sleeping:'clawd-sleeping.svg',
-yawn:'clawd-idle-yawn.svg',
-drag:'clawd-react-drag.svg',
-error:'clawd-error.svg',
-notification:'clawd-notification.svg',
-bubble:'clawd-idle-bubble.svg',
-doze:'clawd-idle-doze.svg',
-look:'clawd-idle-look.svg',
-wake:'clawd-wake.svg',
-doubleTap:'clawd-react-double.svg',
-building:'clawd-working-building.svg',
-aegyo:'clawd-aegyo-shy.svg',
-coffeeHand:'clawd-coffee-hand.svg',
-coffeeFlip:'clawd-coffee-head-flip.svg',
-collapseSleep:'clawd-collapse-sleep.svg',
-dizzy:'clawd-dizzy.svg',
-headphones:'clawd-headphones-groove.svg',
-collapse:'clawd-idle-collapse.svg',
-follow:'clawd-idle-follow.svg',
-lowBattery:'clawd-idle-low-battery.svg',
-reading:'clawd-idle-reading.svg',
-crabwalk:'clawd-mini-crabwalk.svg',
-doubleJump:'clawd-react-double-jump.svg',
-reactLeft:'clawd-react-left.svg',
-reactRight:'clawd-react-right.svg',
-carrying:'clawd-working-carrying.svg',
-debugger:'clawd-working-debugger.svg',
-juggling:'clawd-working-juggling.svg',
-sweeping:'clawd-working-sweeping.svg',
-typingBoss:'clawd-working-typing-boss.svg',
-ultrathink:'clawd-working-ultrathink.svg',
-wizard:'clawd-working-wizard.svg',
-bathing:'svg/clawd-daily-bathing.svg',
-eating:'svg/clawd-daily-eating.svg',
-exercising:'svg/clawd-daily-exercising.svg',
-gaming:'svg/clawd-daily-gaming.svg',
-listening:'svg/clawd-daily-listening-music.svg',
-readingNew:'svg/clawd-daily-reading.svg',
-singing:'svg/clawd-daily-singing.svg',
-dailySleeping:'svg/clawd-daily-sleeping.svg',
-birthday:'svg/clawd-festival-birthday.svg',
-christmas:'svg/clawd-festival-christmas.svg',
-dragonboat:'svg/clawd-festival-dragonboat.svg',
-halloween:'svg/clawd-festival-halloween.svg',
-lantern:'svg/clawd-festival-lantern.svg',
-midautumn:'svg/clawd-festival-midautumn.svg',
-newyear:'svg/clawd-festival-newyear.svg',
-newyearday:'svg/clawd-festival-newyearday.svg',
-qixi:'svg/clawd-festival-qixi.svg',
-valentine:'svg/clawd-festival-valentine.svg',
-coffee:'svg/clawd-hobby-coffee.svg',
-painting:'svg/clawd-hobby-painting.svg',
-photo:'svg/clawd-hobby-photo.svg',
-watering:'svg/clawd-hobby-watering.svg',
-guitar:'svg/clawd-hobby-guitar.svg',
-coding:'svg/clawd-hobby-coding.svg'
+  idle:'clawd-idle-living.svg',look:'clawd-idle-look.svg',bubble:'clawd-idle-bubble.svg',
+  yawn:'clawd-idle-yawn.svg',doze:'clawd-idle-doze.svg',wake:'clawd-wake.svg',
+  happy:'clawd-happy.svg',annoyed:'clawd-react-annoyed.svg',drag:'clawd-react-drag.svg',
+  error:'clawd-error.svg',notification:'clawd-notification.svg',
+  shy:'clawd-aegyo-shy.svg',coffee:'clawd-coffee-hand.svg',coffeeFlip:'clawd-coffee-head-flip.svg',
+  collapseSleep:'clawd-collapse-sleep.svg',dizzy:'clawd-dizzy.svg',
+  headphones:'clawd-headphones-groove.svg',idleCollapse:'clawd-idle-collapse.svg',
+  follow:'clawd-idle-follow.svg',lowBattery:'clawd-idle-low-battery.svg',
+  reading:'clawd-idle-reading.svg',crabwalk:'clawd-mini-crabwalk.svg',
+  doubleJump:'clawd-react-double-jump.svg',reactDouble:'clawd-react-double.svg',
+  reactLeft:'clawd-react-left.svg',reactRight:'clawd-react-right.svg',
+  carrying:'clawd-working-carrying.svg',building:'clawd-working-building.svg',
+  debugger:'clawd-working-debugger.svg',juggling:'clawd-working-juggling.svg',
+  sweeping:'clawd-working-sweeping.svg',typingBoss:'clawd-working-typing-boss.svg',
+  ultrathink:'clawd-working-ultrathink.svg',wizard:'clawd-working-wizard.svg',
+  sleeping:'clawd-sleeping.svg',
+  miniPeek:'clawd-mini-peek.svg',miniIdle:'clawd-mini-idle.svg',
+  miniEnter:'clawd-mini-enter.svg',miniHappy:'clawd-mini-happy.svg',
+  miniAlert:'clawd-mini-alert.svg',miniTyping:'clawd-mini-typing.svg',
+  miniSleep:'clawd-mini-sleep.svg',miniEnterSleep:'clawd-mini-enter-sleep.svg',
+  thinking:'clawd-working-thinking.svg',typing:'clawd-working-typing.svg',
+  dailyBathing:'svg/clawd-daily-bathing.svg',
+  dailyEating:'svg/clawd-daily-eating.svg',
+  dailyExercising:'svg/clawd-daily-exercising.svg',
+  dailyGaming:'svg/clawd-daily-gaming.svg',
+  dailyListening:'svg/clawd-daily-listening-music.svg',
+  dailyReading:'svg/clawd-daily-reading.svg',
+  dailySinging:'svg/clawd-daily-singing.svg',
+  dailySleeping:'svg/clawd-daily-sleeping.svg',
+  festivalBirthday:'svg/clawd-festival-birthday.svg',
+  festivalChristmas:'svg/clawd-festival-christmas.svg',
+  festivalDragonboat:'svg/clawd-festival-dragonboat.svg',
+  festivalHalloween:'svg/clawd-festival-halloween.svg',
+  festivalLantern:'svg/clawd-festival-lantern.svg',
+  festivalMidautumn:'svg/clawd-festival-midautumn.svg',
+  festivalNewyear:'svg/clawd-festival-newyear.svg',
+  festivalNewyearday:'svg/clawd-festival-newyearday.svg',
+  festivalQixi:'svg/clawd-festival-qixi.svg',
+  festivalValentine:'svg/clawd-festival-valentine.svg',
+  hobbyCoffee:'svg/clawd-hobby-coffee.svg',
+  hobbyPainting:'svg/clawd-hobby-painting.svg',
+  hobbyPhoto:'svg/clawd-hobby-photo.svg',
+  hobbyWatering:'svg/clawd-hobby-watering.svg',
+  hobbyGuitar:'svg/clawd-hobby-guitar.svg',
+  hobbyCoding:'svg/clawd-hobby-coding.svg'
 };
-var petEl=document.getElementById('pet');
-var bubbleEl=document.getElementById('bubble');
 var currentState='idle';
 var bubbleTimer=null;
+var idleTimer=null;
+var backTimer=null;
+var isMini=false;
+var miniIdleTimer=null;
+var miniSleepTimer=null;
+var petDiv=document.getElementById('pet');
+var bubbleDiv=document.getElementById('bubble');
 
-var tapTexts=['嗯？','干嘛戳我','别碰','看什么看','哼。','...你手欠？','有事？'];
-var dblTexts=['嘿嘿~','喜欢你♡','开心！','再来一下~','♪'];
-var longTexts=['放开我！','你要干啥！','啊啊啊别拽！','松手！！'];
+// === TIME AWARENESS ===
+var timeSlots={
+  dawn:{hours:[6,7,8],
+    auto:['早安...','新的一天~','起床气消了没','要吃早饭哦','太阳出来了','醒了没呀','伸个懒腰~'],
+    tap:['一大早就来烦我','早起的虫被鸟吃','早上好困...','你也起这么早？','别碰我还没醒']},
+  morning:{hours:[9,10,11],
+    auto:['在忙吗','喝水了没','别太累','上午好呀','认真的你好看','今天计划是什么'],
+    tap:['工作时间别摸鱼','你不忙吗','专心点啦','有事说事','又来找我玩']},
+  noon:{hours:[12,13],
+    auto:['该吃午饭了','中午要午休吗','困不困','吃饱了吗','下午还长着呢先歇会'],
+    tap:['吃了吗','饭点了还戳我','困...','午休一下吧','别饿着自己']},
+  afternoon:{hours:[14,15,16,17],
+    auto:['下午好呀','有点困...','今天还顺利吗','在干嘛呢','摸鱼时间到','下午茶时间'],
+    tap:['下午犯困正常','又来了','要喝奶茶吗','你今天好闲','再戳我咬你']},
+  evening:{hours:[18,19],
+    auto:['该吃晚饭了','今天辛苦了','晚上想做什么','傍晚了呢','一天快结束了'],
+    tap:['吃晚饭了吗','今天怎么样','晚上有什么安排','你还在忙啊','陪我玩会']},
+  night:{hours:[20,21,22],
+    auto:['夜晚好','放松一下吧','今天开心吗','别玩太晚','夜深了','在干嘛呢'],
+    tap:['晚上好呀','别熬夜','你今天还没休息','玩够了没','夜猫子']},
+  latenight:{hours:[23,0,1,2,3,4,5],
+    auto:['太晚了...','该睡觉了','再不睡我生气了','晚安...','熬夜伤身体','你不困我困了','都几点了...'],
+    tap:['大半夜不睡觉戳我','困...别闹','你不睡我也不睡了哼','真的该睡了','夜猫子本猫','明天不起了吧','黑眼圈要出来了']}
+};
+var usedAutoWords=[];
+var lastAutoSlot='';
+var autoTimer=null;
+
+function getTimeSlot(){
+  var h=new Date().getHours();
+  for(var key in timeSlots){
+    if(timeSlots[key].hours.indexOf(h)!==-1)return key;
+  }
+  return 'night';
+}
+
+function pickUnused(pool,usedList){
+  var available=[];
+  for(var i=0;i<pool.length;i++){
+    if(usedList.indexOf(pool[i])===-1)available.push(pool[i]);
+  }
+  if(available.length===0)return null;
+  return available[Math.floor(Math.random()*available.length)];
+}
+
+function checkTimeAuto(){
+  if(isMini||isLonely)return;
+  var slot=getTimeSlot();
+  if(slot!==lastAutoSlot){
+    lastAutoSlot=slot;
+    usedAutoWords=[];
+  }
+  var word=pickUnused(timeSlots[slot].auto,usedAutoWords);
+  if(word){
+    usedAutoWords.push(word);
+    showBubble(word);
+  }
+}
+autoTimer=setInterval(checkTimeAuto,3600000);
+setTimeout(function(){checkTimeAuto();},5000);
+
+// === LONELINESS ENGINE ===
+var lastInteraction=Date.now();
+var lonelyLevel=0;
+var lonelyTimer=null;
+var isLonely=false;
+var lonelyStages=[
+  {time:300000, state:'look', msg:null},
+  {time:600000, state:'bubble', msg:'...'},
+  {time:900000, state:'carrying', msg:null},
+  {time:1200000, state:'yawn', msg:'好无聊...'},
+  {time:1500000, state:'doze', msg:null},
+  {time:1800000, state:'sleeping', msg:'zzZ'}
+];
+function resetLonely(){
+  lastInteraction=Date.now();
+  if(isLonely){
+    isLonely=false;
+    lonelyLevel=0;
+    if(currentState==='sleeping'||currentState==='doze'||currentState==='yawn'){
+      loadState('wake');
+      showBubble('嗯...你来啦');
+      backToIdle();
+    }
+  }
+}
+function checkLonely(){
+  if(isMini)return;
+  var elapsed=Date.now()-lastInteraction;
+  var newLevel=-1;
+  for(var i=lonelyStages.length-1;i>=0;i--){
+    if(elapsed>=lonelyStages[i].time){newLevel=i;break;}
+  }
+  if(newLevel>=0 && newLevel!==lonelyLevel-1){
+    lonelyLevel=newLevel+1;
+    isLonely=true;
+    var stage=lonelyStages[newLevel];
+    loadState(stage.state);
+    if(stage.msg)showBubble(stage.msg);
+    if(idleTimer){clearInterval(idleTimer);idleTimer=null;}
+  }
+}
+lonelyTimer=setInterval(checkLonely,30000);
 
 function loadState(name){
-var file=states[name]||states.idle;
-var xhr=new XMLHttpRequest();
-xhr.open('GET',file,true);
-xhr.onload=function(){
-if(xhr.status===200){
-petEl.innerHTML=xhr.responseText;
-currentState=name;
+  if(!states[name])name='idle';
+  currentState=name;
+  var xhr=new XMLHttpRequest();
+  xhr.open('GET',states[name],true);
+  xhr.onload=function(){
+    if(xhr.status===200){
+      petDiv.innerHTML=xhr.responseText;
+      var svg=petDiv.querySelector('svg');
+      if(svg){
+        svg.setAttribute('viewBox','-5 -3 26 22');
+        svg.removeAttribute('width');
+        svg.removeAttribute('height');
+        svg.style.width='100%';
+        svg.style.height='100%';
+      }
+    }
+  };
+  xhr.send();
 }
-};
-xhr.send();
+function showBubble(text){
+  if(text.length>7){text=text.substring(0,7)+"<br>"+text.substring(7);}
+  bubbleDiv.innerHTML=text;
+  bubbleDiv.classList.add('show');
+  if(bubbleTimer)clearTimeout(bubbleTimer);
+  bubbleTimer=setTimeout(function(){bubbleDiv.classList.remove('show');},2500);
 }
-
-function showBubble(text,duration){
-bubbleEl.textContent=text;
-bubbleEl.classList.add('show');
-if(bubbleTimer)clearTimeout(bubbleTimer);
-bubbleTimer=setTimeout(function(){
-bubbleEl.classList.remove('show');
-},duration||2000);
-}
-
-function randomFrom(arr){return arr[Math.floor(Math.random()*arr.length)];}
-
 function backToIdle(){
-setTimeout(function(){loadState('idle');},2500);
+  if(backTimer)clearTimeout(backTimer);
+  backTimer=setTimeout(function(){
+    if(!isMini && !isLonely){
+      loadState('idle');
+      if(!idleTimer)idleTimer=setInterval(idleCycle,12000);
+    }
+  },2500);
+}
+var idlePool=['idle','idle','look','bubble','yawn','reading','coffee','headphones','follow','crabwalk','sweeping','idleCollapse','notification','carrying','thinking','dailyGaming','dailyListening','dailyReading','dailySinging','hobbyCoffee','hobbyPainting','hobbyGuitar','hobbyCoding','hobbyWatering','dailyExercising'];
+function idleCycle(){
+  if(isMini||isLonely)return;
+  var pick=idlePool[Math.floor(Math.random()*idlePool.length)];
+  loadState(pick);
+}
+
+// === TAP REACTIONS (expanded + time-aware) ===
+var baseTapReactions=['annoyed','dizzy','reactLeft','reactRight','error','look','dailyGaming','dailyEating'];
+var baseTapWords=['干嘛戳我','别碰','看什么看','哼','讨厌','你手欠啊','戳我一下一块钱','...又是你','轻点','有事？','再戳我咬你','烦死了'];
+var baseDoubleTapReactions=['happy','shy','doubleJump','coffee','notification','hobbyGuitar','hobbyPainting','dailySinging'];
+var baseDoubleTapWords=['喜欢你~','嘿嘿','再来一下','给你咖啡','你好粘人','开心~','么么','抱抱','蹦蹦','❤','喜欢被你戳','哎呀好突然'];
+var dragWords=['啊啊放我下来','别拽我','救命','头晕...','你轻点','我要吐了'];
+var usedTapWords=[];
+var usedDoubleTapWords=[];
+
+function getTimeTapWords(){
+  var slot=getTimeSlot();
+  return timeSlots[slot]?timeSlots[slot].tap:[];
+}
+
+function pickTapWord(){
+  var pool=baseTapWords.concat(getTimeTapWords());
+  var w=pickUnused(pool,usedTapWords);
+  if(!w){usedTapWords=[];w=pool[Math.floor(Math.random()*pool.length)];}
+  usedTapWords.push(w);
+  return w;
+}
+
+function pickDoubleTapWord(){
+  var w=pickUnused(baseDoubleTapWords,usedDoubleTapWords);
+  if(!w){usedDoubleTapWords=[];w=baseDoubleTapWords[Math.floor(Math.random()*baseDoubleTapWords.length)];}
+  usedDoubleTapWords.push(w);
+  return w;
+}
+
+// === MINI IDLE/SLEEP ===
+function clearMiniTimers(){
+  if(miniIdleTimer){clearTimeout(miniIdleTimer);miniIdleTimer=null;}
+  if(miniSleepTimer){clearTimeout(miniSleepTimer);miniSleepTimer=null;}
+}
+function startMiniTimers(){
+  clearMiniTimers();
+  miniIdleTimer=setTimeout(function(){if(isMini)loadState('miniIdle');},60000);
+  miniSleepTimer=setTimeout(function(){if(isMini)loadState('miniSleep');},300000);
 }
 
 window.petEngine={
-onTap:function(){
-var tapAnims=['annoyed','gaming','eating','listening','reading','coffee','headphones','coffeeHand','singing'];
-loadState(randomFrom(tapAnims));
-showBubble(randomFrom(tapTexts));
-backToIdle();
-},
-onDoubleTap:function(){
-var happyAnims=['happy','doubleJump','guitar','painting','photo','birthday','christmas','aegyo'];
-loadState(randomFrom(happyAnims));
-showBubble(randomFrom(dblTexts));
-backToIdle();
-},
-onLongPress:function(){
-loadState('drag');
-showBubble(randomFrom(longTexts));
-backToIdle();
-}
+  onTap:function(){
+    resetLonely();
+    var i=Math.floor(Math.random()*baseTapReactions.length);
+    loadState(baseTapReactions[i]);
+    showBubble(pickTapWord());
+    backToIdle();
+  },
+  onDoubleTap:function(){
+    resetLonely();
+    var i=Math.floor(Math.random()*baseDoubleTapReactions.length);
+    loadState(baseDoubleTapReactions[i]);
+    showBubble(pickDoubleTapWord());
+    backToIdle();
+  },
+  onLongPress:function(){
+    resetLonely();
+    loadState('drag');
+    showBubble('放开我！！');
+    backToIdle();
+  },
+  onDragStart:function(){
+    resetLonely();
+    loadState('drag');
+    var w=dragWords[Math.floor(Math.random()*dragWords.length)];
+    showBubble(w);
+  },
+  onDragEnd:function(){
+    loadState('annoyed');
+    showBubble('哼，别乱丢我');
+    backToIdle();
+  },
+  enterMini:function(isLeft){
+    isMini=true;
+    if(idleTimer){clearInterval(idleTimer);idleTimer=null;}
+    if(backTimer){clearTimeout(backTimer);backTimer=null;}
+    bubbleDiv.classList.remove('show');
+    loadState('miniPeek');
+    startMiniTimers();
+  },
+  exitMini:function(){
+    isMini=false;
+    clearMiniTimers();
+    resetLonely();
+    loadState('wake');
+    showBubble('我回来啦~');
+    backToIdle();
+  }
 };
-
 loadState('idle');
-
-var idlePool=['idle','look','bubble','yawn','doze','reading','headphones','coffeeHand','coffeeFlip','follow','crabwalk','listening','gaming','eating','singing','painting','guitar','coffee','coding','watering','photo','carrying','juggling','sweeping','building','debugger','wizard','ultrathink','typingBoss'];
-function idleCycle(){
-var next=idlePool[Math.floor(Math.random()*idlePool.length)];
-loadState(next);
-}
-setInterval(idleCycle,16000);
-})();
-</script>
-</body>
-</html>
+idleTimer=setInterval(idleCycle,12000);
+</script></body></html>
