@@ -436,13 +436,13 @@ window.petEngine={
   },
   onFling:function(toLeft){
     resetLonely();
-    var flingWords=['！！！','你干嘛！！','啊？？','疼！！','过分！！','吓死我了！'];
+    var flingWords=['！！！','你干嘛！！','啊？？','疼！！','过分！！','吓死我了！','救命啊！','你有病吧！','我招你惹你了！','轻点啊！！','呜呜呜','我要报警了','别甩我！！','手下留情！'];
     loadState('wake');
     showBubble(flingWords[Math.floor(Math.random()*flingWords.length)]);
   },
   onFlingReturn:function(toLeft){
     loadState('crabwalk');
-    var returnWords=['...我回来了','你等着','哼，走回来了','气死了','你真行'];
+    var returnWords=['...我回来了','你等着','哼，走回来了','气死了','你真行','我爬...','委屈','走回来好累','你就这么对我？','腿都软了'];
     showBubble(returnWords[Math.floor(Math.random()*returnWords.length)]);
   },
   onFlingDone:function(){
