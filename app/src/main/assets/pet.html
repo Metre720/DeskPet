@@ -360,8 +360,19 @@ function startMiniTimers(){
   },300000);
 }
 
+// === TAP COUNT WORDS ===
+var tapWords3=['别戳了！','疼！','你有完没完','够了够了','再戳咬你','烦死了'];
+var tapWords5=['你够了啊！！','我要报警了','救命啊','疯了吧你','手给你剁了','住手！！'];
+var tapWords8=['要被你戳死了','error...系统崩溃','灵魂出窍中...','你赢了...我投降','我裂开了','寄'];
+// === LONG PRESS WORDS ===
+var longPressPhase1Words=['嘿嘿...','别松手嘛','继续摸~','舒服...','哼哼','再摸一会'];
+var longPressPhase2Words=['放开我！','手拿开！','够了！别摸了','我要生气了！','你想干嘛！','别按了啊！'];
+var longPressEndWords1=['哼...不摸了','还想继续的','走了就走了','下次还摸吗'];
+var longPressEndWords2=['终于放开了...','你手可真重','我都喘不过气了','自由了！'];
+var longPressPhase=0;
+
 window.petEngine={
-  onTap:function(){
+  onTapCount:function(count){
     resetLonely();
     if(isMini){
       var pick=miniTapPool[Math.floor(Math.random()*miniTapPool.length)];
@@ -370,23 +381,46 @@ window.petEngine={
       setTimeout(function(){if(isMini)loadState('miniPeek');},4000);
       return;
     }
-    var i=Math.floor(Math.random()*baseTapReactions.length);
-    loadState(baseTapReactions[i]);
-    showBubble(pickTapWord());
-    backToIdle();
+    if(count>=8){
+      loadState('error');
+      showBubble(tapWords8[Math.floor(Math.random()*tapWords8.length)]);
+      backToIdle();
+    }else if(count>=5){
+      loadState('annoyed');
+      showBubble(tapWords5[Math.floor(Math.random()*tapWords5.length)]);
+      backToIdle();
+    }else if(count>=3){
+      loadState('dizzy');
+      showBubble(tapWords3[Math.floor(Math.random()*tapWords3.length)]);
+      backToIdle();
+    }else if(count===2){
+      var i=Math.floor(Math.random()*baseDoubleTapReactions.length);
+      loadState(baseDoubleTapReactions[i]);
+      showBubble(pickDoubleTapWord());
+      backToIdle();
+    }else{
+      var i=Math.floor(Math.random()*baseTapReactions.length);
+      loadState(baseTapReactions[i]);
+      showBubble(pickTapWord());
+      backToIdle();
+    }
   },
-  onDoubleTap:function(){
+  onLongPressStart:function(){
     resetLonely();
-    var i=Math.floor(Math.random()*baseDoubleTapReactions.length);
-    loadState(baseDoubleTapReactions[i]);
-    showBubble(pickDoubleTapWord());
-    backToIdle();
+    longPressPhase=1;
+    loadState('happy');
+    showBubble(longPressPhase1Words[Math.floor(Math.random()*longPressPhase1Words.length)]);
   },
-  onLongPress:function(){
-    resetLonely();
-    loadState('drag');
-    showBubble('放开我！！');
+  onLongPressPhase2:function(){
+    longPressPhase=2;
+    loadState('annoyed');
+    showBubble(longPressPhase2Words[Math.floor(Math.random()*longPressPhase2Words.length)]);
+  },
+  onLongPressEnd:function(){
+    var words=longPressPhase>=2?longPressEndWords2:longPressEndWords1;
+    showBubble(words[Math.floor(Math.random()*words.length)]);
     backToIdle();
+    longPressPhase=0;
   },
   onDragStart:function(){
     resetLonely();
