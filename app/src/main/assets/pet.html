@@ -2,7 +2,7 @@
 *{margin:0;padding:0}
 html,body{width:100%;height:100%;overflow:hidden;background:transparent}
 #container{width:100%;height:100%;position:relative}
-#pet{width:100%;position:absolute;bottom:0;left:0;right:0;height:82%;display:flex;align-items:flex-end;justify-content:center;overflow:hidden}
+#pet{width:81%;height:74%;position:absolute;bottom:0;left:50%;transform:translateX(-50%);display:flex;align-items:flex-end;justify-content:center;overflow:visible}
 #pet svg{width:auto;height:100%;max-width:100%;transform:translateY(3px)}
 #bubble{position:absolute;top:2px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.95);border-radius:8px;padding:3px 6px;font-size:9px;font-family:sans-serif;white-space:nowrap;max-width:none;word-break:normal;text-align:center;opacity:0;transition:opacity 0.3s;pointer-events:none;box-shadow:0 1px 3px rgba(0,0,0,0.2);z-index:10}
 #bubble.show{opacity:1}
@@ -280,7 +280,7 @@ window.petEngine={
       var pick=miniTapPool[Math.floor(Math.random()*miniTapPool.length)];
       loadState(pick);
       startMiniTimers();
-      setTimeout(function(){if(isMini)loadState('miniPeek');},2000);
+      setTimeout(function(){if(isMini)loadState('miniPeek');},5000);
       return;
     }
     var i=Math.floor(Math.random()*baseTapReactions.length);
