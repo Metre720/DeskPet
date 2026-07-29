@@ -108,8 +108,10 @@ class OverlayService : Service() {
                 }
                 MotionEvent.ACTION_UP -> {
                     val elapsed = System.currentTimeMillis() - touchStartTime
-                    if (isMiniMode && !hasMoved) {
+                    if (isMiniMode && hasMoved) {
                         exitMiniMode()
+                    } else if (isMiniMode && !hasMoved) {
+                        onTap()
                     } else if (hasMoved && !isMiniMode) {
                         if (!checkEdgeSnap()) {
                             onDragEnd()
