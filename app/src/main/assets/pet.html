@@ -416,6 +416,18 @@ window.petEngine={
     loadState('annoyed');
     showBubble(longPressPhase2Words[Math.floor(Math.random()*longPressPhase2Words.length)]);
   },
+  onLongPressShort:function(){
+    if(Math.random()<0.5){
+      loadState('shy');
+      var shyWords=['害羞了...','别这样啦','你干嘛...','脸红了','讨厌...','不要看我'];
+      showBubble(shyWords[Math.floor(Math.random()*shyWords.length)]);
+    }else{
+      loadState('happy');
+      showBubble(longPressPhase1Words[Math.floor(Math.random()*longPressPhase1Words.length)]);
+    }
+    backToIdle();
+    longPressPhase=0;
+  },
   onLongPressEnd:function(){
     var words=longPressPhase>=2?longPressEndWords2:longPressEndWords1;
     showBubble(words[Math.floor(Math.random()*words.length)]);
