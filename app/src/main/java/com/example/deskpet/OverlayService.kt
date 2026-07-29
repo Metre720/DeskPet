@@ -101,7 +101,7 @@ class OverlayService : Service() {
     private var lastMoveX = 0f
     private var lastMoveTime = 0L
     private var isFlung = false
-    private val FLING_VELOCITY_THRESHOLD = 2000f
+    private val FLING_VELOCITY_THRESHOLD = 1500f
     private val tapResetRunnable = Runnable { tapCount = 0 }
     private val longPressStartRunnable = Runnable {
         if (!hasMoved) {
@@ -241,20 +241,14 @@ class OverlayService : Service() {
     }
     private fun onFling(toLeft: Boolean) {
         isFlung = true
-        val petWidth = dpToPx(PET_SIZE_DP)
         val returnX = initialX
         val returnY = initialY
-        val targetX = if (toLeft) -petWidth - 50 else screenWidth + 50
-        params?.x = targetX
-        windowManager?.updateViewLayout(overlayView, params)
+        val startX = params?.x ?: 0
+        val startY = params?.y ?: 0
         overlayView?.evaluateJavascript(
             "window.petEngine && window.petEngine.onFling($toLeft)", null
         )
         handler.postDelayed({
-            val startX = if (toLeft) -petWidth else screenWidth
-            val startY = params?.y ?: returnY
-            params?.x = startX
-            windowManager?.updateViewLayout(overlayView, params)
             overlayView?.evaluateJavascript(
                 "window.petEngine && window.petEngine.onFlingReturn($toLeft)", null
             )
