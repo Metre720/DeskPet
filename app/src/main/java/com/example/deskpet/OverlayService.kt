@@ -94,9 +94,21 @@ class OverlayService : Service() {
     private var initialY = 0
     private var initialTouchX = 0f
     private var initialTouchY = 0f
-    private var lastTapTime = 0L
     private var touchStartTime = 0L
     private var hasMoved = false
+    private var tapCount = 0
+    private var isLongPressing = false
+    private val tapResetRunnable = Runnable { tapCount = 0 }
+    private val longPressStartRunnable = Runnable {
+        if (!hasMoved) {
+            isLongPressing = true
+            onLongPressStart()
+            handler.postDelayed(longPressPhase2Runnable, 3400)
+        }
+    }
+    private val longPressPhase2Runnable = Runnable {
+        if (isLongPressing) { onLongPressPhase2() }
+    }
     private fun createTouchListener(): View.OnTouchListener {
         return View.OnTouchListener { _, event ->
             when (event.action) {
@@ -107,12 +119,15 @@ class OverlayService : Service() {
                     initialTouchY = event.rawY
                     touchStartTime = System.currentTimeMillis()
                     hasMoved = false
+                    handler.postDelayed(longPressStartRunnable, 600)
                     true
                 }
                 MotionEvent.ACTION_MOVE -> {
                     val dx = (event.rawX - initialTouchX).toInt()
                     val dy = (event.rawY - initialTouchY).toInt()
                     if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
+                        handler.removeCallbacks(longPressStartRunnable)
+                        handler.removeCallbacks(longPressPhase2Runnable)
                         if (!hasMoved && !isMiniMode) { onDragStart() }
                         hasMoved = true
                         if (!isMiniMode) {
@@ -124,24 +139,24 @@ class OverlayService : Service() {
                     true
                 }
                 MotionEvent.ACTION_UP -> {
-                    val elapsed = System.currentTimeMillis() - touchStartTime
-                    if (isMiniMode && hasMoved) {
+                    handler.removeCallbacks(longPressStartRunnable)
+                    handler.removeCallbacks(longPressPhase2Runnable)
+                    if (isLongPressing) {
+                        isLongPressing = false
+                        onLongPressEnd()
+                    } else if (isMiniMode && hasMoved) {
                         exitMiniMode()
                     } else if (isMiniMode && !hasMoved) {
-                        onTap()
+                        onTapCount(1)
                     } else if (hasMoved && !isMiniMode) {
                         if (!checkEdgeSnap()) {
                             onDragEnd()
                         }
                     } else if (!hasMoved && !isMiniMode) {
-                        when {
-                            elapsed > 600 -> onLongPress()
-                            System.currentTimeMillis() - lastTapTime < 300 -> onDoubleTap()
-                            else -> {
-                                lastTapTime = System.currentTimeMillis()
-                                onTap()
-                            }
-                        }
+                        tapCount++
+                        handler.removeCallbacks(tapResetRunnable)
+                        handler.postDelayed(tapResetRunnable, 2000)
+                        onTapCount(tapCount)
                     }
                     true
                 }
@@ -180,19 +195,24 @@ class OverlayService : Service() {
             "window.petEngine && window.petEngine.exitMini()", null
         )
     }
-    private fun onTap() {
+    private fun onTapCount(count: Int) {
         overlayView?.evaluateJavascript(
-            "window.petEngine && window.petEngine.onTap()", null
+            "window.petEngine && window.petEngine.onTapCount($count)", null
         )
     }
-    private fun onDoubleTap() {
+    private fun onLongPressStart() {
         overlayView?.evaluateJavascript(
-            "window.petEngine && window.petEngine.onDoubleTap()", null
+            "window.petEngine && window.petEngine.onLongPressStart()", null
         )
     }
-    private fun onLongPress() {
+    private fun onLongPressPhase2() {
         overlayView?.evaluateJavascript(
-            "window.petEngine && window.petEngine.onLongPress()", null
+            "window.petEngine && window.petEngine.onLongPressPhase2()", null
+        )
+    }
+    private fun onLongPressEnd() {
+        overlayView?.evaluateJavascript(
+            "window.petEngine && window.petEngine.onLongPressEnd()", null
         )
     }
     private fun onDragStart() {
