@@ -37,6 +37,7 @@ class OverlayService : Service() {
         private const val PET_HEIGHT_DP = 72
         private const val EDGE_THRESHOLD_DP = 25
         private const val MINI_VISIBLE_DP = 32
+        var notificationCallback: ((String) -> Unit)? = null
     }
     override fun onBind(intent: Intent?): IBinder? = null
     override fun onCreate() {
@@ -80,6 +81,13 @@ class OverlayService : Service() {
             setOnTouchListener(createTouchListener())
         }
         windowManager?.addView(overlayView, params)
+        notificationCallback = { pkg ->
+            handler.post {
+                overlayView?.evaluateJavascript(
+                    "window.petEngine && window.petEngine.onNotification('$pkg')", null
+                )
+            }
+        }
     }
     // === GESTURE HANDLING ===
     private var initialX = 0
