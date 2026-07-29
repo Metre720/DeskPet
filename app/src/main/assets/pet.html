@@ -436,8 +436,8 @@ window.petEngine={
   },
   onFling:function(toLeft){
     resetLonely();
-    var flingWords=['啊啊啊啊！！','你！！！','我飞了——','救命——','过分！！'];
-    loadState('dizzy');
+    var flingWords=['！！！','你干嘛！！','啊？？','疼！！','过分！！','吓死我了！'];
+    loadState('wake');
     showBubble(flingWords[Math.floor(Math.random()*flingWords.length)]);
   },
   onFlingReturn:function(toLeft){
