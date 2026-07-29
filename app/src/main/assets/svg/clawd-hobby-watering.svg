@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -25 45 45">
+    <defs><style>
+      .wt-body{transform-origin:7.5px 13px;animation:wt-bob 2.8s infinite ease-in-out;}
+      .wt-shad{transform-origin:7.5px 15.5px;animation:wt-shadow 2.8s infinite ease-in-out;}
+      .wt-eye {transform-origin:7.5px 9px;animation:wt-blink 3.4s infinite;}
+      .wt-can {transform-origin:13px 10px;animation:wt-tip 2.8s infinite ease-in-out;}
+      .wt-drop{opacity:0;animation:wt-drop 1s var(--sd,0s) infinite linear;}
+      .wt-leaf{transform-origin:1px 13px;animation:wt-sway 2.8s infinite ease-in-out;}
+      @keyframes wt-bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-.4px);}}
+      @keyframes wt-shadow{0%,100%{transform:scaleX(1);opacity:.5;}50%{transform:scaleX(.97);opacity:.46;}}
+      @keyframes wt-blink{0%,46%,54%,100%{transform:scaleY(1);}50%{transform:scaleY(.1);}}
+      @keyframes wt-tip{0%,100%{transform:rotate(-4deg);}50%{transform:rotate(-16deg);}}
+      @keyframes wt-drop{0%{opacity:0;transform:translateY(-1px);}20%{opacity:.9;}100%{opacity:0;transform:translateY(7px);}}
+      @keyframes wt-sway{0%,100%{transform:rotate(-3deg);}50%{transform:rotate(3deg);}}
+    </style></defs>
+
+    <rect class="wt-shad" x="3" y="15" width="9" height="1" fill="#000" opacity=".5"/>
+    <g class="wt-body">
+      <g fill="#DE886D">
+        <rect x="3" y="13" width="1" height="2"/><rect x="5" y="13" width="1" height="2"/>
+        <rect x="9" y="13" width="1" height="2"/><rect x="11" y="13" width="1" height="2"/>
+      </g>
+      <rect x="2" y="6" width="11" height="7" fill="#DE886D"/>
+      <g class="wt-eye" fill="#000"><rect x="4" y="8" width="1" height="2"/><rect x="10" y="8" width="1" height="2"/></g>
+      <rect x="0" y="9" width="2" height="2" fill="#DE886D"/>
+      <rect x="13" y="9" width="2" height="2" fill="#DE886D"/>
+      <!-- right arm tilting watering can over the plant -->
+      <g class="wt-can">
+        <rect x="13.6" y="4.4" width="5.2" height="3.8" rx=".8" fill="#6fb3c9"/>
+        <rect x="13.6" y="4.4" width="5.2" height="1.1" rx=".8" fill="#8fd0e2"/>
+        <path d="M13.8 7.6 L10.2 6.6 L9.8 7.9 L13.6 8.7 Z" fill="#6fb3c9"/>
+        <rect x="9.4" y="6.1" width="1.5" height="1.5" rx=".3" fill="#8fd0e2"/>
+        <path d="M15 4.4 q2.2 -1.8 3.4 .2" fill="none" stroke="#6fb3c9" stroke-width=".8"/>
+      </g>
+    </g>
+    <!-- water droplets falling onto plant -->
+    <g fill="#7ec8ff">
+      <rect class="wt-drop" style="--sd:0s"   x="10"  y="7.8" width=".7" height="1.5" rx=".35"/>
+      <rect class="wt-drop" style="--sd:-.3s" x="10.7" y="8.2" width=".7" height="1.5" rx=".35"/>
+      <rect class="wt-drop" style="--sd:-.6s" x="9.5" y="8.4" width=".7" height="1.5" rx=".35"/>
+    </g>
+    <!-- potted plant (foreground, under the spout) -->
+    <g>
+      <g class="wt-leaf" style="transform-origin:10.5px 13px">
+        <rect x="10.1" y="11" width=".8" height="2.6" fill="#3f9a52"/>
+        <ellipse cx="8.8" cy="11.8" rx="1.5" ry=".9" fill="#4fb564" transform="rotate(-28,8.8,11.8)"/>
+        <ellipse cx="12.2" cy="11.6" rx="1.5" ry=".9" fill="#4fb564" transform="rotate(28,12.2,11.6)"/>
+        <circle cx="10.5" cy="11.1" r="1.2" fill="#ff7eb0"/>
+        <circle cx="10.5" cy="11.1" r=".5" fill="#ffd14a"/>
+      </g>
+      <path d="M7.6 13.4 H13.6 L12.8 16.4 H8.4 Z" fill="#c2693f"/>
+      <rect x="7.3" y="12.8" width="6.6" height="1.2" rx=".3" fill="#d6794d"/>
+    </g>
+    </svg>

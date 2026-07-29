@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -25 45 45">
+    <defs><style>
+      .sh-body{transform-origin:7.5px 13px;animation:sh-sway 2.2s infinite ease-in-out;}
+      .sh-shad{transform-origin:7.5px 15.5px;animation:sh-shadow 2.2s infinite ease-in-out;}
+      .sh-eye {transform-origin:7.5px 9px;animation:sh-blink 3s infinite;}
+      .sh-arm {transform-origin:13px 10px;animation:sh-scrub .5s infinite alternate ease-in-out;}
+      .sh-water{opacity:0;animation:sh-water 1.1s var(--sd,0s) infinite linear;}
+      .sh-bubble{opacity:0;animation:sh-bubble var(--d,2.4s) var(--sd,0s) infinite ease-out;}
+      @keyframes sh-sway{0%,100%{transform:rotate(-2deg);}50%{transform:rotate(2deg);}}
+      @keyframes sh-shadow{0%,100%{transform:scaleX(1);opacity:.5;}50%{transform:scaleX(.95);opacity:.45;}}
+      @keyframes sh-blink{0%,45%,55%,100%{transform:scaleY(.7);}50%{transform:scaleY(.1);}}
+      @keyframes sh-scrub{0%{transform:rotate(-26deg) translateX(0);}100%{transform:rotate(-50deg) translateX(-.6px);}}
+      @keyframes sh-water{0%{opacity:0;transform:translateY(-2px);}15%{opacity:.85;}100%{opacity:0;transform:translateY(18px);}}
+      @keyframes sh-bubble{0%{opacity:0;transform:translate(0,0) scale(.4);}25%{opacity:.7;}100%{opacity:0;transform:translate(var(--tx,3px),-15px) scale(1.1);}}
+    </style></defs>
+
+    <!-- shower head -->
+    <g>
+      <rect x="6.5" y="-23" width="2" height="3" fill="#8a98a0"/>
+      <path d="M2 -20 H13 L11.5 -18 H3.5 Z" fill="#aab6bd"/>
+      <rect x="3.5" y="-18.4" width="8" height=".6" fill="#87949b"/>
+    </g>
+    <!-- water -->
+    <g fill="#7ec8ff">
+      <rect class="sh-water" style="--sd:0s"   x="3.5" y="-17" width=".8" height="2.4" rx=".4"/>
+      <rect class="sh-water" style="--sd:-.3s" x="6"   y="-17" width=".8" height="2.4" rx=".4"/>
+      <rect class="sh-water" style="--sd:-.6s" x="8.5" y="-17" width=".8" height="2.4" rx=".4"/>
+      <rect class="sh-water" style="--sd:-.15s" x="10.8" y="-17" width=".8" height="2.4" rx=".4"/>
+      <rect class="sh-water" style="--sd:-.45s" x="4.8" y="-17" width=".7" height="2" rx=".35"/>
+      <rect class="sh-water" style="--sd:-.75s" x="9.6" y="-17" width=".7" height="2" rx=".35"/>
+    </g>
+    <!-- soap bubbles -->
+    <g fill="#cfeeff">
+      <g class="sh-bubble" style="--d:2.4s;--sd:0s;--tx:4px"><circle cx="13" cy="10" r="1.3" opacity=".6"/><circle cx="12.6" cy="9.6" r=".4" fill="#fff"/></g>
+      <g class="sh-bubble" style="--d:2.8s;--sd:-1s;--tx:-3px"><circle cx="1" cy="11" r="1" opacity=".6"/><circle cx=".7" cy="10.7" r=".3" fill="#fff"/></g>
+      <g class="sh-bubble" style="--d:2.2s;--sd:-1.6s;--tx:2px"><circle cx="14" cy="12" r=".8" opacity=".55"/></g>
+    </g>
+
+    <rect class="sh-shad" x="3" y="15" width="9" height="1" fill="#000" opacity=".5"/>
+    <g class="sh-body">
+      <g fill="#DE886D">
+        <rect x="3" y="13" width="1" height="2"/><rect x="5" y="13" width="1" height="2"/>
+        <rect x="9" y="13" width="1" height="2"/><rect x="11" y="13" width="1" height="2"/>
+      </g>
+      <rect x="2" y="6" width="11" height="7" fill="#DE886D"/>
+      <g class="sh-eye" fill="#000"><rect x="4" y="8" width="1" height="2"/><rect x="10" y="8" width="1" height="2"/></g>
+      <g class="sh-al"><rect x="0" y="9" width="2" height="2" fill="#DE886D"/></g>
+      <!-- right arm with sponge -->
+      <g class="sh-arm">
+        <rect x="13" y="9" width="2" height="2" fill="#DE886D"/>
+        <rect x="10.2" y="8.4" width="2.6" height="2.2" rx=".4" fill="#ffd95e"/>
+        <rect x="10.4" y="8.7" width="2.2" height=".7" fill="#fff" opacity=".5"/>
+      </g>
+      <!-- foam on head -->
+      <g fill="#fff">
+        <circle cx="4" cy="5" r="1.6"/><circle cx="7.5" cy="4.2" r="2"/><circle cx="11" cy="5" r="1.6"/>
+        <circle cx="5.8" cy="5.2" r="1.4"/><circle cx="9.2" cy="5.2" r="1.4"/>
+      </g>
+    </g>
+    <!-- rubber duck (foreground) -->
+    <g transform="translate(9.5,13.6)">
+      <ellipse cx="1.6" cy="1.6" rx="2" ry="1.4" fill="#FFD22E"/>
+      <circle cx="3.2" cy=".3" r="1.1" fill="#FFD22E"/>
+      <rect x="3.9" y=".1" width="1.4" height=".8" rx=".3" fill="#FF9000"/>
+      <circle cx="3.4" cy="0" r=".25" fill="#000"/>
+    </g>
+    </svg>

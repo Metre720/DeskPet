@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -25 45 45">
+    <defs><style>
+      .sg-body{transform-origin:7.5px 13px;animation:sg-sway 1.4s infinite ease-in-out;}
+      .sg-shad{transform-origin:7.5px 15.5px;animation:sg-shadow 1.4s infinite ease-in-out;}
+      .sg-eye {transform-origin:7.5px 9px;animation:sg-blink 2.8s infinite;}
+      .sg-mouth{transform-origin:7.5px 11.5px;animation:sg-sing .5s infinite alternate ease-in-out;}
+      .sg-al  {transform-origin:2px 10px;animation:sg-wave 1.4s infinite ease-in-out;}
+      .sg-mic {transform-origin:11.5px 12px;animation:sg-michold 1.4s infinite ease-in-out;}
+      .sg-note{opacity:0;animation:sg-note var(--d,2s) var(--delay,0s) infinite ease-out;}
+      @keyframes sg-sway{0%,100%{transform:rotate(-3deg);}50%{transform:rotate(3deg);}}
+      @keyframes sg-shadow{0%,100%{transform:scaleX(1);opacity:.5;}50%{transform:scaleX(.92);opacity:.42;}}
+      @keyframes sg-blink{0%,44%,56%,100%{transform:scaleY(1);}50%{transform:scaleY(.1);}}
+      @keyframes sg-sing{0%{transform:scaleY(.45) scaleX(.9);}100%{transform:scaleY(1.15) scaleX(1.05);}}
+      @keyframes sg-wave{0%,100%{transform:rotate(42deg);}50%{transform:rotate(78deg) translateY(-1px);}}
+      @keyframes sg-michold{0%,100%{transform:rotate(-3deg);}50%{transform:rotate(3deg);}}
+      @keyframes sg-note{0%{opacity:0;transform:translate(0,0) rotate(0);}15%{opacity:1;}80%{opacity:.85;}100%{opacity:0;transform:translate(var(--tx,-5px),-18px) rotate(var(--r,-18deg));}}
+    </style></defs>
+
+    <!-- notes -->
+    <g>
+      <g class="sg-note" style="--delay:0s;--d:2s;--tx:-6px;--r:-25deg" transform="translate(0,-1)" fill="#ff7ab3"><ellipse cx="0" cy="2" rx="1.1" ry=".85"/><rect x="1" y="-2" width=".7" height="4"/><rect x="1" y="-2" width="2.2" height=".8"/></g>
+      <g class="sg-note" style="--delay:-.8s;--d:2.3s;--tx:-4px;--r:18deg" transform="translate(11,-2)" fill="#ff9ec8"><ellipse cx="0" cy="1.6" rx=".9" ry=".7"/><rect x=".8" y="-1.8" width=".6" height="3.6"/></g>
+      <g class="sg-note" style="--delay:-1.4s;--d:2.1s;--tx:-7px;--r:-12deg" transform="translate(5,-3)" fill="#ff5aa0"><ellipse cx="0" cy="1.6" rx="1" ry=".75"/><rect x=".9" y="-1.8" width=".6" height="3.6"/><rect x=".9" y="-1.8" width="1.8" height=".7"/></g>
+    </g>
+
+    <rect class="sg-shad" x="3" y="15" width="9" height="1" fill="#000" opacity=".5"/>
+    <g class="sg-body">
+      <g fill="#DE886D">
+        <rect x="3" y="13" width="1" height="2"/><rect x="5" y="13" width="1" height="2"/>
+        <rect x="9" y="13" width="1" height="2"/><rect x="11" y="13" width="1" height="2"/>
+      </g>
+      <rect x="2" y="6" width="11" height="7" fill="#DE886D"/>
+      <g class="sg-al"><rect x="0" y="9" width="2" height="2" fill="#DE886D"/></g>
+      <!-- right forearm bent down to grip the mic -->
+      <rect x="11" y="9" width="2" height="3.6" fill="#DE886D" rx=".5"/>
+      <g class="sg-eye" fill="#000"><rect x="4" y="8" width="1" height="2"/><rect x="10" y="8" width="1" height="2"/></g>
+      <!-- open singing mouth -->
+      <ellipse class="sg-mouth" cx="7" cy="11.2" rx="1.3" ry="1.2" fill="#7a2230"/>
+      <!-- microphone: handle connects the hand to the ball at the mouth -->
+      <g class="sg-mic">
+        <rect x="8.8" y="11.1" width="3.6" height="1" rx=".5" fill="#3a3a42" transform="rotate(24,11.5,12)"/>
+        <circle cx="8.7" cy="11" r="1.5" fill="#9a9aa2"/>
+        <circle cx="8.4" cy="10.6" r=".5" fill="#d6d6de"/>
+        <rect x="7.6" y="10.5" width="2.2" height=".35" fill="#555" transform="rotate(24,8.7,11)"/>
+        <rect x="7.6" y="11.2" width="2.2" height=".35" fill="#555" transform="rotate(24,8.7,11)"/>
+      </g>
+    </g>
+    </svg>

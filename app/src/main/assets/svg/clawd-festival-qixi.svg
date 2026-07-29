@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -25 45 45">
+    <defs><style>
+      .qx-body{transform-origin:7.5px 13px;animation:qx-look 5s infinite ease-in-out;}
+      .qx-shad{transform-origin:7.5px 15.5px;animation:qx-shadow 5s infinite ease-in-out;}
+      .qx-eye {transform-origin:7.5px 9px;animation:qx-eye 5s infinite ease-in-out;}
+      .qx-bstar{animation:qx-bstar var(--d,2s) var(--sd,0s) infinite ease-in-out;}
+      .qx-big {animation:qx-bigstar 2.5s var(--bd3,0s) infinite ease-in-out;}
+      .qx-mag {animation:qx-magfly 6s infinite ease-in-out;}
+      .qx-wing{transform-origin:center;animation:qx-flap .3s infinite alternate ease-in-out;}
+      .qx-heart{transform-origin:7.5px -18px;animation:qx-heartpulse 1.5s infinite ease-in-out;}
+      @keyframes qx-look{0%,30%,100%{transform:rotate(0deg) translateY(0);}45%,85%{transform:rotate(-7deg) translate(-.5px,-.4px);}}
+      @keyframes qx-shadow{0%,30%,100%{opacity:.5;transform:scaleX(1);}60%{opacity:.35;transform:scaleX(.88);}}
+      @keyframes qx-eye{0%,30%,100%{transform:translate(0,0) scaleY(1);}35%{transform:scaleY(.1);}38%,85%{transform:translate(-.5px,-.8px) scaleY(.82);}}
+      @keyframes qx-bstar{0%,100%{opacity:.3;transform:scale(.6);}50%{opacity:.9;transform:scale(1);}}
+      @keyframes qx-bigstar{0%,100%{opacity:.7;transform:scale(.9);}50%{opacity:1;transform:scale(1.2);}}
+      @keyframes qx-magfly{0%,100%{transform:translate(0,0);}50%{transform:translate(3px,-2px);}}
+      @keyframes qx-flap{0%{transform:scaleX(1);}100%{transform:scaleX(.5);}}
+      @keyframes qx-heartpulse{0%,100%{opacity:.85;transform:scale(1);}50%{opacity:1;transform:scale(1.12);}}
+    </style></defs>
+
+    <!-- magpie bridge: arc of small stars -->
+    <g fill="#C5CEFF">
+      <rect class="qx-bstar" style="--d:1.6s;--sd:0s"   x="-11" y="-12" width=".8" height=".8" rx=".2"/>
+      <rect class="qx-bstar" style="--d:1.8s;--sd:-.2s" x="-8" y="-15" width=".8" height=".8" rx=".2"/>
+      <rect class="qx-bstar" style="--d:2s;--sd:-.4s"   x="-4" y="-17.5" width=".8" height=".8" rx=".2"/>
+      <rect class="qx-bstar" style="--d:1.7s;--sd:-.6s" x="1" y="-19" width=".8" height=".8" rx=".2"/>
+      <rect class="qx-bstar" style="--d:1.9s;--sd:-.8s" x="7" y="-19.5" width=".8" height=".8" rx=".2"/>
+      <rect class="qx-bstar" style="--d:2.1s;--sd:-1s"  x="13" y="-19" width=".8" height=".8" rx=".2"/>
+      <rect class="qx-bstar" style="--d:1.8s;--sd:-1.2s"x="18" y="-17.5" width=".8" height=".8" rx=".2"/>
+      <rect class="qx-bstar" style="--d:2s;--sd:-1.4s"  x="22" y="-15" width=".8" height=".8" rx=".2"/>
+      <rect class="qx-bstar" style="--d:1.7s;--sd:-1.6s"x="25" y="-12" width=".8" height=".8" rx=".2"/>
+    </g>
+
+    <!-- 牛郎织女 two big stars on either side -->
+    <g class="qx-big" style="--bd3:0s" transform="translate(-11,-8)" fill="#FFE066">
+      <rect x="-.5" y="-2" width="1" height="4"/><rect x="-2" y="-.5" width="4" height="1"/>
+    </g>
+    <g class="qx-big" style="--bd3:-1.2s" transform="translate(25,-8)" fill="#FFB3D1">
+      <rect x="-.5" y="-2" width="1" height="4"/><rect x="-2" y="-.5" width="4" height="1"/>
+    </g>
+
+    <!-- magpie -->
+    <g class="qx-mag" transform="translate(16,-13)" fill="#222">
+      <ellipse cx="0" cy="0" rx="1.4" ry="1" />
+      <rect x="1" y="-.4" width="1.6" height=".8" rx=".3"/>
+      <g class="qx-wing"><polygon points="-1,-.4 -3,-1.4 -2.4,.6"/></g>
+      <rect x="-2.4" y="-.2" width="2" height=".5" fill="#222"/>
+    </g>
+
+    <!-- floating heart above -->
+    <g class="qx-heart" transform="translate(6,-22)" fill="#FF6B9D">
+      <rect x="0" y="0" width="1.2" height="1.2"/><rect x="1.8" y="0" width="1.2" height="1.2"/>
+      <rect x="0" y=".9" width="3" height="1.2"/><rect x=".7" y="2" width="1.6" height=".9"/><rect x="1.2" y="2.7" width=".6" height=".6"/>
+    </g>
+
+    <rect class="qx-shad" x="3" y="15" width="9" height="1" fill="#000" opacity=".5"/>
+    <g class="qx-body">
+      <g fill="#DE886D">
+        <rect x="3" y="13" width="1" height="2"/><rect x="5" y="13" width="1" height="2"/>
+        <rect x="9" y="13" width="1" height="2"/><rect x="11" y="13" width="1" height="2"/>
+      </g>
+      <rect x="2" y="6" width="11" height="7" fill="#DE886D"/>
+      <rect x="0" y="9" width="2" height="2" fill="#DE886D"/>
+      <rect x="13" y="9" width="2" height="2" fill="#DE886D"/>
+      <g class="qx-eye" fill="#000"><rect x="4" y="8" width="1" height="2"/><rect x="10" y="8" width="1" height="2"/></g>
+    </g>
+    </svg>

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -25 45 45">
+    <defs><style>
+      .cd-body{transform-origin:7.5px 13px;animation:cd-focus 2.4s infinite ease-in-out;}
+      .cd-shad{transform-origin:7.5px 15.5px;animation:cd-shadow 2.4s infinite ease-in-out;}
+      .cd-eye {transform-origin:7.5px 9px;animation:cd-blink 2.8s infinite;}
+      .cd-glow{animation:cd-glow .6s infinite alternate ease-in-out;}
+      .cd-cur {animation:cd-cur 1s steps(1) infinite;}
+      .cd-l1  {animation:cd-type 1.8s steps(1) infinite;}
+      .cd-l2  {animation:cd-type 1.8s -.6s steps(1) infinite;}
+      .cd-l3  {animation:cd-type 1.8s -1.2s steps(1) infinite;}
+      @keyframes cd-focus{0%,100%{transform:translateY(0);}50%{transform:translateY(-.3px);}}
+      @keyframes cd-shadow{0%,100%{transform:scaleX(1);opacity:.5;}50%{transform:scaleX(.98);opacity:.47;}}
+      @keyframes cd-blink{0%,47%,53%,100%{transform:scaleY(1);}50%{transform:scaleY(.1);}}
+      @keyframes cd-glow{0%{opacity:.08;}100%{opacity:.2;}}
+      @keyframes cd-cur{0%,50%{opacity:1;}51%,100%{opacity:0;}}
+      @keyframes cd-type{0%,100%{transform:scaleX(.5);}50%{transform:scaleX(1);}}
+    </style></defs>
+
+    <rect class="cd-shad" x="3" y="15" width="9" height="1" fill="#000" opacity=".5"/>
+    <g class="cd-body">
+      <g fill="#DE886D">
+        <rect x="3" y="13" width="1" height="2"/><rect x="5" y="13" width="1" height="2"/>
+        <rect x="9" y="13" width="1" height="2"/><rect x="11" y="13" width="1" height="2"/>
+      </g>
+      <rect x="2" y="6" width="11" height="7" fill="#DE886D"/>
+      <rect class="cd-glow" x="2" y="6" width="11" height="4" rx="1" fill="#4fd6a0"/>
+      <rect x="0" y="9" width="2" height="2" fill="#DE886D"/>
+      <rect x="13" y="9" width="2" height="2" fill="#DE886D"/>
+      <g class="cd-eye" fill="#000"><rect x="4" y="8" width="1" height="2"/><rect x="10" y="8" width="1" height="2"/></g>
+      <!-- laptop (foreground, screen faces us; eyes peek over the top) -->
+      <g>
+        <rect x="0.4" y="9.9" width="14.2" height="5.2" rx=".5" fill="#23272f"/>
+        <rect x="1.3" y="10.6" width="12.4" height="3.8" rx=".3" fill="#0c1018"/>
+        <!-- code lines -->
+        <rect class="cd-l1" style="transform-origin:2.2px 11.3px" x="2.2" y="11" width="4"   height=".7" rx=".2" fill="#ff79c6"/>
+        <rect             x="6.8" y="11" width="3"   height=".7" rx=".2" fill="#8be9fd"/>
+        <rect class="cd-l2" style="transform-origin:3px 12.4px"  x="3"   y="12.1" width="5"   height=".7" rx=".2" fill="#50fa7b"/>
+        <rect             x="8.6" y="12.1" width="2.4" height=".7" rx=".2" fill="#f1fa8c"/>
+        <rect class="cd-l3" style="transform-origin:2.2px 13.5px" x="2.2" y="13.2" width="3.4" height=".7" rx=".2" fill="#bd93f9"/>
+        <rect class="cd-cur" x="6" y="13.2" width=".7" height=".8" fill="#fff"/>
+        <!-- hinge / base -->
+        <rect x="-.4" y="15" width="15.4" height="1" rx=".4" fill="#2f343d"/>
+      </g>
+    </g>
+    </svg>

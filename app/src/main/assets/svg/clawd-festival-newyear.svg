@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -25 45 45">
+    <defs><style>
+      .sp-body{transform-origin:7.5px 13px;animation:sp-bow 3.2s infinite ease-in-out;}
+      .sp-shad{transform-origin:7.5px 15.5px;animation:sp-shadow 3.2s infinite ease-in-out;}
+      .sp-eye {transform-origin:7.5px 9px;animation:sp-blink 3.2s infinite;}
+      .sp-al  {transform-origin:2px 10px;animation:sp-arm-l 3.2s infinite ease-in-out;}
+      .sp-ar  {transform-origin:14px 10px;animation:sp-arm-r 3.2s infinite ease-in-out;}
+      .sp-lanl{transform-origin:-8px -22px;animation:sp-lan .9s infinite alternate ease-in-out;}
+      .sp-lanr{transform-origin:23px -22px;animation:sp-lan .9s infinite alternate-reverse ease-in-out;}
+      .sp-fu  {transform-origin:18px -3px;animation:sp-fupulse 2.4s infinite ease-in-out;}
+      .sp-coin{opacity:0;animation:sp-coinfall var(--d,1.5s) var(--delay,0s) infinite ease-in;}
+      @keyframes sp-bow{
+        0%,22%,100%{transform:rotate(0deg) translateY(0);}
+        42%,62%{transform:rotate(-16deg) translate(-1px,1.2px);}
+        80%{transform:rotate(-4deg) translateX(-.4px);}
+      }
+      @keyframes sp-shadow{
+        0%,22%,100%{transform:scaleX(1);opacity:.5;}
+        52%{transform:scaleX(.78) translateX(-1px);opacity:.35;}
+      }
+      @keyframes sp-blink{0%,36%,64%,100%{transform:translate(-.5px,.5px) scaleY(.72);}50%{transform:translate(-.5px,.5px) scaleY(.1);}}
+      @keyframes sp-arm-l{0%,22%,100%{transform:rotate(0deg);}42%,62%{transform:rotate(58deg) translate(1px,-1.2px);}}
+      @keyframes sp-arm-r{0%,22%,100%{transform:rotate(0deg);}42%,62%{transform:rotate(-58deg) translate(-1px,-1.2px);}}
+      @keyframes sp-lan{0%{transform:rotate(-7deg);}100%{transform:rotate(7deg);}}
+      @keyframes sp-fupulse{0%,100%{opacity:.85;transform:scale(1) rotate(0deg);}50%{opacity:1;transform:scale(1.06) rotate(0deg);}}
+      @keyframes sp-coinfall{
+        0%{opacity:0;transform:translate(0,0) rotate(0deg);}
+        14%{opacity:1;}
+        88%{opacity:.8;}
+        100%{opacity:0;transform:translate(var(--tx,2px),20px) rotate(360deg);}
+      }
+    </style></defs>
+
+    <line x1="-8" y1="-25" x2="-8" y2="-22" stroke="#7a0000" stroke-width=".5"/>
+    <line x1="23" y1="-25" x2="23" y2="-22" stroke="#7a0000" stroke-width=".5"/>
+
+    <!-- 灯笼 -->
+    <g class="sp-lanl" transform="translate(-8,-22)">
+      <rect x="-2.2" y="0" width="4.4" height=".6" fill="#FFC83D"/>
+      <rect x="-2.6" y=".6" width="5.2" height="5.4" fill="#CC0000" rx="1.2"/>
+      <rect x="-1.6" y=".8" width="1.6" height="5" fill="#E03030" opacity=".5" rx=".8"/>
+      <rect x="-1.2" y="2" width="2.4" height=".5" fill="#FFC83D"/>
+      <rect x="-.4" y="2.5" width="1" height="1.6" fill="#FFC83D"/>
+      <rect x="-2.2" y="6" width="4.4" height=".6" fill="#FFC83D"/>
+      <rect x="-1.4" y="6.6" width=".5" height="2.4" fill="#FFC83D"/>
+      <rect x="-.25" y="6.6" width=".5" height="2.8" fill="#FFC83D"/>
+      <rect x="0.9" y="6.6" width=".5" height="2.4" fill="#FFC83D"/>
+    </g>
+    <g class="sp-lanr" transform="translate(23,-22)">
+      <rect x="-2.2" y="0" width="4.4" height=".6" fill="#FFC83D"/>
+      <rect x="-2.6" y=".6" width="5.2" height="5.4" fill="#CC0000" rx="1.2"/>
+      <rect x="-1.6" y=".8" width="1.6" height="5" fill="#E03030" opacity=".5" rx=".8"/>
+      <rect x="-1.2" y="2" width="2.4" height=".5" fill="#FFC83D"/>
+      <rect x="-.4" y="2.5" width="1" height="1.6" fill="#FFC83D"/>
+      <rect x="-2.2" y="6" width="4.4" height=".6" fill="#FFC83D"/>
+      <rect x="-1.4" y="6.6" width=".5" height="2.4" fill="#FFC83D"/>
+      <rect x="-.25" y="6.6" width=".5" height="2.8" fill="#FFC83D"/>
+      <rect x="0.9" y="6.6" width=".5" height="2.4" fill="#FFC83D"/>
+    </g>
+
+    <!-- 福 on red diamond -->
+    <g class="sp-fu" transform="translate(18,-3)">
+      <rect x="-4" y="-4" width="8" height="8" fill="#CC0000" transform="rotate(45)"/>
+      <rect x="-3" y="-3" width="6" height="6" fill="#E81818" transform="rotate(45)" opacity=".6"/>
+      <g fill="#FFD700">
+        <rect x="-2.8" y="-2.6" width="5.6" height=".8"/>
+        <rect x="-.4" y="-1.8" width="1" height="4"/>
+        <rect x="-2.2" y="-1" width="4.8" height=".7"/>
+        <rect x="-2.2" y="-.3" width="1.8" height="1.8"/>
+        <rect x=".6" y="-.3" width="1.8" height="1.8"/>
+        <rect x="-2.2" y="1.5" width="4.8" height=".8"/>
+      </g>
+    </g>
+
+    <!-- gold coins -->
+    <g>
+      <rect class="sp-coin" style="--delay:0s;--d:1.6s;--tx:-3px"  x="-11" y="-15" width="2" height="2" rx="1" fill="#FFD700"/>
+      <rect class="sp-coin" style="--delay:-.5s;--d:1.4s;--tx:2px"  x="-13" y="-10" width="1.6" height="1.6" rx=".8" fill="#FFC107"/>
+      <rect class="sp-coin" style="--delay:-1s;--d:1.7s;--tx:-2px"  x="-9" y="-18" width="1.6" height="1.6" rx=".8" fill="#FFEB3B"/>
+    </g>
+
+    <rect class="sp-shad" x="3" y="15" width="9" height="1" fill="#000" opacity=".5"/>
+    <g class="sp-body">
+      <g fill="#DE886D">
+        <rect x="3" y="13" width="1" height="2"/><rect x="5" y="13" width="1" height="2"/>
+        <rect x="9" y="13" width="1" height="2"/><rect x="11" y="13" width="1" height="2"/>
+      </g>
+      <rect x="2" y="6" width="11" height="7" fill="#DE886D"/>
+      <rect x="2" y="10" width="11" height="2" fill="#CC0000"/>
+      <rect x="2" y="10" width="11" height=".7" fill="#FF3838"/>
+      <g class="sp-al"><rect x="0" y="9" width="2" height="2" fill="#DE886D"/></g>
+      <g class="sp-ar"><rect x="13" y="9" width="2" height="2" fill="#DE886D"/></g>
+      <g class="sp-eye" fill="#000"><rect x="4" y="8" width="1" height="2"/><rect x="10" y="8" width="1" height="2"/></g>
+    </g>
+    </svg>

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -25 45 45">
+    <defs><style>
+      .vd-body{transform-origin:7.5px 13px;animation:vd-sway 2.8s infinite ease-in-out;}
+      .vd-shad{transform-origin:7.5px 15.5px;animation:vd-shadow 2.8s infinite ease-in-out;}
+      .vd-heart{transform-origin:7.5px 9px;animation:vd-heartbeat .8s infinite ease-in-out;}
+      .vd-blush{animation:vd-blush 2.8s infinite ease-in-out;}
+      .vd-rise{opacity:0;animation:vd-rise var(--d,2.6s) var(--delay,0s) infinite ease-out;}
+      @keyframes vd-sway{0%,100%{transform:rotate(-2deg);}50%{transform:rotate(2deg);}}
+      @keyframes vd-shadow{0%,100%{transform:scaleX(1);opacity:.5;}50%{transform:scaleX(1.03);opacity:.45;}}
+      @keyframes vd-heartbeat{0%,100%{transform:scale(1);}25%{transform:scale(1.2);}40%{transform:scale(1);}60%{transform:scale(1.15);}}
+      @keyframes vd-blush{0%,100%{opacity:.6;}50%{opacity:.95;}}
+      @keyframes vd-rise{0%{opacity:0;transform:translate(0,0) scale(.5) rotate(0deg);}15%{opacity:1;transform:scale(1);}80%{opacity:.7;}100%{opacity:0;transform:translate(var(--tx,2px),-22px) scale(1.1) rotate(var(--r,15deg));}}
+    </style></defs>
+
+    <!-- rising hearts -->
+    <g fill="#FF4081">
+      <g class="vd-rise" style="--delay:0s;--d:2.8s;--tx:-3px;--r:-12deg" transform="translate(-8,8)"><rect x="0" y="0" width="1.4" height="1.4"/><rect x="2" y="0" width="1.4" height="1.4"/><rect x="0" y="1" width="3.4" height="1.4"/><rect x=".8" y="2.2" width="1.8" height="1"/><rect x="1.4" y="3" width=".6" height=".8"/></g>
+      <g class="vd-rise" style="--delay:-.9s;--d:2.4s;--tx:4px;--r:18deg" transform="translate(15,9)" fill="#FF6EA5"><rect x="0" y="0" width="1.1" height="1.1"/><rect x="1.6" y="0" width="1.1" height="1.1"/><rect x="0" y=".8" width="2.7" height="1.1"/><rect x=".6" y="1.8" width="1.5" height=".8"/><rect x="1.1" y="2.5" width=".5" height=".6"/></g>
+      <g class="vd-rise" style="--delay:-1.6s;--d:3s;--tx:-2px;--r:-20deg" transform="translate(4,10)" fill="#FF80AB"><rect x="0" y="0" width="1.2" height="1.2"/><rect x="1.7" y="0" width="1.2" height="1.2"/><rect x="0" y=".9" width="2.9" height="1.2"/><rect x=".7" y="2" width="1.5" height=".9"/><rect x="1.2" y="2.8" width=".5" height=".7"/></g>
+      <g class="vd-rise" style="--delay:-2.1s;--d:2.5s;--tx:5px;--r:10deg" transform="translate(20,7)" fill="#FF4081"><rect x="0" y="0" width="1" height="1"/><rect x="1.4" y="0" width="1" height="1"/><rect x="0" y=".7" width="2.4" height="1"/><rect x=".5" y="1.6" width="1.4" height=".7"/><rect x="1" y="2.2" width=".4" height=".5"/></g>
+    </g>
+
+    <rect class="vd-shad" x="3" y="15" width="9" height="1" fill="#000" opacity=".5"/>
+    <g class="vd-body">
+      <g fill="#DE886D">
+        <rect x="3" y="13" width="1" height="2"/><rect x="5" y="13" width="1" height="2"/>
+        <rect x="9" y="13" width="1" height="2"/><rect x="11" y="13" width="1" height="2"/>
+      </g>
+      <rect x="2" y="6" width="11" height="7" fill="#DE886D"/>
+      <rect x="0" y="9" width="2" height="2" fill="#DE886D"/>
+      <!-- right arm holds a rose -->
+      <rect x="13" y="8" width="2" height="2" fill="#DE886D"/>
+      <g transform="translate(14,2)">
+        <rect x="0" y="3" width=".6" height="4" fill="#2E7D32"/>
+        <rect x="-1" y="4.5" width="1.2" height=".6" fill="#388E3C" transform="rotate(-30,-.4,4.8)"/>
+        <rect x="-1.5" y="0" width="3.2" height="3" fill="#E91E63" rx=".6"/>
+        <rect x="-.8" y=".6" width="1.6" height="1.6" fill="#FF5C8D" rx=".3"/>
+      </g>
+      <!-- blush cheeks -->
+      <g class="vd-blush" fill="#FF7AA8"><rect x="3" y="10" width="1.6" height="1" rx=".5"/><rect x="10.4" y="10" width="1.6" height="1" rx=".5"/></g>
+      <!-- heart eyes -->
+      <g class="vd-heart" fill="#FF1744">
+        <g transform="translate(3.4,8)"><rect x="0" y="0" width=".8" height=".8"/><rect x="1.2" y="0" width=".8" height=".8"/><rect x="0" y=".6" width="2" height=".9"/><rect x=".5" y="1.4" width="1" height=".7"/></g>
+        <g transform="translate(9.4,8)"><rect x="0" y="0" width=".8" height=".8"/><rect x="1.2" y="0" width=".8" height=".8"/><rect x="0" y=".6" width="2" height=".9"/><rect x=".5" y="1.4" width="1" height=".7"/></g>
+      </g>
+    </g>
+    </svg>

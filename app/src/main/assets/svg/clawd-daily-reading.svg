@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -25 45 45">
+    <defs><style>
+      .rd-body{transform-origin:7.5px 13px;animation:rd-bob 4.2s infinite ease-in-out;}
+      .rd-shad{transform-origin:7.5px 15.5px;animation:rd-shadow 4.2s infinite ease-in-out;}
+      .rd-eye {transform-origin:7.5px 9px;animation:rd-scan 4.2s infinite ease-in-out;}
+      .rd-page{transform-origin:7.5px 11px;animation:rd-flip 4.2s infinite ease-in-out;}
+      @keyframes rd-bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-.5px);}}
+      @keyframes rd-shadow{0%,100%{transform:scaleX(1);opacity:.5;}50%{transform:scaleX(.97);opacity:.46;}}
+      @keyframes rd-scan{
+        0%,8%{transform:translateX(-.9px) scaleY(1);}
+        12%{transform:translateX(-.9px) scaleY(.15);}
+        16%,42%{transform:translateX(-.9px) scaleY(1);}
+        50%,90%{transform:translateX(.9px) scaleY(1);}
+        100%{transform:translateX(-.9px) scaleY(1);}
+      }
+      @keyframes rd-flip{0%,72%,100%{transform:scaleX(1);}80%{transform:scaleX(.08);}88%{transform:scaleX(1);}}
+    </style></defs>
+
+    <rect class="rd-shad" x="3" y="15" width="9" height="1" fill="#000" opacity=".5"/>
+    <g class="rd-body">
+      <g fill="#DE886D">
+        <rect x="3" y="13" width="1" height="2"/><rect x="5" y="13" width="1" height="2"/>
+        <rect x="9" y="13" width="1" height="2"/><rect x="11" y="13" width="1" height="2"/>
+      </g>
+      <rect x="2" y="6" width="11" height="7" fill="#DE886D"/>
+      <g class="rd-eye" fill="#000"><rect x="4" y="8" width="1" height="2"/><rect x="10" y="8" width="1" height="2"/></g>
+      <!-- arms holding book -->
+      <rect x="-.3" y="9.6" width="2.6" height="2" fill="#DE886D" rx=".4" transform="rotate(28,1,10.6)"/>
+      <rect x="12.7" y="9.6" width="2.6" height="2" fill="#DE886D" rx=".4" transform="rotate(-28,14,10.6)"/>
+      <!-- open book (foreground) -->
+      <g>
+        <polygon points="1.6,12.4 2.8,9.4 7.5,9.9 7.5,12.6" fill="#8a5a2a"/>
+        <polygon points="13.4,12.4 12.2,9.4 7.5,9.9 7.5,12.6" fill="#7a4e22"/>
+        <polygon points="2.2,12.1 3.2,9.7 7.5,10.1 7.5,12.2" fill="#F5E6C8"/>
+        <g class="rd-page"><polygon points="12.8,12.1 11.8,9.7 7.5,10.1 7.5,12.2" fill="#FBF1D8"/></g>
+        <g stroke="#c9b48a" stroke-width=".25">
+          <line x1="3.4" y1="10.6" x2="6.9" y2="10.9"/>
+          <line x1="3.3" y1="11.3" x2="6.9" y2="11.5"/>
+          <line x1="8.1" y1="10.9" x2="11.6" y2="10.6"/>
+          <line x1="8.1" y1="11.5" x2="11.7" y2="11.3"/>
+        </g>
+        <rect x="7.2" y="9.7" width=".6" height="2.9" fill="#5e3c1a"/>
+      </g>
+    </g>
+    </svg>

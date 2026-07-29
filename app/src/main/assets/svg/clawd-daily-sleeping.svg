@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -25 45 45">
+    <defs><style>
+      .sl-body{transform-origin:7.5px 13px;animation:sl-breathe 3.6s infinite ease-in-out;}
+      .sl-shad{transform-origin:7.5px 15.5px;animation:sl-shadow 3.6s infinite ease-in-out;}
+      .sl-bubble{transform-origin:12px 10px;animation:sl-bub 3.6s infinite ease-in-out;}
+      .sl-z   {opacity:0;animation:sl-z var(--d,3s) var(--delay,0s) infinite ease-out;}
+      @keyframes sl-breathe{0%,100%{transform:translateY(0) scaleY(1);}50%{transform:translateY(.5px) scaleY(.96);}}
+      @keyframes sl-shadow{0%,100%{transform:scaleX(1);opacity:.5;}50%{transform:scaleX(1.03);opacity:.46;}}
+      @keyframes sl-bub{0%,60%,100%{transform:scale(.2);opacity:0;}30%{transform:scale(1);opacity:.7;}}
+      @keyframes sl-z{0%{opacity:0;transform:translate(0,0) scale(.6);}20%{opacity:1;}80%{opacity:.8;}100%{opacity:0;transform:translate(var(--tx,6px),-15px) scale(1.3);}}
+    </style></defs>
+
+    <!-- ZZZ -->
+    <g fill="#8ca0ff" font-family="monospace" font-weight="bold">
+      <text class="sl-z" style="--delay:0s;--d:3s;--tx:7px"   x="11" y="-2" font-size="3.4">Z</text>
+      <text class="sl-z" style="--delay:-1s;--d:3s;--tx:6px"  x="13" y="-6" font-size="4.4">Z</text>
+      <text class="sl-z" style="--delay:-2s;--d:3s;--tx:5px"  x="15" y="-11" font-size="5.6">Z</text>
+    </g>
+
+    <!-- ground shadow under bed -->
+    <ellipse class="sl-shad" cx="7.5" cy="17.4" rx="13" ry="1.3" fill="#000" opacity=".4"/>
+    <!-- bed: frame + pillow (behind crab) -->
+    <g>
+      <rect x="-6" y="13.4" width="27" height="4.4" rx="1.3" fill="#473b59"/>
+      <rect x="-6" y="13.4" width="27" height="1.2" rx="1.3" fill="#5d4f73"/>
+      <rect x="-5" y="11.7" width="25" height="2.6" rx="1.3" fill="#dfe4ff"/>
+      <!-- pillow behind head -->
+      <rect x="-2" y="8.6" width="18" height="5" rx="2.4" fill="#eef1ff"/>
+      <rect x="-2" y="8.6" width="18" height="1.6" rx="2.4" fill="#ffffff"/>
+    </g>
+    <g class="sl-body">
+      <g fill="#DE886D">
+        <rect x="3" y="13" width="1" height="2"/><rect x="5" y="13" width="1" height="2"/>
+        <rect x="9" y="13" width="1" height="2"/><rect x="11" y="13" width="1" height="2"/>
+      </g>
+      <rect x="2" y="6" width="11" height="7" fill="#DE886D"/>
+      <rect x="0" y="9" width="2" height="2" fill="#DE886D"/>
+      <rect x="13" y="9" width="2" height="2" fill="#DE886D"/>
+      <!-- closed sleeping eyes -->
+      <g fill="#000"><rect x="3.6" y="8.9" width="2" height=".7" rx=".35"/><rect x="9.4" y="8.9" width="2" height=".7" rx=".35"/></g>
+      <!-- sleep bubble at nose -->
+      <circle class="sl-bubble" cx="12.4" cy="9.6" r="1.1" fill="#cfe0ff" opacity=".6"/>
+      <!-- nightcap (soft droopy, not pointy) -->
+      <rect x="1.6" y="4.8" width="11.5" height="1.6" fill="#3E5C8A" rx=".4"/>
+      <rect x="1.6" y="4.8" width="11.5" height=".6" fill="#587CB0"/>
+      <path d="M2.5 5 Q3 0.8 7 -0.2 Q11.4 -1.2 13 1.6 Q13.7 2.8 12.2 3.2 Q10 1.8 7 2.2 Q4 2.6 2.5 5 Z" fill="#4A6FA5"/>
+      <path d="M2.5 5 Q3.4 1.8 6.5 1 Q9 .4 10.6 1.6 Q8.5 1.6 6 2.2 Q3.8 2.8 2.5 5 Z" fill="#587CB0" opacity=".5"/>
+      <circle cx="12.6" cy="2" r="1.6" fill="#fff"/>
+    </g>
+    <!-- blanket over lower body (foreground) -->
+    <g>
+      <path d="M-5 12.4 Q7.5 10.9 20 12.4 L20 15.6 Q7.5 17 -5 15.6 Z" fill="#3E5C8A"/>
+      <path d="M-5 12.4 Q7.5 10.9 20 12.4 L20 13.4 Q7.5 11.9 -5 13.4 Z" fill="#6E8FC4"/>
+    </g>
+    </svg>

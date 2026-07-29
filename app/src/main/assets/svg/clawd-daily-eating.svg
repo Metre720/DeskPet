@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -25 45 45">
+    <defs><style>
+      .et-body{transform-origin:7.5px 13px;animation:et-bob 1.8s infinite ease-in-out;}
+      .et-shad{transform-origin:7.5px 15.5px;animation:et-shadow 1.8s infinite ease-in-out;}
+      .et-eye {transform-origin:7.5px 9px;animation:et-blink 3.4s infinite;}
+      .et-mouth{transform-origin:7.5px 11.3px;animation:et-chew .45s infinite alternate ease-in-out;}
+      .et-arm {transform-origin:13px 10px;animation:et-feed 1.8s infinite ease-in-out;}
+      .et-steam{opacity:0;animation:et-steam 2s var(--sd,0s) infinite ease-in;}
+      @keyframes et-bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-.4px);}}
+      @keyframes et-shadow{0%,100%{transform:scaleX(1);opacity:.5;}50%{transform:scaleX(.97);opacity:.46;}}
+      @keyframes et-blink{0%,46%,54%,100%{transform:scaleY(1);}50%{transform:scaleY(.1);}}
+      @keyframes et-chew{0%{transform:scaleY(.5);}100%{transform:scaleY(1);}}
+      @keyframes et-feed{0%,12%{transform:rotate(-13deg);}48%{transform:rotate(3deg);}82%,100%{transform:rotate(-13deg);}}
+      @keyframes et-steam{0%{opacity:0;transform:translate(0,0) scaleX(1);}25%{opacity:.7;}100%{opacity:0;transform:translate(var(--tx,1px),-7px) scaleX(.4);}}
+    </style></defs>
+
+    <rect class="et-shad" x="3" y="15" width="9" height="1" fill="#000" opacity=".5"/>
+    <g class="et-body">
+      <g fill="#DE886D">
+        <rect x="3" y="13" width="1" height="2"/><rect x="5" y="13" width="1" height="2"/>
+        <rect x="9" y="13" width="1" height="2"/><rect x="11" y="13" width="1" height="2"/>
+      </g>
+      <rect x="2" y="6" width="11" height="7" fill="#DE886D"/>
+      <g class="et-eye" fill="#000"><rect x="4" y="8" width="1" height="2"/><rect x="10" y="8" width="1" height="2"/></g>
+      <rect class="et-mouth" x="6.4" y="10.7" width="2.2" height="1.2" rx=".5" fill="#7a2230"/>
+      <!-- left arm supports bowl -->
+      <rect x="-.4" y="10.4" width="2.6" height="2" fill="#DE886D" rx=".4" transform="rotate(34,1,11.4)"/>
+      <!-- right arm holding chopsticks (pivots at shoulder 13,10) -->
+      <g class="et-arm">
+        <rect x="13" y="9" width="2" height="2" fill="#DE886D"/>
+        <rect x="6.2" y="11.2" width="7.6" height=".5" rx=".25" fill="#C9A227" transform="rotate(-7,13,10)"/>
+        <rect x="6.2" y="12.3" width="7.6" height=".5" rx=".25" fill="#C9A227" transform="rotate(-7,13,10)"/>
+        <rect x="5.6" y="11" width="1.5" height="1.5" rx=".5" fill="#E8B04B" transform="rotate(-7,13,10)"/>
+      </g>
+      <!-- bowl (foreground) -->
+      <g>
+        <g fill="#fff">
+          <g class="et-steam" style="--sd:0s;--tx:-1px"><rect x="3.6" y="9.6" width=".7" height="2" rx=".35"/></g>
+          <g class="et-steam" style="--sd:-1s;--tx:1px"><rect x="5.6" y="9.6" width=".7" height="2" rx=".35"/></g>
+        </g>
+        <path d="M2 11.6 H9 L8 14 Q5.5 15 3 14 Z" fill="#3f7fd0"/>
+        <path d="M2 11.6 H9 V12.4 H2 Z" fill="#5a9aea"/>
+        <ellipse cx="5.5" cy="11.7" rx="3.2" ry="1.1" fill="#FBF6EE"/>
+      </g>
+    </g>
+    </svg>

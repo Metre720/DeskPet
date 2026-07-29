@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -25 45 45">
+    <defs><style>
+      .cf-body{transform-origin:7.5px 13px;animation:cf-sip 3.4s infinite ease-in-out;}
+      .cf-shad{transform-origin:7.5px 15.5px;animation:cf-shadow 3.4s infinite ease-in-out;}
+      .cf-eye {transform-origin:7.5px 9px;animation:cf-blink 3s infinite;}
+      .cf-steam{opacity:0;animation:cf-steam 2.4s var(--sd,0s) infinite ease-in;}
+      @keyframes cf-sip{0%,55%,100%{transform:rotate(0) translateY(0);}72%{transform:rotate(-7deg) translateY(-1px);}88%{transform:rotate(0) translateY(0);}}
+      @keyframes cf-shadow{0%,100%{transform:scaleX(1);opacity:.5;}72%{transform:scaleX(.93);opacity:.44;}}
+      @keyframes cf-blink{0%,46%,54%,100%{transform:scaleY(1);}50%{transform:scaleY(.1);}}
+      @keyframes cf-steam{0%{opacity:0;transform:translate(0,0) scaleX(1);}30%{opacity:.6;}100%{opacity:0;transform:translate(var(--tx,1px),-8px) scaleX(.5);}}
+    </style></defs>
+
+    <rect class="cf-shad" x="3" y="15" width="9" height="1" fill="#000" opacity=".5"/>
+    <g class="cf-body">
+      <g fill="#DE886D">
+        <rect x="3" y="13" width="1" height="2"/><rect x="5" y="13" width="1" height="2"/>
+        <rect x="9" y="13" width="1" height="2"/><rect x="11" y="13" width="1" height="2"/>
+      </g>
+      <rect x="2" y="6" width="11" height="7" fill="#DE886D"/>
+      <g class="cf-eye" fill="#000"><rect x="4" y="8" width="1" height="2"/><rect x="10" y="8" width="1" height="2"/></g>
+      <rect x="6.4" y="10.8" width="2.2" height="1" rx=".5" fill="#7a2230"/>
+      <!-- arms cupping mug -->
+      <rect x="0.4" y="10" width="2" height="2.2" rx=".3" fill="#DE886D" transform="rotate(40,1.4,11)"/>
+      <rect x="12.6" y="10" width="2" height="2.2" rx=".3" fill="#DE886D" transform="rotate(-40,13.6,11)"/>
+      <!-- steam -->
+      <g fill="#fff">
+        <rect class="cf-steam" style="--sd:0s;--tx:-1px"   x="5.6" y="8.2" width=".7" height="2.4" rx=".35"/>
+        <rect class="cf-steam" style="--sd:-1.2s;--tx:1px" x="8"   y="8.2" width=".7" height="2.4" rx=".35"/>
+      </g>
+      <!-- mug (foreground) -->
+      <g>
+        <path d="M11 11 q2.4 .2 2.4 1.6 q0 1.5 -2.4 1.4" fill="none" stroke="#efe9df" stroke-width=".9"/>
+        <rect x="4" y="10.4" width="7" height="3.6" rx=".7" fill="#efe9df"/>
+        <rect x="4" y="10.4" width="7" height="1" rx=".7" fill="#fff"/>
+        <ellipse cx="7.5" cy="10.7" rx="2.9" ry=".8" fill="#5b3a22"/>
+      </g>
+    </g>
+    </svg>

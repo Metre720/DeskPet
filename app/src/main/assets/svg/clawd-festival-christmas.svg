@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -25 45 45">
+    <defs><style>
+      .xm-body{transform-origin:7.5px 13px;animation:xm-sway 2.6s infinite ease-in-out;}
+      .xm-shad{transform-origin:7.5px 15.5px;animation:xm-shadow 2.6s infinite ease-in-out;}
+      .xm-eye {transform-origin:7.5px 9px;animation:xm-blink 3s infinite;}
+      .xm-pom {transform-origin:9px -2px;animation:xm-pom 2.6s infinite ease-in-out;}
+      .xm-snow{opacity:0;animation:xm-snow var(--d,3s) var(--delay,0s) infinite linear;}
+      .xm-star{transform-origin:center;animation:xm-twinkle 1.6s infinite ease-in-out;}
+      @keyframes xm-sway{0%,100%{transform:rotate(-2deg);}50%{transform:rotate(2deg);}}
+      @keyframes xm-shadow{0%,100%{transform:scaleX(1);opacity:.5;}50%{transform:scaleX(1.04);opacity:.45;}}
+      @keyframes xm-blink{0%,45%,55%,100%{transform:scaleY(1);}50%{transform:scaleY(.1);}}
+      @keyframes xm-pom{0%,100%{transform:rotate(0deg) translateX(0);}50%{transform:rotate(10deg) translateX(.6px);}}
+      @keyframes xm-snow{0%{opacity:0;transform:translate(0,-2px);}12%{opacity:1;}88%{opacity:.9;}100%{opacity:0;transform:translate(var(--tx,-3px),26px);}}
+      @keyframes xm-twinkle{0%,100%{opacity:.5;transform:scale(.8);}50%{opacity:1;transform:scale(1.15);}}
+    </style></defs>
+
+    <!-- snow -->
+    <g fill="#fff">
+      <rect class="xm-snow" style="--delay:0s;--d:3.2s;--tx:-3px"  x="-10" y="-23" width="1.2" height="1.2" rx=".6"/>
+      <rect class="xm-snow" style="--delay:-.8s;--d:2.8s;--tx:2px"  x="-2" y="-24" width="1" height="1" rx=".5"/>
+      <rect class="xm-snow" style="--delay:-1.5s;--d:3.5s;--tx:-2px" x="6" y="-23" width="1.4" height="1.4" rx=".7"/>
+      <rect class="xm-snow" style="--delay:-.4s;--d:3s;--tx:3px"     x="14" y="-24" width="1" height="1" rx=".5"/>
+      <rect class="xm-snow" style="--delay:-2s;--d:3.3s;--tx:-1px"   x="20" y="-22" width="1.2" height="1.2" rx=".6"/>
+      <rect class="xm-snow" style="--delay:-1.2s;--d:2.6s;--tx:2px"  x="-13" y="-21" width="1" height="1" rx=".5"/>
+      <rect class="xm-snow" style="--delay:-2.4s;--d:3.4s;--tx:-3px" x="23" y="-20" width="1.2" height="1.2" rx=".6"/>
+    </g>
+
+    <!-- christmas tree (left) -->
+    <g transform="translate(-13,4)">
+      <polygon points="3,-2 5.5,2 .5,2" fill="#2E7D32"/>
+      <polygon points="3,0 6,4 0,4" fill="#388E3C"/>
+      <polygon points="3,2 6.5,7 -.5,7" fill="#43A047"/>
+      <rect x="2.4" y="7" width="1.2" height="2" fill="#6D4C41"/>
+      <g class="xm-star" style="transform-origin:3px -2px"><rect x="2.4" y="-3.4" width="1.2" height="1.2" fill="#FFD700" rx=".2"/></g>
+      <circle cx="1.8" cy="3" r=".5" fill="#FF5252"/>
+      <circle cx="4.2" cy="2" r=".5" fill="#FFD700"/>
+      <circle cx="3" cy="5.5" r=".5" fill="#42A5F5"/>
+    </g>
+
+    <rect class="xm-shad" x="3" y="15" width="9" height="1" fill="#000" opacity=".5"/>
+    <g class="xm-body">
+      <g fill="#DE886D">
+        <rect x="3" y="13" width="1" height="2"/><rect x="5" y="13" width="1" height="2"/>
+        <rect x="9" y="13" width="1" height="2"/><rect x="11" y="13" width="1" height="2"/>
+      </g>
+      <!-- santa hat -->
+      <rect x="2" y="3" width="10" height="2" fill="#CC0000"/>
+      <rect x="3" y="1" width="8" height="2" fill="#D81B1B"/>
+      <rect x="5" y="-.5" width="5" height="2" fill="#E53535"/>
+      <g class="xm-pom"><rect x="8" y="-2" width="3" height="2" fill="#fff" rx=".5"/></g>
+      <rect x="2" y="4.6" width="10" height="1.6" fill="#fff"/>            <!-- white trim -->
+      <rect x="2" y="6" width="11" height="7" fill="#DE886D"/>
+      <!-- green+red scarf -->
+      <rect x="2" y="10.5" width="11" height="1.8" fill="#1B7A3A"/>
+      <rect x="2" y="10.5" width="11" height=".6" fill="#34C75A"/>
+      <rect x="0" y="9" width="2" height="2" fill="#DE886D"/>
+      <rect x="13" y="9" width="2" height="2" fill="#DE886D"/>
+      <g class="xm-eye" fill="#000"><rect x="4" y="8" width="1" height="2"/><rect x="10" y="8" width="1" height="2"/></g>
+    </g>
+    </svg>

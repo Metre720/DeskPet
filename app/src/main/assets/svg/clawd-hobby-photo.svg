@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -25 45 45">
+    <defs><style>
+      .ph-body{transform-origin:7.5px 13px;animation:ph-bob 3s infinite ease-in-out;}
+      .ph-shad{transform-origin:7.5px 15.5px;animation:ph-shadow 3s infinite ease-in-out;}
+      .ph-flash{animation:ph-flash 2.4s infinite;}
+      .ph-burst{opacity:0;transform-origin:center;animation:ph-burst 2.4s infinite;}
+      @keyframes ph-bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-.4px);}}
+      @keyframes ph-shadow{0%,100%{transform:scaleX(1);opacity:.5;}50%{transform:scaleX(.97);opacity:.46;}}
+      @keyframes ph-flash{0%,92%,100%{fill:#7a7d86;}95%{fill:#fffbe0;}}
+      @keyframes ph-burst{0%,90%,100%{opacity:0;transform:scale(.3);}94%{opacity:.85;transform:scale(1);}}
+    </style></defs>
+
+    <rect class="ph-shad" x="3" y="15" width="9" height="1" fill="#000" opacity=".5"/>
+    <g class="ph-body">
+      <g fill="#DE886D">
+        <rect x="3" y="13" width="1" height="2"/><rect x="5" y="13" width="1" height="2"/>
+        <rect x="9" y="13" width="1" height="2"/><rect x="11" y="13" width="1" height="2"/>
+      </g>
+      <rect x="2" y="6" width="11" height="7" fill="#DE886D"/>
+      <!-- little smile below camera -->
+      <rect x="6.2" y="11.4" width="2.6" height=".8" rx=".4" fill="#7a2230"/>
+      <!-- arms gripping camera -->
+      <rect x="0.6" y="8.8" width="2.4" height="2" rx=".3" fill="#DE886D" transform="rotate(34,1.8,9.8)"/>
+      <rect x="12" y="8.8" width="2.4" height="2" rx=".3" fill="#DE886D" transform="rotate(-34,13.2,9.8)"/>
+      <!-- camera (covers upper face) -->
+      <g>
+        <rect x="8.4" y="5.6" width="2.4" height="1.6" rx=".3" fill="#3a3a44"/>
+        <rect x="2.6" y="6.6" width="9" height="4.6" rx=".7" fill="#2b2b34"/>
+        <rect x="2.6" y="6.6" width="9" height="1" rx=".7" fill="#3a3a46"/>
+        <circle cx="7" cy="9" r="2" fill="#1a1a20"/>
+        <circle cx="7" cy="9" r="1.3" fill="#46566b"/>
+        <circle cx="6.5" cy="8.5" r=".5" fill="#a9c4e0"/>
+        <rect class="ph-flash" x="3.2" y="7" width="1.6" height="1.1" rx=".25"/>
+      </g>
+      <!-- flash burst -->
+      <g class="ph-burst" fill="#fffbe0">
+        <polygon points="0.4,4 1.1,5.6 0.4,7.2 -0.3,5.6"/>
+        <polygon points="-1.4,5.6 0.2,4.9 1.8,5.6 0.2,6.3"/>
+      </g>
+    </g>
+    </svg>

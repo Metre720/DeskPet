@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -25 45 45">
+    <defs><style>
+      .ma-body{transform-origin:7.5px 13px;animation:ma-look 6.5s infinite ease-in-out;}
+      .ma-shad{transform-origin:7.5px 15.5px;animation:ma-shadow 6.5s infinite ease-in-out;}
+      .ma-eye {transform-origin:7.5px 9px;animation:ma-eye 6.5s infinite ease-in-out;}
+      .ma-moon{transform-origin:7.5px -18px;animation:ma-moon 8s infinite ease-in-out;}
+      .ma-rabbit{transform-origin:7.5px -18px;animation:ma-rabbit 4s infinite ease-in-out;}
+      .ma-star{animation:ma-star var(--d,2s) var(--sd,0s) infinite ease-in-out;}
+      @keyframes ma-look{0%,28%,100%{transform:rotate(0deg) translateY(0);}40%,82%{transform:rotate(-9deg) translate(-.6px,-.5px);}}
+      @keyframes ma-shadow{0%,28%,100%{opacity:.5;transform:scaleX(1);}60%{opacity:.35;transform:scaleX(.86) translateX(-.4px);}}
+      @keyframes ma-eye{0%,28%,100%{transform:translate(0,0) scaleY(1);}33%{transform:scaleY(.1);}36%,82%{transform:translate(-.6px,-.9px) scaleY(.82);}}
+      @keyframes ma-moon{0%,100%{transform:translateY(0);}50%{transform:translateY(-1.5px);}}
+      @keyframes ma-rabbit{0%,100%{transform:translateY(0);}50%{transform:translateY(-.6px);}}
+      @keyframes ma-star{0%,100%{opacity:.3;transform:scale(.7);}50%{opacity:1;transform:scale(1.2);}}
+    </style></defs>
+
+    <g class="ma-moon">
+      <circle cx="7.5" cy="-17" r="8" fill="#FFF0A0"/>
+      <circle cx="7.5" cy="-17" r="8.6" fill="none" stroke="#FFF0A0" stroke-width=".9" opacity=".25"/>
+      <circle cx="4.5" cy="-19.5" r="1.3" fill="#F0DC6A" opacity=".45"/>
+      <circle cx="10.5" cy="-15" r=".9" fill="#F0DC6A" opacity=".4"/>
+      <!-- jade rabbit silhouette -->
+      <g class="ma-rabbit" fill="#E8CF6A" opacity=".7">
+        <ellipse cx="7.5" cy="-14.5" rx="2" ry="1.4"/>
+        <circle cx="6.2" cy="-16" r="1.1"/>
+        <rect x="5.4" y="-18.5" width=".7" height="2.2" rx=".35" transform="rotate(-12,5.7,-17.4)"/>
+        <rect x="6.4" y="-18.6" width=".7" height="2.2" rx=".35" transform="rotate(8,6.7,-17.5)"/>
+      </g>
+    </g>
+
+    <rect class="ma-star" style="--d:1.8s;--sd:0s"   x="-12" y="-23" width="1" height="1" fill="#FFF8DC" rx=".2"/>
+    <rect class="ma-star" style="--d:2.4s;--sd:-.6s" x="21" y="-22" width=".8" height=".8" fill="#FFF8DC" rx=".2"/>
+    <rect class="ma-star" style="--d:1.5s;--sd:-1s"  x="-5" y="-24" width=".6" height=".6" fill="#FFF8DC" rx=".1"/>
+    <rect class="ma-star" style="--d:3s;--sd:-.4s"   x="24" y="-15" width=".8" height=".8" fill="#FFF8DC" rx=".2"/>
+    <rect class="ma-star" style="--d:2s;--sd:-.9s"   x="-13" y="-13" width=".6" height=".6" fill="#FFF8DC" rx=".1"/>
+
+    <rect class="ma-shad" x="3" y="15" width="9" height="1" fill="#000" opacity=".5"/>
+    <g class="ma-body">
+      <g fill="#DE886D">
+        <rect x="3" y="13" width="1" height="2"/><rect x="5" y="13" width="1" height="2"/>
+        <rect x="9" y="13" width="1" height="2"/><rect x="11" y="13" width="1" height="2"/>
+      </g>
+      <rect x="2" y="6" width="11" height="7" fill="#DE886D"/>
+      <rect x="0" y="9" width="2" height="2" fill="#DE886D"/>
+      <!-- right arm holds a mooncake up -->
+      <rect x="13" y="7" width="2" height="2" fill="#DE886D"/>
+      <g transform="translate(13.5,3.5)">
+        <rect x="0" y="0" width="4" height="3.2" fill="#C8860A" rx=".4"/>
+        <rect x=".4" y=".4" width="3.2" height="2.4" fill="#D4950F" rx=".3"/>
+        <rect x="1" y=".9" width="2" height=".4" fill="#A06808"/>
+        <rect x="1.8" y="1.3" width=".4" height="1.2" fill="#A06808"/>
+      </g>
+      <g class="ma-eye" fill="#000"><rect x="4" y="8" width="1" height="2"/><rect x="10" y="8" width="1" height="2"/></g>
+    </g>
+    </svg>

@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -25 45 45">
+    <defs><style>
+      .gm-body{transform-origin:7.5px 13px;animation:gm-lean 2.4s infinite ease-in-out;}
+      .gm-shad{transform-origin:7.5px 15.5px;animation:gm-shadow 2.4s infinite ease-in-out;}
+      .gm-eye {transform-origin:7.5px 9px;animation:gm-blink 2.8s infinite;}
+      .gm-al  {transform-origin:2px 10px;animation:gm-hold-l 2.4s infinite ease-in-out;}
+      .gm-ar  {transform-origin:13px 10px;animation:gm-hold-r 2.4s infinite ease-in-out;}
+      .gm-ba  {transform-origin:center;animation:gm-press .36s infinite alternate ease-in-out;}
+      .gm-bb  {transform-origin:center;animation:gm-press .36s -.18s infinite alternate ease-in-out;}
+      .gm-glow{animation:gm-glow .5s infinite alternate ease-in-out;}
+      .gm-scr {animation:gm-flick 2.4s infinite ease-in-out;}
+      .gm-spr {animation:gm-spr .8s infinite ease-in-out;}
+      .gm-enm {animation:gm-enm 1.1s infinite ease-in-out;}
+      @keyframes gm-flick{0%,100%{opacity:.96;}50%{opacity:1;}}
+      @keyframes gm-spr{0%,100%{transform:translateY(0);}50%{transform:translateY(-1.4px);}}
+      @keyframes gm-enm{0%,100%{transform:translateX(0);}50%{transform:translateX(-2px);}}
+      @keyframes gm-lean{0%,58%,100%{transform:translateY(0) rotate(0);}74%{transform:translateY(-2px) rotate(-2deg);}84%{transform:translateY(0) rotate(0);}}
+      @keyframes gm-shadow{0%,100%{transform:scaleX(1);opacity:.5;}74%{transform:scaleX(.9);opacity:.42;}}
+      @keyframes gm-blink{0%,45%,55%,100%{transform:scaleY(.82);}50%{transform:scaleY(.1);}}
+      @keyframes gm-hold-l{0%,100%{transform:rotate(46deg);}74%{transform:rotate(40deg);}}
+      @keyframes gm-hold-r{0%,100%{transform:rotate(-46deg);}74%{transform:rotate(-40deg);}}
+      @keyframes gm-press{0%{transform:translateY(-.3px);}100%{transform:translateY(.5px);}}
+      @keyframes gm-glow{0%{opacity:.1;}100%{opacity:.26;}}
+    </style></defs>
+
+    <!-- monitor / game screen (faced by crab) -->
+    <g class="gm-scr">
+      <rect x="-1" y="-12.5" width="18" height="11.4" rx="1.2" fill="#16161d"/>
+      <rect x=".4" y="-11.1" width="15.2" height="8.5" rx=".6" fill="#0b1626"/>
+      <rect x=".4" y="-4.9" width="15.2" height="2.3" fill="#15401b"/>
+      <rect class="gm-spr" x="2.4" y="-6.9" width="1.9" height="2" fill="#4ad6ff"/>
+      <rect class="gm-enm" x="10" y="-5" width="1.7" height="2.4" fill="#ff5a5a"/>
+      <rect x="12.8" y="-9.8" width="1.1" height="1.1" rx=".55" fill="#ffd14a"/>
+      <rect x="5.2" y="-10" width=".9" height=".9" fill="#fff" opacity=".6"/>
+      <rect x="7" y="-1.2" width="2.6" height="2" fill="#16161d"/>
+      <rect x="3.8" y=".8" width="9" height="1.4" rx=".6" fill="#16161d"/>
+    </g>
+
+    <rect class="gm-shad" x="3" y="15" width="9" height="1" fill="#000" opacity=".5"/>
+    <g class="gm-body">
+      <g fill="#DE886D">
+        <rect x="3" y="13" width="1" height="2"/><rect x="5" y="13" width="1" height="2"/>
+        <rect x="9" y="13" width="1" height="2"/><rect x="11" y="13" width="1" height="2"/>
+      </g>
+      <rect x="2" y="6" width="11" height="7" fill="#DE886D"/>
+      <!-- screen glow on face -->
+      <rect class="gm-glow" x="2" y="6" width="11" height="5" fill="#4ad6ff" rx="1"/>
+      <g class="gm-al"><rect x="0" y="9" width="2" height="2" fill="#DE886D"/></g>
+      <g class="gm-ar"><rect x="13" y="9" width="2" height="2" fill="#DE886D"/></g>
+      <g class="gm-eye" fill="#000"><rect x="4" y="8" width="1" height="2"/><rect x="10" y="8" width="1" height="2"/></g>
+      <!-- controller (foreground, held in front) -->
+      <g>
+        <rect x="2.6" y="10.4" width="9.8" height="2.8" rx="1.3" fill="#2b2b34"/>
+        <rect x="2.6" y="10.4" width="9.8" height=".9" rx="1.3" fill="#3a3a46"/>
+        <!-- d-pad -->
+        <rect x="4" y="11.4" width="1.8" height=".7" fill="#555"/>
+        <rect x="4.55" y="10.85" width=".7" height="1.8" fill="#555"/>
+        <!-- buttons -->
+        <circle class="gm-ba" cx="9.4" cy="11.3" r=".7" fill="#ff5555"/>
+        <circle class="gm-bb" cx="10.8" cy="12" r=".7" fill="#ffd14a"/>
+      </g>
+    </g>
+    </svg>

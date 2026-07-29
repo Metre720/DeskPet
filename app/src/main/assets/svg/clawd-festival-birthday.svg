@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -25 45 45">
+    <defs><style>
+      .bd-all {transform-origin:7.5px 15px;animation:bd-hop 1.1s infinite ease-in-out;}
+      .bd-shad{transform-origin:7.5px 15.5px;animation:bd-shadow 1.1s infinite ease-in-out;}
+      .bd-eye {transform-origin:7.5px 9px;animation:bd-blink 2.2s infinite;}
+      .bd-al  {transform-origin:2px 10px;animation:bd-arm-l .55s infinite alternate ease-in-out;}
+      .bd-ar  {transform-origin:14px 10px;animation:bd-arm-r .55s infinite alternate ease-in-out;}
+      .bd-hat {transform-origin:7.5px 6px;animation:bd-hatwob 1.1s infinite ease-in-out;}
+      .bd-flame{transform-origin:7.5px 9.5px;animation:bd-flame .22s infinite alternate ease-in-out;}
+      .bd-cf  {opacity:0;animation:bd-confetti var(--d,1.3s) var(--delay,0s) infinite ease-in;}
+      @keyframes bd-hop{
+        0%,18%,100%{transform:translateY(0) scaleY(1) scaleX(1);}
+        24%{transform:translateY(.4px) scaleY(.86) scaleX(1.1);}
+        46%{transform:translateY(-6px) scaleY(1.05) scaleX(.97);}
+        52%{transform:translateY(-7px) scaleY(1) scaleX(1);}
+        58%{transform:translateY(-6px) scaleY(1.05) scaleX(.97);}
+        82%{transform:translateY(.4px) scaleY(.86) scaleX(1.1);}
+        90%{transform:translateY(0) scaleY(1.03) scaleX(.99);}
+      }
+      @keyframes bd-shadow{
+        0%,18%,100%{transform:scaleX(1);opacity:.5;}
+        46%,58%{transform:scaleX(.55);opacity:.18;}
+        82%{transform:scaleX(1.12);opacity:.6;}
+      }
+      @keyframes bd-blink{0%,44%,56%,100%{transform:scaleY(1);}50%{transform:scaleY(.1);}}
+      @keyframes bd-arm-l{0%{transform:rotate(35deg);}100%{transform:rotate(75deg);}}
+      @keyframes bd-arm-r{0%{transform:rotate(-35deg);}100%{transform:rotate(-75deg);}}
+      @keyframes bd-hatwob{
+        0%,18%,100%{transform:rotate(0deg);}
+        52%{transform:rotate(-7deg);}
+        82%{transform:rotate(5deg);}
+      }
+      @keyframes bd-flame{0%{transform:scaleX(1) scaleY(1);}100%{transform:scaleX(.65) scaleY(1.25) translateX(.1px);}}
+      @keyframes bd-confetti{
+        0%{opacity:0;transform:translate(0,0) rotate(0deg);}
+        12%{opacity:1;}
+        85%{opacity:.8;}
+        100%{opacity:0;transform:translate(var(--tx,3px),22px) rotate(var(--r,200deg));}
+      }
+    </style></defs>
+
+    <!-- confetti behind -->
+    <g>
+      <rect class="bd-cf" style="--delay:0s;--d:1.4s;--tx:-6px;--r:220deg"  x="-6" y="-20" width="1.6" height="1.6" fill="#FF4444"/>
+      <rect class="bd-cf" style="--delay:-.3s;--d:1.1s;--tx:5px;--r:160deg" x="13" y="-22" width="1.6" height="1"   fill="#FFD700"/>
+      <rect class="bd-cf" style="--delay:-.6s;--d:1.5s;--tx:-3px;--r:280deg"x="3"  y="-23" width="1"   height="1.6" fill="#44AAFF"/>
+      <rect class="bd-cf" style="--delay:-.9s;--d:1.2s;--tx:7px;--r:90deg"  x="19" y="-19" width="1.6" height="1"   fill="#FF69B4"/>
+      <rect class="bd-cf" style="--delay:-.2s;--d:1.6s;--tx:-8px;--r:320deg"x="-9" y="-16" width="1"   height="1.6" fill="#44DD88"/>
+      <rect class="bd-cf" style="--delay:-.7s;--d:1.05s;--tx:4px;--r:180deg"x="9"  y="-24" width="1.6" height="1"   fill="#FF9500"/>
+      <rect class="bd-cf" style="--delay:-.45s;--d:1.35s;--tx:-5px;--r:240deg"x="16" y="-18" width="1"  height="1"   fill="#CC44FF"/>
+      <rect class="bd-cf" style="--delay:-.85s;--d:1.15s;--tx:2px;--r:120deg"x="-3" y="-21" width="1.6" height="1.6" fill="#FFD700"/>
+    </g>
+
+    <rect class="bd-shad" x="3" y="15" width="9" height="1" fill="#000" opacity=".5"/>
+
+    <g class="bd-all">
+      <!-- party hat (sits on head, moves with body) -->
+      <g class="bd-hat">
+        <rect x="6.5" y="-1.5" width="2" height="2" fill="#fff"/>
+        <rect x="6"   y=".5" width="3"  height="1" fill="#FF4444"/>
+        <rect x="5"   y="1.5" width="5"  height="1" fill="#FFD700"/>
+        <rect x="4"   y="2.5" width="7"  height="1" fill="#FF4444"/>
+        <rect x="3"   y="3.5"  width="9"  height="1" fill="#FFD700"/>
+        <rect x="2"   y="4.5"  width="11" height="1.2" fill="#FF4444"/>
+        <rect x="2"   y="5.5"  width="11" height=".6" fill="#fff" opacity=".55"/>
+      </g>
+      <g fill="#DE886D">
+        <rect x="3" y="13" width="1" height="2"/><rect x="5" y="13" width="1" height="2"/>
+        <rect x="9" y="13" width="1" height="2"/><rect x="11" y="13" width="1" height="2"/>
+      </g>
+      <rect x="2" y="6" width="11" height="7" fill="#DE886D"/>
+      <g class="bd-al"><rect x="0" y="9" width="2" height="2" fill="#DE886D"/></g>
+      <g class="bd-ar"><rect x="13" y="9" width="2" height="2" fill="#DE886D"/></g>
+      <g class="bd-eye" fill="#000"><rect x="4" y="8" width="1" height="2"/><rect x="10" y="8" width="1" height="2"/></g>
+    </g>
+
+    <!-- cake (foreground, in front of feet) -->
+    <g transform="translate(2.5,13.5)">
+      <rect x="-1" y="3.2" width="11" height=".8" fill="#bbb"/>            <!-- plate -->
+      <rect x="0" y="0" width="9" height="3.4" fill="#F48FB1"/>
+      <rect x="0" y="-.6" width="9" height="1" fill="#fff"/>
+      <rect x="1" y="-.6" width="1" height="1.5" fill="#fff"/>
+      <rect x="4" y="-.6" width="1" height="1.7" fill="#fff"/>
+      <rect x="7" y="-.6" width="1" height="1.4" fill="#fff"/>
+      <rect x="0" y="1.6" width="9" height=".5" fill="#fff" opacity=".4"/>
+      <rect x="4" y="-4" width="1" height="3.4" fill="#FFD700"/>            <!-- candle -->
+      <g class="bd-flame">
+        <rect x="4" y="-6" width="1" height="2" fill="#FF6B00"/>
+        <rect x="4.2" y="-6.5" width=".6" height="1" fill="#FFD700"/>
+      </g>
+    </g>
+    </svg>
