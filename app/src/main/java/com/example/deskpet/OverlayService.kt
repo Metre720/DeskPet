@@ -454,11 +454,18 @@ class OverlayService : Service() {
         handler.postDelayed(keyboardCheckRunnable!!, 2000)
     }
     private fun isKeyboardVisible(): Boolean {
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         return try {
-            val method = imm.javaClass.getMethod("getInputMethodWindowVisibleHeight")
-            val height = method.invoke(imm) as Int
-            height > 100
+            if (android.os.Build.VERSION.SDK_INT >= 30) {
+                val insets = overlayView?.rootWindowInsets
+                if (insets != null) {
+                    return insets.isVisible(android.view.WindowInsets.Type.ime())
+                }
+            }
+            val rect = android.graphics.Rect()
+            overlayView?.getWindowVisibleDisplayFrame(rect)
+            val screenHeight = resources.displayMetrics.heightPixels
+            val keyboardHeight = screenHeight - rect.bottom
+            keyboardHeight > 200
         } catch (e: Exception) { false }
     }
     // === FOREGROUND APP DETECTION ===
