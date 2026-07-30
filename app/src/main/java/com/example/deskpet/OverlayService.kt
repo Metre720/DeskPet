@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.media.AudioManager
 import android.graphics.PixelFormat
 import android.os.Build
 import android.os.Environment
@@ -30,6 +31,8 @@ class OverlayService : Service() {
     private val handler = Handler(Looper.getMainLooper())
     private var screenshotObserver: FileObserver? = null
     private var batteryReceiver: BroadcastReceiver? = null
+    private var musicCheckRunnable: Runnable? = null
+    private var isMusicPlaying = false
     companion object {
         private const val CHANNEL_ID = "pet_overlay_channel"
         private const val NOTIFICATION_ID = 1001
@@ -51,6 +54,7 @@ class OverlayService : Service() {
         setupOverlay()
         setupScreenshotObserver()
         setupBatteryReceiver()
+        setupMusicChecker()
     }
     private fun setupOverlay() {
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
@@ -101,7 +105,8 @@ class OverlayService : Service() {
     private var lastMoveX = 0f
     private var lastMoveTime = 0L
     private var isFlung = false
-    private val FLING_VELOCITY_THRESHOLD = 700f
+    private val FLING_VELOCITY_THRESHOLD = 600f
+    private val FLING_DIST_THRESHOLD = 70f
     private val tapResetRunnable = Runnable { tapCount = 0 }
     private val longPressStartRunnable = Runnable {
         if (!hasMoved) {
@@ -163,10 +168,16 @@ class OverlayService : Service() {
                         onTapCount(1)
                     } else if (hasMoved && !isMiniMode) {
                         val upTime = System.currentTimeMillis()
-                        val dt = (upTime - lastMoveTime).coerceAtLeast(1)
-                        val velocityX = Math.abs(event.rawX - lastMoveX) / dt * 1000f
-                        if (velocityX > FLING_VELOCITY_THRESHOLD) {
-                            val flingLeft = (event.rawX - lastMoveX) < 0
+                        val totalDist = Math.sqrt(
+                            ((event.rawX - initialTouchX) * (event.rawX - initialTouchX) +
+                             (event.rawY - initialTouchY) * (event.rawY - initialTouchY)).toDouble()
+                        ).toFloat()
+                        val totalTime = ((upTime - touchStartTime).coerceAtLeast(1)) / 1000f
+                        val speed = totalDist / totalTime
+                        if (speed > 80f && totalDist > FLING_DIST_THRESHOLD && speed > FLING_VELOCITY_THRESHOLD) {
+                            val dx = event.rawX - initialTouchX
+                            val dy = event.rawY - initialTouchY
+                            val flingLeft = if (Math.abs(dx) >= Math.abs(dy)) dx < 0 else dy < 0
                             onFling(flingLeft)
                         } else if (!checkEdgeSnap()) {
                             onDragEnd()
@@ -288,6 +299,33 @@ class OverlayService : Service() {
             "window.petEngine && window.petEngine.onDragEnd()", null
         )
     }
+    // === MUSIC DETECTION ===
+    private fun setupMusicChecker() {
+        musicCheckRunnable = object : Runnable {
+            override fun run() {
+                val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+                val playing = audioManager.isMusicActive
+                if (playing && !isMusicPlaying) {
+                    isMusicPlaying = true
+                    handler.post {
+                        overlayView?.evaluateJavascript(
+                            "window.petEngine && window.petEngine.onMusicStart()", null
+                        )
+                    }
+                } else if (!playing && isMusicPlaying) {
+                    isMusicPlaying = false
+                    handler.post {
+                        overlayView?.evaluateJavascript(
+                            "window.petEngine && window.petEngine.onMusicStop()", null
+                        )
+                    }
+                }
+                handler.postDelayed(this, 3000)
+            }
+        }
+        handler.postDelayed(musicCheckRunnable!!, 3000)
+    }
+
     // === SCREENSHOT OBSERVER ===
     private fun setupScreenshotObserver() {
         val screenshotDir = File(
@@ -369,6 +407,8 @@ class OverlayService : Service() {
         return (dp * resources.displayMetrics.density).toInt()
     }
     override fun onDestroy() {
+        musicCheckRunnable?.let { handler.removeCallbacks(it) }
+        musicCheckRunnable = null
         screenshotObserver?.stopWatching()
         screenshotObserver = null
         batteryReceiver?.let { unregisterReceiver(it) }
@@ -381,3 +421,4 @@ class OverlayService : Service() {
         super.onDestroy()
     }
 }
+
