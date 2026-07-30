@@ -19,6 +19,14 @@ import android.webkit.WebSettings
 import android.util.DisplayMetrics
 import androidx.core.app.NotificationCompat
 import java.io.File
+import android.app.usage.UsageStatsManager
+import android.app.usage.UsageEvents
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
+import android.view.inputmethod.InputMethodManager
+import java.util.Calendar
 class OverlayService : Service() {
     private var windowManager: WindowManager? = null
     private var overlayView: WebView? = null
@@ -33,6 +41,17 @@ class OverlayService : Service() {
     private var batteryReceiver: BroadcastReceiver? = null
     private var musicCheckRunnable: Runnable? = null
     private var isMusicPlaying = false
+    private var keyboardCheckRunnable: Runnable? = null
+    private var isKeyboardShowing = false
+    private var foregroundCheckRunnable: Runnable? = null
+    private var currentForegroundState = ""
+    private var lateNightActive = false
+    private var lateNightCheckRunnable: Runnable? = null
+    private var screenOffTime = 0L
+    private var screenReceiver: BroadcastReceiver? = null
+    private var packageReceiver: BroadcastReceiver? = null
+    private var networkCallback: ConnectivityManager.NetworkCallback? = null
+    private var alarmReceiver: BroadcastReceiver? = null
     companion object {
         private const val CHANNEL_ID = "pet_overlay_channel"
         private const val NOTIFICATION_ID = 1001
@@ -55,6 +74,13 @@ class OverlayService : Service() {
         setupScreenshotObserver()
         setupBatteryReceiver()
         setupMusicChecker()
+        setupKeyboardChecker()
+        setupForegroundChecker()
+        setupLateNightChecker()
+        setupScreenReceiver()
+        setupPackageReceiver()
+        setupNetworkCallback()
+        setupAlarmReceiver()
     }
     private fun setupOverlay() {
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
@@ -402,6 +428,225 @@ class OverlayService : Service() {
                 .createNotificationChannel(channel)
         }
     }
+    // === KEYBOARD DETECTION ===
+    private fun setupKeyboardChecker() {
+        keyboardCheckRunnable = object : Runnable {
+            override fun run() {
+                val visible = isKeyboardVisible()
+                if (visible && !isKeyboardShowing) {
+                    isKeyboardShowing = true
+                    handler.post {
+                        overlayView?.evaluateJavascript(
+                            "window.petEngine && window.petEngine.onKeyboardShow()", null
+                        )
+                    }
+                } else if (!visible && isKeyboardShowing) {
+                    isKeyboardShowing = false
+                    handler.post {
+                        overlayView?.evaluateJavascript(
+                            "window.petEngine && window.petEngine.onKeyboardHide()", null
+                        )
+                    }
+                }
+                handler.postDelayed(this, 2000)
+            }
+        }
+        handler.postDelayed(keyboardCheckRunnable!!, 2000)
+    }
+    private fun isKeyboardVisible(): Boolean {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        return try {
+            val method = imm.javaClass.getMethod("getInputMethodWindowVisibleHeight")
+            val height = method.invoke(imm) as Int
+            height > 100
+        } catch (e: Exception) { false }
+    }
+    // === FOREGROUND APP DETECTION ===
+    private val gamePackages = setOf("com.netease.tom", "com.tencent.tmgp.sgame", "com.miHoYo.Yuanshen")
+    private val studyPackages = setOf("cn.wps.moffice_eng", "com.baidu.homework")
+    private val operitPackage = "com.ai.assistance.operit"
+    private fun setupForegroundChecker() {
+        foregroundCheckRunnable = object : Runnable {
+            override fun run() {
+                val pkg = getForegroundPackage()
+                val newState = when {
+                    pkg in gamePackages -> "game"
+                    pkg == operitPackage -> "operit"
+                    pkg in studyPackages -> "study"
+                    else -> ""
+                }
+                if (newState != currentForegroundState) {
+                    val oldState = currentForegroundState
+                    currentForegroundState = newState
+                    handler.post { onForegroundStateChanged(oldState, newState) }
+                }
+                handler.postDelayed(this, 3000)
+            }
+        }
+        handler.postDelayed(foregroundCheckRunnable!!, 5000)
+    }
+    private fun getForegroundPackage(): String {
+        val usm = getSystemService(Context.USAGE_STATS_SERVICE) as? UsageStatsManager ?: return ""
+        val now = System.currentTimeMillis()
+        val events = usm.queryEvents(now - 5000, now)
+        var lastPkg = ""
+        val event = UsageEvents.Event()
+        while (events.hasNextEvent()) {
+            events.getNextEvent(event)
+            if (event.eventType == UsageEvents.Event.MOVE_TO_FOREGROUND) {
+                lastPkg = event.packageName
+            }
+        }
+        return lastPkg
+    }
+    private fun onForegroundStateChanged(old: String, new: String) {
+        if (old.isNotEmpty()) {
+            val stopMethod = when (old) {
+                "game" -> "onGameStop"
+                "operit" -> "onOperitStop"
+                "study" -> "onStudyStop"
+                else -> null
+            }
+            stopMethod?.let {
+                overlayView?.evaluateJavascript(
+                    "window.petEngine && window.petEngine.$it()", null
+                )
+            }
+        }
+        if (new.isNotEmpty()) {
+            val startMethod = when (new) {
+                "game" -> "onGameStart"
+                "operit" -> "onOperitStart"
+                "study" -> "onStudyStart"
+                else -> null
+            }
+            startMethod?.let {
+                overlayView?.evaluateJavascript(
+                    "window.petEngine && window.petEngine.$it()", null
+                )
+            }
+        }
+    }
+    // === LATE NIGHT DETECTION ===
+    private fun setupLateNightChecker() {
+        lateNightCheckRunnable = object : Runnable {
+            override fun run() {
+                val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+                if (hour >= 1 && hour < 6 && !lateNightActive) {
+                    lateNightActive = true
+                    handler.post {
+                        overlayView?.evaluateJavascript(
+                            "window.petEngine && window.petEngine.onLateNight()", null
+                        )
+                    }
+                } else if ((hour >= 6 || hour < 1) && lateNightActive) {
+                    lateNightActive = false
+                    handler.post {
+                        overlayView?.evaluateJavascript(
+                            "window.petEngine && window.petEngine.onLateNightEnd()", null
+                        )
+                    }
+                }
+                handler.postDelayed(this, 60000)
+            }
+        }
+        handler.postDelayed(lateNightCheckRunnable!!, 10000)
+    }
+    // === SCREEN OFF DETECTION (for late night end) ===
+    private fun setupScreenReceiver() {
+        screenReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                when (intent?.action) {
+                    Intent.ACTION_SCREEN_OFF -> {
+                        screenOffTime = System.currentTimeMillis()
+                    }
+                    Intent.ACTION_SCREEN_ON -> {
+                        if (lateNightActive && screenOffTime > 0) {
+                            val offDuration = System.currentTimeMillis() - screenOffTime
+                            if (offDuration > 600000) {
+                                lateNightActive = false
+                                handler.post {
+                                    overlayView?.evaluateJavascript(
+                                        "window.petEngine && window.petEngine.onLateNightEnd()", null
+                                    )
+                                }
+                            }
+                        }
+                        screenOffTime = 0L
+                    }
+                }
+            }
+        }
+        val filter = IntentFilter().apply {
+            addAction(Intent.ACTION_SCREEN_OFF)
+            addAction(Intent.ACTION_SCREEN_ON)
+        }
+        registerReceiver(screenReceiver, filter)
+    }
+    // === APP INSTALL DETECTION ===
+    private fun setupPackageReceiver() {
+        packageReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                if (intent?.action == Intent.ACTION_PACKAGE_ADDED) {
+                    handler.post {
+                        overlayView?.evaluateJavascript(
+                            "window.petEngine && window.petEngine.onAppInstall()", null
+                        )
+                    }
+                    handler.postDelayed({
+                        overlayView?.evaluateJavascript(
+                            "window.petEngine && window.petEngine.onAppInstallDone()", null
+                        )
+                    }, 15000)
+                }
+            }
+        }
+        val filter = IntentFilter(Intent.ACTION_PACKAGE_ADDED).apply {
+            addDataScheme("package")
+        }
+        registerReceiver(packageReceiver, filter)
+    }
+    // === WIFI DETECTION ===
+    private fun setupNetworkCallback() {
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        networkCallback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                val caps = cm.getNetworkCapabilities(network)
+                if (caps?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true) {
+                    handler.post {
+                        overlayView?.evaluateJavascript(
+                            "window.petEngine && window.petEngine.onWifiConnected()", null
+                        )
+                    }
+                }
+            }
+        }
+        val request = NetworkRequest.Builder()
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            .build()
+        cm.registerNetworkCallback(request, networkCallback!!)
+    }
+    // === ALARM DETECTION ===
+    private fun setupAlarmReceiver() {
+        alarmReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                val action = intent?.action ?: return
+                if (action.contains("ALARM") || action.contains("alarm")) {
+                    handler.post {
+                        overlayView?.evaluateJavascript(
+                            "window.petEngine && window.petEngine.onAlarmRing()", null
+                        )
+                    }
+                }
+            }
+        }
+        val filter = IntentFilter().apply {
+            addAction("com.android.deskclock.ALARM_ALERT")
+            addAction("com.android.alarmclock.ALARM_ALERT")
+            addAction("android.intent.action.ALARM_CHANGED")
+        }
+        registerReceiver(alarmReceiver, filter)
+    }
     // === UTILS ===
     private fun dpToPx(dp: Int): Int {
         return (dp * resources.displayMetrics.density).toInt()
@@ -409,10 +654,27 @@ class OverlayService : Service() {
     override fun onDestroy() {
         musicCheckRunnable?.let { handler.removeCallbacks(it) }
         musicCheckRunnable = null
+        keyboardCheckRunnable?.let { handler.removeCallbacks(it) }
+        keyboardCheckRunnable = null
+        foregroundCheckRunnable?.let { handler.removeCallbacks(it) }
+        foregroundCheckRunnable = null
+        lateNightCheckRunnable?.let { handler.removeCallbacks(it) }
+        lateNightCheckRunnable = null
         screenshotObserver?.stopWatching()
         screenshotObserver = null
         batteryReceiver?.let { unregisterReceiver(it) }
         batteryReceiver = null
+        screenReceiver?.let { unregisterReceiver(it) }
+        screenReceiver = null
+        packageReceiver?.let { unregisterReceiver(it) }
+        packageReceiver = null
+        alarmReceiver?.let { unregisterReceiver(it) }
+        alarmReceiver = null
+        networkCallback?.let {
+            val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            cm.unregisterNetworkCallback(it)
+        }
+        networkCallback = null
         overlayView?.let {
             windowManager?.removeView(it)
             it.destroy()
