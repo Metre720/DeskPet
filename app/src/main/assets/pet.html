@@ -507,6 +507,22 @@ window.petEngine={
     showBubble('充电中~回血了');
     backToIdle();
   },
+  onMusicStart:function(){
+    resetLonely();
+    if(isMini)return;
+    loadState('dailyListening');
+    showBubble('摇起来~');
+    if(idleTimer){clearInterval(idleTimer);idleTimer=null;}
+  },
+  onMusicStop:function(){
+    if(isMini)return;
+    if(currentState==='dailyListening'){
+      loadState('idle');
+      showBubble('音乐停了...');
+      if(!idleTimer)idleTimer=setInterval(idleCycle,12000);
+      backToIdle();
+    }
+  },
   onNotification:function(pkg){
     resetLonely();
     if(isMini)return;
