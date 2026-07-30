@@ -126,8 +126,6 @@ class OverlayService : Service() {
                     initialTouchX = event.rawX
                     initialTouchY = event.rawY
                     touchStartTime = System.currentTimeMillis()
-                    lastMoveX = event.rawX
-                    lastMoveTime = System.currentTimeMillis()
                     hasMoved = false
                     isFlung = false
                     velocityTracker?.recycle()
@@ -149,11 +147,6 @@ class OverlayService : Service() {
                             params?.x = initialX + dx
                             params?.y = initialY + dy
                             windowManager?.updateViewLayout(overlayView, params)
-                        }
-                        val now = System.currentTimeMillis()
-                        if (now - lastMoveTime > 10) {
-                            lastMoveX = event.rawX
-                            lastMoveTime = now
                         }
                     }
                     true
