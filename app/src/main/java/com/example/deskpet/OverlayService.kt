@@ -102,11 +102,10 @@ class OverlayService : Service() {
     private var hasMoved = false
     private var tapCount = 0
     private var isLongPressing = false
-    private var lastMoveX = 0f
-    private var lastMoveTime = 0L
     private var isFlung = false
-    private val FLING_VELOCITY_THRESHOLD = 700f
-    private val FLING_DIST_THRESHOLD = 400f
+    private var velocityTracker: VelocityTracker? = null
+    private val FLING_VELOCITY_THRESHOLD = 2500f
+    private val FLING_DIST_THRESHOLD = 200f
     private val tapResetRunnable = Runnable { tapCount = 0 }
     private val longPressStartRunnable = Runnable {
         if (!hasMoved) {
@@ -131,10 +130,14 @@ class OverlayService : Service() {
                     lastMoveTime = System.currentTimeMillis()
                     hasMoved = false
                     isFlung = false
+                    velocityTracker?.recycle()
+                    velocityTracker = VelocityTracker.obtain()
+                    velocityTracker?.addMovement(event)
                     handler.postDelayed(longPressStartRunnable, 600)
                     true
                 }
                 MotionEvent.ACTION_MOVE -> {
+                    velocityTracker?.addMovement(event)
                     val dx = (event.rawX - initialTouchX).toInt()
                     val dy = (event.rawY - initialTouchY).toInt()
                     if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
@@ -167,14 +170,18 @@ class OverlayService : Service() {
                     } else if (isMiniMode && !hasMoved) {
                         onTapCount(1)
                     } else if (hasMoved && !isMiniMode) {
-                        val upTime = System.currentTimeMillis()
+                        velocityTracker?.addMovement(event)
+                        velocityTracker?.computeCurrentVelocity(1000)
+                        val vx = velocityTracker?.xVelocity ?: 0f
+                        val vy = velocityTracker?.yVelocity ?: 0f
+                        val speed = Math.sqrt((vx * vx + vy * vy).toDouble()).toFloat()
                         val totalDist = Math.sqrt(
                             ((event.rawX - initialTouchX) * (event.rawX - initialTouchX) +
                              (event.rawY - initialTouchY) * (event.rawY - initialTouchY)).toDouble()
                         ).toFloat()
-                        val totalTime = ((upTime - touchStartTime).coerceAtLeast(1)) / 1000f
-                        val speed = totalDist / totalTime
-                        if (speed > 80f && totalDist > FLING_DIST_THRESHOLD && speed > FLING_VELOCITY_THRESHOLD) {
+                        velocityTracker?.recycle()
+                        velocityTracker = null
+                        if (totalDist > FLING_DIST_THRESHOLD && speed > FLING_VELOCITY_THRESHOLD) {
                             val dx = event.rawX - initialTouchX
                             val dy = event.rawY - initialTouchY
                             val flingLeft = if (Math.abs(dx) >= Math.abs(dy)) dx < 0 else dy < 0
