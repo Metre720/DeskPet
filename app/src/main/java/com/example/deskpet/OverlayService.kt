@@ -645,7 +645,7 @@ class OverlayService : Service() {
             addAction("com.android.alarmclock.ALARM_ALERT")
             addAction("android.intent.action.ALARM_CHANGED")
         }
-        registerReceiver(alarmReceiver, filter)
+        registerReceiver(alarmReceiver, filter, android.content.Context.RECEIVER_EXPORTED)
     }
     // === UTILS ===
     private fun dpToPx(dp: Int): Int {
