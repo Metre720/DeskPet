@@ -62,6 +62,7 @@ var states={
 var currentState='idle';
 var bubbleTimer=null;
 var idleTimer=null;
+    var studyTimer=null;
 var backTimer=null;
 var isMini=false;
 var miniIdleTimer=null;
@@ -593,15 +594,15 @@ window.petEngine={
     loadState(studyAnims[Math.floor(Math.random()*studyAnims.length)]);
     showBubble(studyWords[Math.floor(Math.random()*studyWords.length)]);
     if(idleTimer){clearInterval(idleTimer);idleTimer=null;}
-    if(this._studyTimer){clearInterval(this._studyTimer);}
-    var self=this;
-    self._studyTimer=setInterval(function(){
-      loadState(studyAnims[Math.floor(Math.random()*studyAnims.length)]);
+    if(studyTimer){clearInterval(studyTimer);studyTimer=null;}
+    studyTimer=setInterval(function(){
+      var sa=['debugger','dailyReading','reading'];
+      loadState(sa[Math.floor(Math.random()*sa.length)]);
     },12000);
   },
   onStudyStop:function(){
     if(isMini)return;
-    if(this._studyTimer){clearInterval(this._studyTimer);this._studyTimer=null;}
+    if(studyTimer){clearInterval(studyTimer);studyTimer=null;}
     if(currentState==='debugger'||currentState==='dailyReading'||currentState==='reading'){
       loadState('idle');
       if(!idleTimer)idleTimer=setInterval(idleCycle,12000);
