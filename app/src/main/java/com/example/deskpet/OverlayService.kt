@@ -455,23 +455,22 @@ class OverlayService : Service() {
     }
     private fun isKeyboardVisible(): Boolean {
         return try {
-            if (android.os.Build.VERSION.SDK_INT >= 30) {
-                val insets = overlayView?.rootWindowInsets
-                if (insets != null) {
-                    return insets.isVisible(android.view.WindowInsets.Type.ime())
-                }
-            }
-            val rect = android.graphics.Rect()
-            overlayView?.getWindowVisibleDisplayFrame(rect)
-            val screenHeight = resources.displayMetrics.heightPixels
-            val keyboardHeight = screenHeight - rect.bottom
-            keyboardHeight > 200
+            val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", "dumpsys input_method | grep mInputShown"))
+            val output = process.inputStream.bufferedReader().readText()
+            process.waitFor()
+            output.contains("mInputShown=true")
         } catch (e: Exception) { false }
     }
     // === FOREGROUND APP DETECTION ===
     private val gamePackages = setOf("com.netease.tom", "com.tencent.tmgp.sgame", "com.miHoYo.Yuanshen")
     private val studyPackages = setOf("cn.wps.moffice_eng", "com.baidu.homework")
     private val operitPackage = "com.ai.assistance.operit"
+    private val shoppingPackages = setOf("com.taobao.taobao", "com.xunmeng.pinduoduo")
+    private val xhsPackage = "com.xingin.xhs"
+    private val douyinPackage = "com.ss.android.ugc.aweme"
+    private val biliPackage = "tv.danmaku.bili"
+    private val hongguoPackage = "com.jifen.qukan.video"
+    private val cameraPackages = setOf("com.android.camera", "com.huawei.camera", "com.sec.android.app.camera", "com.oppo.camera", "com.miui.camera", "com.vivo.camera")
     private fun setupForegroundChecker() {
         foregroundCheckRunnable = object : Runnable {
             override fun run() {
@@ -480,6 +479,12 @@ class OverlayService : Service() {
                     pkg in gamePackages -> "game"
                     pkg == operitPackage -> "operit"
                     pkg in studyPackages -> "study"
+                    pkg in shoppingPackages -> "shopping"
+                    pkg == xhsPackage -> "xhs"
+                    pkg == douyinPackage -> "douyin"
+                    pkg == biliPackage -> "bili"
+                    pkg == hongguoPackage -> "hongguo"
+                    pkg in cameraPackages -> "camera"
                     else -> ""
                 }
                 if (newState != currentForegroundState) {
@@ -512,6 +517,12 @@ class OverlayService : Service() {
                 "game" -> "onGameStop"
                 "operit" -> "onOperitStop"
                 "study" -> "onStudyStop"
+                "shopping" -> "onShoppingStop"
+                "xhs" -> "onXhsStop"
+                "douyin" -> "onDouyinStop"
+                "bili" -> "onBiliStop"
+                "hongguo" -> "onHongguoStop"
+                "camera" -> "onCameraStop"
                 else -> null
             }
             stopMethod?.let {
@@ -525,6 +536,12 @@ class OverlayService : Service() {
                 "game" -> "onGameStart"
                 "operit" -> "onOperitStart"
                 "study" -> "onStudyStart"
+                "shopping" -> "onShoppingStart"
+                "xhs" -> "onXhsStart"
+                "douyin" -> "onDouyinStart"
+                "bili" -> "onBiliStart"
+                "hongguo" -> "onHongguoStart"
+                "camera" -> "onCameraStart"
                 else -> null
             }
             startMethod?.let {
