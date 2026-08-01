@@ -696,6 +696,7 @@ window.petEngine={
     var words=['老板娘在巡店','看看就好别下单','又在逛了','钱包在哭','下单前三思','买了吗买了吗','购物车又满了吧','剁手冠军'];
     loadState('typingBoss');
     showBubble(words[Math.floor(Math.random()*words.length)]);
+    setTimeout(function(){loadState('idle');if(!idleTimer)idleTimer=setInterval(idleCycle,12000);},15000);
   },
   onShoppingStop:function(){
     if(isMini)return;
@@ -708,6 +709,7 @@ window.petEngine={
     var words=['又在种草','看到啥好东西了','别光收藏不看','笔记刷不完的','被安利了？'];
     loadState('reading');
     showBubble(words[Math.floor(Math.random()*words.length)]);
+    setTimeout(function(){loadState('idle');if(!idleTimer)idleTimer=setInterval(idleCycle,12000);},15000);
   },
   onXhsStop:function(){
     if(isMini)return;
@@ -720,6 +722,7 @@ window.petEngine={
     var words=['又刷上了','一个接一个停不下来吧','别刷太久眼睛疼','好看吗给我也看看','时间杀手'];
     loadState('headphones');
     showBubble(words[Math.floor(Math.random()*words.length)]);
+    setTimeout(function(){loadState('idle');if(!idleTimer)idleTimer=setInterval(idleCycle,12000);},15000);
   },
   onDouyinStop:function(){
     if(isMini)return;
@@ -732,6 +735,7 @@ window.petEngine={
     var words=['追番呢？','弹幕比视频好看','看的啥','三连了吗','别通宵追番'];
     loadState('headphones');
     showBubble(words[Math.floor(Math.random()*words.length)]);
+    setTimeout(function(){loadState('idle');if(!idleTimer)idleTimer=setInterval(idleCycle,12000);},15000);
   },
   onBiliStop:function(){
     if(isMini)return;
@@ -744,6 +748,7 @@ window.petEngine={
     var words=['又追剧了','好看吗','一集接一集停不下来吧','别熬夜追','追到第几集了'];
     loadState('reading');
     showBubble(words[Math.floor(Math.random()*words.length)]);
+    setTimeout(function(){loadState('idle');if(!idleTimer)idleTimer=setInterval(idleCycle,12000);},15000);
   },
   onHongguoStop:function(){
     if(isMini)return;
@@ -757,6 +762,7 @@ window.petEngine={
     loadState('hobbyPhoto');
     showBubble(words[Math.floor(Math.random()*words.length)]);
     if(idleTimer){clearInterval(idleTimer);idleTimer=null;}
+    setTimeout(function(){loadState('idle');if(!idleTimer)idleTimer=setInterval(idleCycle,12000);},15000);
   },
   onCameraStop:function(){
     if(isMini)return;
