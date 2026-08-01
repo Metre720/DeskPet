@@ -224,14 +224,15 @@ var lonelyStages=[
   {time:900000, state:'carrying', msg:null},
   {time:1200000, state:'yawn', msg:'好无聊...'},
   {time:1500000, state:'doze', msg:null},
-  {time:1800000, state:'sleeping', msg:'zzZ'}
+  {time:1800000, state:'sleeping', msg:'zzZ'},
+  {time:2400000, state:'dailySleeping', msg:'zzZ...'}
 ];
 function resetLonely(){
   lastInteraction=Date.now();
   if(isLonely){
     isLonely=false;
     lonelyLevel=0;
-    if(currentState==='sleeping'||currentState==='doze'||currentState==='yawn'){
+    if(currentState==='sleeping'||currentState==='dailySleeping'||currentState==='doze'||currentState==='yawn'){
       loadState('wake');
       showBubble('嗯...你来啦');
       backToIdle();
@@ -300,7 +301,7 @@ function backToIdle(){
     }
   },2500);
 }
-var idlePool=['idle','idle','look','bubble','yawn','reading','coffee','headphones','follow','crabwalk','sweeping','idleCollapse','notification','carrying','thinking','dailyGaming','dailyListening','dailyReading','dailySinging','hobbyCoffee','hobbyPainting','hobbyGuitar','hobbyCoding','hobbyWatering','dailyExercising','building','debugger','juggling','typingBoss','ultrathink','wizard'];
+var idlePool=['idle','idle','look','bubble','yawn','reading','coffee','headphones','follow','crabwalk','sweeping','idleCollapse','notification','carrying','thinking','dailyGaming','dailyListening','dailyReading','dailySinging','hobbyCoffee','hobbyPainting','hobbyGuitar','hobbyCoding','hobbyWatering','dailyExercising','building','debugger','juggling','typingBoss','ultrathink','wizard','dailyBathing','dailySleeping','hobbyPhoto'];
 function idleCycle(){
   if(isMini||isLonely)return;
   var pick=idlePool[Math.floor(Math.random()*idlePool.length)];
@@ -625,7 +626,7 @@ window.petEngine={
     if(isMini)return;
     this._gameBoostActive=false;
     idlePool=idlePool.filter(function(x){return !(x==='dailyGaming'&&idlePool.indexOf(x)>idlePool.lastIndexOf('dailyExercising'))||!(x==='juggling'&&idlePool.indexOf(x)>idlePool.lastIndexOf('dailyExercising'));});
-    idlePool=['idle','idle','look','bubble','yawn','reading','coffee','headphones','follow','crabwalk','sweeping','idleCollapse','notification','carrying','thinking','dailyGaming','dailyListening','dailyReading','dailySinging','hobbyCoffee','hobbyPainting','hobbyGuitar','hobbyCoding','hobbyWatering','dailyExercising','building','debugger','juggling','typingBoss','ultrathink','wizard'];
+    idlePool=['idle','idle','look','bubble','yawn','reading','coffee','headphones','follow','crabwalk','sweeping','idleCollapse','notification','carrying','thinking','dailyGaming','dailyListening','dailyReading','dailySinging','hobbyCoffee','hobbyPainting','hobbyGuitar','hobbyCoding','hobbyWatering','dailyExercising','building','debugger','juggling','typingBoss','ultrathink','wizard','dailyBathing','dailySleeping','hobbyPhoto'];
     if(currentState==='dailyGaming'||currentState==='juggling'){
       loadState('idle');
       if(!idleTimer)idleTimer=setInterval(idleCycle,12000);
@@ -646,7 +647,7 @@ window.petEngine={
     if(isMini)return;
     this._operitBoostActive=false;
     idlePool=idlePool.filter(function(x,i){return !(x==='typingBoss'&&i>idlePool.indexOf('wizard'));});
-    idlePool=['idle','idle','look','bubble','yawn','reading','coffee','headphones','follow','crabwalk','sweeping','idleCollapse','notification','carrying','thinking','dailyGaming','dailyListening','dailyReading','dailySinging','hobbyCoffee','hobbyPainting','hobbyGuitar','hobbyCoding','hobbyWatering','dailyExercising','building','debugger','juggling','typingBoss','ultrathink','wizard'];
+    idlePool=['idle','idle','look','bubble','yawn','reading','coffee','headphones','follow','crabwalk','sweeping','idleCollapse','notification','carrying','thinking','dailyGaming','dailyListening','dailyReading','dailySinging','hobbyCoffee','hobbyPainting','hobbyGuitar','hobbyCoding','hobbyWatering','dailyExercising','building','debugger','juggling','typingBoss','ultrathink','wizard','dailyBathing','dailySleeping','hobbyPhoto'];
     if(currentState==='typingBoss'){
       loadState('idle');
       if(!idleTimer)idleTimer=setInterval(idleCycle,12000);
@@ -666,7 +667,7 @@ window.petEngine={
   onLateNightEnd:function(){
     if(isMini)return;
     this._lateNightActive=false;
-    idlePool=['idle','idle','look','bubble','yawn','reading','coffee','headphones','follow','crabwalk','sweeping','idleCollapse','notification','carrying','thinking','dailyGaming','dailyListening','dailyReading','dailySinging','hobbyCoffee','hobbyPainting','hobbyGuitar','hobbyCoding','hobbyWatering','dailyExercising','building','debugger','juggling','typingBoss','ultrathink','wizard'];
+    idlePool=['idle','idle','look','bubble','yawn','reading','coffee','headphones','follow','crabwalk','sweeping','idleCollapse','notification','carrying','thinking','dailyGaming','dailyListening','dailyReading','dailySinging','hobbyCoffee','hobbyPainting','hobbyGuitar','hobbyCoding','hobbyWatering','dailyExercising','building','debugger','juggling','typingBoss','ultrathink','wizard','dailyBathing','dailySleeping','hobbyPhoto'];
     if(currentState==='ultrathink'){
       loadState('idle');
       if(!idleTimer)idleTimer=setInterval(idleCycle,12000);
@@ -687,8 +688,101 @@ window.petEngine={
     loadState('wizard');
     showBubble('连接成功~');
     backToIdle();
+  },
+  onShoppingStart:function(){
+    resetLonely();
+    if(isMini)return;
+    var words=['老板娘在巡店','看看就好别下单','又在逛了','钱包在哭','下单前三思','买了吗买了吗','购物车又满了吧','剁手冠军'];
+    loadState('typingBoss');
+    showBubble(words[Math.floor(Math.random()*words.length)]);
+    backToIdle();
+  },
+  onShoppingStop:function(){
+    if(isMini)return;
+    if(currentState==='typingBoss'){loadState('idle');if(!idleTimer)idleTimer=setInterval(idleCycle,12000);backToIdle();}
+  },
+  onXhsStart:function(){
+    resetLonely();
+    if(isMini)return;
+    var words=['又在种草','看到啥好东西了','别光收藏不看','笔记刷不完的','被安利了？'];
+    loadState('reading');
+    showBubble(words[Math.floor(Math.random()*words.length)]);
+    backToIdle();
+  },
+  onXhsStop:function(){
+    if(isMini)return;
+    if(currentState==='reading'){loadState('idle');if(!idleTimer)idleTimer=setInterval(idleCycle,12000);backToIdle();}
+  },
+  onDouyinStart:function(){
+    resetLonely();
+    if(isMini)return;
+    var words=['又刷上了','一个接一个停不下来吧','别刷太久眼睛疼','好看吗给我也看看','时间杀手'];
+    loadState('headphones');
+    showBubble(words[Math.floor(Math.random()*words.length)]);
+    backToIdle();
+  },
+  onDouyinStop:function(){
+    if(isMini)return;
+    if(currentState==='headphones'){loadState('idle');if(!idleTimer)idleTimer=setInterval(idleCycle,12000);backToIdle();}
+  },
+  onBiliStart:function(){
+    resetLonely();
+    if(isMini)return;
+    var words=['追番呢？','弹幕比视频好看','看的啥','三连了吗','别通宵追番'];
+    loadState('headphones');
+    showBubble(words[Math.floor(Math.random()*words.length)]);
+    backToIdle();
+  },
+  onBiliStop:function(){
+    if(isMini)return;
+    if(currentState==='headphones'){loadState('idle');if(!idleTimer)idleTimer=setInterval(idleCycle,12000);backToIdle();}
+  },
+  onHongguoStart:function(){
+    resetLonely();
+    if(isMini)return;
+    var words=['又追剧了','好看吗','一集接一集停不下来吧','别熬夜追','追到第几集了'];
+    loadState('reading');
+    showBubble(words[Math.floor(Math.random()*words.length)]);
+    backToIdle();
+  },
+  onHongguoStop:function(){
+    if(isMini)return;
+    if(currentState==='reading'){loadState('idle');if(!idleTimer)idleTimer=setInterval(idleCycle,12000);backToIdle();}
+  },
+  onCameraStart:function(){
+    resetLonely();
+    if(isMini)return;
+    var words=['拍什么呢','茄子~','要拍好看的哦','摄影师上线','咔嚓'];
+    loadState('hobbyPhoto');
+    showBubble(words[Math.floor(Math.random()*words.length)]);
+    if(idleTimer){clearInterval(idleTimer);idleTimer=null;}
+  },
+  onCameraStop:function(){
+    if(isMini)return;
+    if(currentState==='hobbyPhoto'){loadState('idle');showBubble('拍好了？');if(!idleTimer)idleTimer=setInterval(idleCycle,12000);backToIdle();}
   }
 };
+
+// === BATHING TIME SYSTEM (21:00-23:00) ===
+var bathingTriggered=false;
+var bathingTimer=null;
+function checkBathingTime(){
+  var h=new Date().getHours();
+  if(h>=21&&h<23&&!bathingTriggered&&!isMini&&!isLonely){
+    bathingTriggered=true;
+    var bathCount=0;
+    loadState('dailyBathing');
+    showBubble('洗澡时间~');
+    if(idleTimer){clearInterval(idleTimer);idleTimer=null;}
+    var bathLoop=setInterval(function(){
+      bathCount++;
+      if(bathCount>=3){clearInterval(bathLoop);backToIdle();}
+      else{loadState('dailyBathing');}
+    },12000);
+  }
+  if(h>=23||h<21){bathingTriggered=false;}
+}
+bathingTimer=setInterval(checkBathingTime,60000);
 if(todayFestival){
   loadState(todayFestival.anim);
   var initFw=todayFestival.words[Math.floor(Math.random()*todayFestival.words.length)];
