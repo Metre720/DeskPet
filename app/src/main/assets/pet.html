@@ -298,6 +298,7 @@ function backToIdle(){
     if(!isMini && !isLonely){
       loadState('idle');
       if(!idleTimer)idleTimer=setInterval(idleCycle,12000);
+setTimeout(function(){loadState("debugger");showBubble("这个是debugger！");},3000);
     }
   },2500);
 }
@@ -525,6 +526,7 @@ window.petEngine={
       loadState('idle');
       showBubble('音乐停了...');
       if(!idleTimer)idleTimer=setInterval(idleCycle,12000);
+setTimeout(function(){loadState("debugger");showBubble("这个是debugger！");},3000);
       backToIdle();
     }
   },
@@ -568,6 +570,7 @@ window.petEngine={
     if(currentState==='typing'){
       loadState('idle');
       if(!idleTimer)idleTimer=setInterval(idleCycle,12000);
+setTimeout(function(){loadState("debugger");showBubble("这个是debugger！");},3000);
       backToIdle();
     }
   },
@@ -584,6 +587,7 @@ window.petEngine={
     if(currentState==='building'){
       loadState('idle');
       if(!idleTimer)idleTimer=setInterval(idleCycle,12000);
+setTimeout(function(){loadState("debugger");showBubble("这个是debugger！");},3000);
       backToIdle();
     }
   },
@@ -607,6 +611,7 @@ window.petEngine={
     if(currentState==='debugger'||currentState==='dailyReading'||currentState==='reading'){
       loadState('idle');
       if(!idleTimer)idleTimer=setInterval(idleCycle,12000);
+setTimeout(function(){loadState("debugger");showBubble("这个是debugger！");},3000);
       backToIdle();
     }
   },
@@ -630,6 +635,7 @@ window.petEngine={
     if(currentState==='dailyGaming'||currentState==='juggling'){
       loadState('idle');
       if(!idleTimer)idleTimer=setInterval(idleCycle,12000);
+setTimeout(function(){loadState("debugger");showBubble("这个是debugger！");},3000);
       backToIdle();
     }
   },
@@ -651,6 +657,7 @@ window.petEngine={
     if(currentState==='typingBoss'){
       loadState('idle');
       if(!idleTimer)idleTimer=setInterval(idleCycle,12000);
+setTimeout(function(){loadState("debugger");showBubble("这个是debugger！");},3000);
       backToIdle();
     }
   },
@@ -671,6 +678,7 @@ window.petEngine={
     if(currentState==='ultrathink'){
       loadState('idle');
       if(!idleTimer)idleTimer=setInterval(idleCycle,12000);
+setTimeout(function(){loadState("debugger");showBubble("这个是debugger！");},3000);
       backToIdle();
     }
   },
@@ -800,6 +808,5 @@ if(todayFestival){
   loadState('idle');
 }
 idleTimer=setInterval(idleCycle,12000);
-
-setTimeout(function(){loadState('hobbyCoding');showBubble('看！就是这个！');},3000);
+setTimeout(function(){loadState("debugger");showBubble("这个是debugger！");},3000);
 </script></body></html>
