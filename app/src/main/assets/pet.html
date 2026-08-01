@@ -692,10 +692,10 @@ window.petEngine={
   onShoppingStart:function(){
     resetLonely();
     if(isMini)return;
+    if(idleTimer){clearInterval(idleTimer);idleTimer=null;}
     var words=['老板娘在巡店','看看就好别下单','又在逛了','钱包在哭','下单前三思','买了吗买了吗','购物车又满了吧','剁手冠军'];
     loadState('typingBoss');
     showBubble(words[Math.floor(Math.random()*words.length)]);
-    backToIdle();
   },
   onShoppingStop:function(){
     if(isMini)return;
@@ -704,10 +704,10 @@ window.petEngine={
   onXhsStart:function(){
     resetLonely();
     if(isMini)return;
+    if(idleTimer){clearInterval(idleTimer);idleTimer=null;}
     var words=['又在种草','看到啥好东西了','别光收藏不看','笔记刷不完的','被安利了？'];
     loadState('reading');
     showBubble(words[Math.floor(Math.random()*words.length)]);
-    backToIdle();
   },
   onXhsStop:function(){
     if(isMini)return;
@@ -716,10 +716,10 @@ window.petEngine={
   onDouyinStart:function(){
     resetLonely();
     if(isMini)return;
+    if(idleTimer){clearInterval(idleTimer);idleTimer=null;}
     var words=['又刷上了','一个接一个停不下来吧','别刷太久眼睛疼','好看吗给我也看看','时间杀手'];
     loadState('headphones');
     showBubble(words[Math.floor(Math.random()*words.length)]);
-    backToIdle();
   },
   onDouyinStop:function(){
     if(isMini)return;
@@ -728,10 +728,10 @@ window.petEngine={
   onBiliStart:function(){
     resetLonely();
     if(isMini)return;
+    if(idleTimer){clearInterval(idleTimer);idleTimer=null;}
     var words=['追番呢？','弹幕比视频好看','看的啥','三连了吗','别通宵追番'];
     loadState('headphones');
     showBubble(words[Math.floor(Math.random()*words.length)]);
-    backToIdle();
   },
   onBiliStop:function(){
     if(isMini)return;
@@ -740,10 +740,10 @@ window.petEngine={
   onHongguoStart:function(){
     resetLonely();
     if(isMini)return;
+    if(idleTimer){clearInterval(idleTimer);idleTimer=null;}
     var words=['又追剧了','好看吗','一集接一集停不下来吧','别熬夜追','追到第几集了'];
     loadState('reading');
     showBubble(words[Math.floor(Math.random()*words.length)]);
-    backToIdle();
   },
   onHongguoStop:function(){
     if(isMini)return;
@@ -752,6 +752,7 @@ window.petEngine={
   onCameraStart:function(){
     resetLonely();
     if(isMini)return;
+    if(idleTimer){clearInterval(idleTimer);idleTimer=null;}
     var words=['拍什么呢','茄子~','要拍好看的哦','摄影师上线','咔嚓'];
     loadState('hobbyPhoto');
     showBubble(words[Math.floor(Math.random()*words.length)]);
