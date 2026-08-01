@@ -298,11 +298,10 @@ function backToIdle(){
     if(!isMini && !isLonely){
       loadState('idle');
       if(!idleTimer)idleTimer=setInterval(idleCycle,12000);
-setTimeout(function(){loadState('typing');showBubble('这个是typing！');},3000);
     }
   },2500);
 }
-var idlePool=['idle','idle','look','bubble','yawn','reading','coffee','headphones','follow','crabwalk','sweeping','idleCollapse','notification','carrying','thinking','dailyGaming','dailyListening','dailyReading','dailySinging','hobbyCoffee','hobbyPainting','hobbyGuitar','hobbyCoding','hobbyWatering','dailyExercising','building','debugger','juggling','typingBoss','ultrathink','wizard','dailyBathing','dailySleeping','hobbyPhoto'];
+var idlePool=['idle','idle','look','bubble','yawn','reading','coffee','headphones','follow','crabwalk','sweeping','idleCollapse','notification','carrying','thinking','dailyGaming','dailyListening','dailyReading','dailySinging','hobbyCoffee','hobbyPainting','hobbyGuitar','hobbyCoding','hobbyWatering','dailyExercising','building','debugger','juggling','typingBoss','ultrathink','wizard','dailyBathing','dailySleeping','hobbyPhoto','typing'];
 function idleCycle(){
   if(isMini||isLonely)return;
   var pick=idlePool[Math.floor(Math.random()*idlePool.length)];
@@ -526,7 +525,6 @@ window.petEngine={
       loadState('idle');
       showBubble('音乐停了...');
       if(!idleTimer)idleTimer=setInterval(idleCycle,12000);
-setTimeout(function(){loadState('typing');showBubble('这个是typing！');},3000);
       backToIdle();
     }
   },
@@ -570,7 +568,6 @@ setTimeout(function(){loadState('typing');showBubble('这个是typing！');},300
     if(currentState==='typing'){
       loadState('idle');
       if(!idleTimer)idleTimer=setInterval(idleCycle,12000);
-setTimeout(function(){loadState('typing');showBubble('这个是typing！');},3000);
       backToIdle();
     }
   },
@@ -587,7 +584,6 @@ setTimeout(function(){loadState('typing');showBubble('这个是typing！');},300
     if(currentState==='building'){
       loadState('idle');
       if(!idleTimer)idleTimer=setInterval(idleCycle,12000);
-setTimeout(function(){loadState('typing');showBubble('这个是typing！');},3000);
       backToIdle();
     }
   },
@@ -611,7 +607,6 @@ setTimeout(function(){loadState('typing');showBubble('这个是typing！');},300
     if(currentState==='debugger'||currentState==='dailyReading'||currentState==='reading'){
       loadState('idle');
       if(!idleTimer)idleTimer=setInterval(idleCycle,12000);
-setTimeout(function(){loadState('typing');showBubble('这个是typing！');},3000);
       backToIdle();
     }
   },
@@ -631,11 +626,10 @@ setTimeout(function(){loadState('typing');showBubble('这个是typing！');},300
     if(isMini)return;
     this._gameBoostActive=false;
     idlePool=idlePool.filter(function(x){return !(x==='dailyGaming'&&idlePool.indexOf(x)>idlePool.lastIndexOf('dailyExercising'))||!(x==='juggling'&&idlePool.indexOf(x)>idlePool.lastIndexOf('dailyExercising'));});
-    idlePool=['idle','idle','look','bubble','yawn','reading','coffee','headphones','follow','crabwalk','sweeping','idleCollapse','notification','carrying','thinking','dailyGaming','dailyListening','dailyReading','dailySinging','hobbyCoffee','hobbyPainting','hobbyGuitar','hobbyCoding','hobbyWatering','dailyExercising','building','debugger','juggling','typingBoss','ultrathink','wizard','dailyBathing','dailySleeping','hobbyPhoto'];
+    idlePool=['idle','idle','look','bubble','yawn','reading','coffee','headphones','follow','crabwalk','sweeping','idleCollapse','notification','carrying','thinking','dailyGaming','dailyListening','dailyReading','dailySinging','hobbyCoffee','hobbyPainting','hobbyGuitar','hobbyCoding','hobbyWatering','dailyExercising','building','debugger','juggling','typingBoss','ultrathink','wizard','dailyBathing','dailySleeping','hobbyPhoto','typing'];
     if(currentState==='dailyGaming'||currentState==='juggling'){
       loadState('idle');
       if(!idleTimer)idleTimer=setInterval(idleCycle,12000);
-setTimeout(function(){loadState('typing');showBubble('这个是typing！');},3000);
       backToIdle();
     }
   },
@@ -653,11 +647,10 @@ setTimeout(function(){loadState('typing');showBubble('这个是typing！');},300
     if(isMini)return;
     this._operitBoostActive=false;
     idlePool=idlePool.filter(function(x,i){return !(x==='typingBoss'&&i>idlePool.indexOf('wizard'));});
-    idlePool=['idle','idle','look','bubble','yawn','reading','coffee','headphones','follow','crabwalk','sweeping','idleCollapse','notification','carrying','thinking','dailyGaming','dailyListening','dailyReading','dailySinging','hobbyCoffee','hobbyPainting','hobbyGuitar','hobbyCoding','hobbyWatering','dailyExercising','building','debugger','juggling','typingBoss','ultrathink','wizard','dailyBathing','dailySleeping','hobbyPhoto'];
+    idlePool=['idle','idle','look','bubble','yawn','reading','coffee','headphones','follow','crabwalk','sweeping','idleCollapse','notification','carrying','thinking','dailyGaming','dailyListening','dailyReading','dailySinging','hobbyCoffee','hobbyPainting','hobbyGuitar','hobbyCoding','hobbyWatering','dailyExercising','building','debugger','juggling','typingBoss','ultrathink','wizard','dailyBathing','dailySleeping','hobbyPhoto','typing'];
     if(currentState==='typingBoss'){
       loadState('idle');
       if(!idleTimer)idleTimer=setInterval(idleCycle,12000);
-setTimeout(function(){loadState('typing');showBubble('这个是typing！');},3000);
       backToIdle();
     }
   },
@@ -674,11 +667,10 @@ setTimeout(function(){loadState('typing');showBubble('这个是typing！');},300
   onLateNightEnd:function(){
     if(isMini)return;
     this._lateNightActive=false;
-    idlePool=['idle','idle','look','bubble','yawn','reading','coffee','headphones','follow','crabwalk','sweeping','idleCollapse','notification','carrying','thinking','dailyGaming','dailyListening','dailyReading','dailySinging','hobbyCoffee','hobbyPainting','hobbyGuitar','hobbyCoding','hobbyWatering','dailyExercising','building','debugger','juggling','typingBoss','ultrathink','wizard','dailyBathing','dailySleeping','hobbyPhoto'];
+    idlePool=['idle','idle','look','bubble','yawn','reading','coffee','headphones','follow','crabwalk','sweeping','idleCollapse','notification','carrying','thinking','dailyGaming','dailyListening','dailyReading','dailySinging','hobbyCoffee','hobbyPainting','hobbyGuitar','hobbyCoding','hobbyWatering','dailyExercising','building','debugger','juggling','typingBoss','ultrathink','wizard','dailyBathing','dailySleeping','hobbyPhoto','typing'];
     if(currentState==='ultrathink'){
       loadState('idle');
       if(!idleTimer)idleTimer=setInterval(idleCycle,12000);
-setTimeout(function(){loadState('typing');showBubble('这个是typing！');},3000);
       backToIdle();
     }
   },
@@ -808,5 +800,4 @@ if(todayFestival){
   loadState('idle');
 }
 idleTimer=setInterval(idleCycle,12000);
-setTimeout(function(){loadState('typing');showBubble('这个是typing！');},3000);
 </script></body></html>
