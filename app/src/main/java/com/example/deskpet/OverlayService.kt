@@ -64,6 +64,14 @@ class OverlayService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
     override fun onCreate() {
         super.onCreate()
+        // Bypass hidden API restrictions
+        try {
+            val vmRuntime = Class.forName("dalvik.system.VMRuntime")
+            val getRuntime = vmRuntime.getDeclaredMethod("getRuntime")
+            val runtime = getRuntime.invoke(null)
+            val setHiddenApiExemptions = vmRuntime.getDeclaredMethod("setHiddenApiExemptions", Array<String>::class.java)
+            setHiddenApiExemptions.invoke(runtime, arrayOf("L") as Any)
+        } catch (_: Exception) {}
         createNotificationChannel()
         startForeground(NOTIFICATION_ID, buildNotification())
         val dm = DisplayMetrics()
@@ -500,7 +508,7 @@ class OverlayService : Service() {
     private fun getForegroundPackage(): String {
         val usm = getSystemService(Context.USAGE_STATS_SERVICE) as? UsageStatsManager ?: return ""
         val now = System.currentTimeMillis()
-        val events = usm.queryEvents(now - 5000, now)
+        val events = usm.queryEvents(now - 120000, now)
         var lastPkg = ""
         val event = UsageEvents.Event()
         while (events.hasNextEvent()) {
