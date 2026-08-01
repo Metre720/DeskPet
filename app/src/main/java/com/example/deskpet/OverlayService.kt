@@ -41,6 +41,7 @@ class OverlayService : Service() {
     private var batteryReceiver: BroadcastReceiver? = null
     private var musicCheckRunnable: Runnable? = null
     private var isMusicPlaying = false
+    private var hongguoExitTime = 0L
     private var keyboardCheckRunnable: Runnable? = null
     private var isKeyboardShowing = false
     private var foregroundCheckRunnable: Runnable? = null
@@ -338,7 +339,7 @@ class OverlayService : Service() {
         musicCheckRunnable = object : Runnable {
             override fun run() {
                 val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-                val playing = audioManager.isMusicActive && getForegroundPackage() != hongguoPackage
+                val playing = audioManager.isMusicActive && getForegroundPackage() != hongguoPackage && (System.currentTimeMillis() - hongguoExitTime > 60000)
                 if (playing && !isMusicPlaying) {
                     isMusicPlaying = true
                     handler.post {
@@ -520,7 +521,8 @@ class OverlayService : Service() {
         return lastPkg
     }
     private fun onForegroundStateChanged(old: String, new: String) {
-        if (old.isNotEmpty()) {
+        if (old == "hongguo") { hongguoExitTime = System.currentTimeMillis() }
+            if (old.isNotEmpty()) {
             val stopMethod = when (old) {
                 "game" -> "onGameStop"
                 "operit" -> "onOperitStop"
