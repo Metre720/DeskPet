@@ -330,7 +330,7 @@ class OverlayService : Service() {
         musicCheckRunnable = object : Runnable {
             override fun run() {
                 val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-                val playing = audioManager.isMusicActive && currentForegroundState != "hongguo"
+                val playing = audioManager.isMusicActive && getForegroundPackage() != hongguoPackage
                 if (playing && !isMusicPlaying) {
                     isMusicPlaying = true
                     handler.post {
@@ -455,10 +455,10 @@ class OverlayService : Service() {
     }
     private fun isKeyboardVisible(): Boolean {
         return try {
-            val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", "dumpsys input_method | grep mWindowVisible"))
-            val output = process.inputStream.bufferedReader().readText()
-            process.waitFor()
-            output.contains("mWindowVisible=true")
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
+            val method = imm.javaClass.getMethod("getInputMethodWindowVisibleHeight")
+            val height = method.invoke(imm) as Int
+            height > 100
         } catch (e: Exception) { false }
     }
     // === FOREGROUND APP DETECTION ===
