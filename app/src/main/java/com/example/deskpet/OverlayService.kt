@@ -330,7 +330,9 @@ class OverlayService : Service() {
         musicCheckRunnable = object : Runnable {
             override fun run() {
                 val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-                val playing = audioManager.isMusicActive
+                val currentPkg = getForegroundPackage()
+                val musicWhitelist = setOf(hongguoPackage)
+                val playing = audioManager.isMusicActive && currentPkg !in musicWhitelist
                 if (playing && !isMusicPlaying) {
                     isMusicPlaying = true
                     handler.post {
@@ -458,7 +460,7 @@ class OverlayService : Service() {
             val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", "dumpsys input_method | grep mInputShown"))
             val output = process.inputStream.bufferedReader().readText()
             process.waitFor()
-            output.contains("mInputShown=true")
+            output.contains("mWindowVisible=true")
         } catch (e: Exception) { false }
     }
     // === FOREGROUND APP DETECTION ===
@@ -469,7 +471,7 @@ class OverlayService : Service() {
     private val xhsPackage = "com.xingin.xhs"
     private val douyinPackage = "com.ss.android.ugc.aweme"
     private val biliPackage = "tv.danmaku.bili"
-    private val hongguoPackage = "com.jifen.qukan.video"
+    private val hongguoPackage = "com.phoenix.read"
     private val cameraPackages = setOf("com.android.camera", "com.huawei.camera", "com.sec.android.app.camera", "com.oppo.camera", "com.miui.camera", "com.vivo.camera")
     private fun setupForegroundChecker() {
         foregroundCheckRunnable = object : Runnable {
