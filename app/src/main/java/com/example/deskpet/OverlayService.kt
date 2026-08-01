@@ -330,9 +330,7 @@ class OverlayService : Service() {
         musicCheckRunnable = object : Runnable {
             override fun run() {
                 val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-                val currentPkg = getForegroundPackage()
-                val musicWhitelist = setOf(hongguoPackage)
-                val playing = audioManager.isMusicActive && currentPkg !in musicWhitelist
+                val playing = audioManager.isMusicActive && currentForegroundState != "hongguo"
                 if (playing && !isMusicPlaying) {
                     isMusicPlaying = true
                     handler.post {
@@ -457,7 +455,7 @@ class OverlayService : Service() {
     }
     private fun isKeyboardVisible(): Boolean {
         return try {
-            val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", "dumpsys input_method | grep mInputShown"))
+            val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", "dumpsys input_method | grep mWindowVisible"))
             val output = process.inputStream.bufferedReader().readText()
             process.waitFor()
             output.contains("mWindowVisible=true")
